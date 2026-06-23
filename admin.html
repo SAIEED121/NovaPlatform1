@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | لوحة التحكم الذكية المتكاملة والشاملة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #dcd9d4;
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.85), rgba(220, 217, 212, 0.85)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            background-attachment: fixed;
+        }
+
+        .admin-dark-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .sunken-admin-box {
+            background-color: #111111;
+            border: 1px solid #222222;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .menu-grid-btn {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .menu-grid-btn:hover {
+            border-color: #801A24;
+            transform: translateY(-4px);
+        }
+        .menu-grid-btn.active {
+            background: #801A24;
+            border-color: #a32230;
+            color: white !important;
+        }
+        .menu-grid-btn.active i, .menu-grid-btn.active p {
+            color: white !important;
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+        .admin-tab-content.active-tab {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased text-gray-200">
+
+    <!-- الهيدر العلوي -->
+    <header class="w-full p-6 bg-transparent relative z-10 border-b border-gray-400/20">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                    Nova<span class="font-light text-gray-800">Platform</span>
+                </div>
+                <span class="text-[10px] bg-[#801A24] text-white px-2.5 py-1 rounded font-bold shadow-sm">النظام البرمجي الشامل</span>
+            </div>
+            <div class="flex items-center text-gray-900 font-bold text-xs gap-4">
+                <span class="bg-gray-800 text-white px-3 py-1.5 rounded-xl"><i class="fa-solid fa-server ml-1 text-emerald-400"></i> حالة السيرفر: متصل ومؤمن</span>
+                <span>المشرف العام</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي للمنصة -->
+    <main class="w-full max-w-7xl mx-auto p-4 md:p-8 flex-1 space-y-6 relative z-10">
+
+        <!-- شريط إحصائيات المنصة الإدارية السريعة (فوق الخانات المتعددة) -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 bg-[#1a1a1a] border border-gray-800 rounded-2xl flex items-center justify-between shadow-xl">
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold">إجمالي الطلاب المشتركين</p>
+                    <p class="text-xl font-black text-white mt-1 font-mono">5,200 <span class="text-xs font-normal text-gray-400">طالب</span></p>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                    <i class="fa-solid fa-user-graduate text-purple-400 text-sm"></i>
+                </div>
+            </div>
+
+            <div class="p-4 bg-[#1a1a1a] border border-gray-800 rounded-2xl flex items-center justify-between shadow-xl">
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold">إجمالي الإيرادات والخزنة</p>
+                    <p class="text-xl font-black text-emerald-400 mt-1 font-mono">14,850,000 <span class="text-[10px] font-normal text-gray-400">ل.س</span></p>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <i class="fa-solid fa-vault text-emerald-400 text-sm"></i>
+                </div>
+            </div>
+
+            <div class="p-4 bg-[#1a1a1a] border border-gray-800 rounded-2xl flex items-center justify-between shadow-xl">
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold">المعلمون النشطون</p>
+                    <p class="text-xl font-black text-amber-400 mt-1 font-mono">12 <span class="text-xs font-normal text-gray-400">مدرس</span></p>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                    <i class="fa-solid fa-chalkboard-user text-amber-400 text-sm"></i>
+                </div>
+            </div>
+
+            <div class="p-4 bg-[#1a1a1a] border border-gray-800 rounded-2xl flex items-center justify-between shadow-xl">
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold">الحصص المباشرة (اللايف) اليوم</p>
+                    <p class="text-xl font-black text-red-400 mt-1 font-mono">4 <span class="text-xs font-normal text-gray-400">حصص</span></p>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20 animate-pulse">
+                    <i class="fa-solid fa-tower-broadcast text-red-400 text-sm"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- الأزرار الرئيسية لفتح الأقسام الإدارية الشاملة -->
+        <section class="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <button onclick="switchTab('settings-tab', this)" class="menu-grid-btn active p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-palette text-2xl text-emerald-400"></i>
+                <p class="text-xs font-bold text-white">إعدادات الهوية والمظهر</p>
+            </button>
+
+            <button onclick="switchTab('finance-tab', this)" class="menu-grid-btn p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-money-check-dollar text-2xl text-amber-400"></i>
+                <p class="text-xs font-bold text-white">المالية وبوابات الشحن</p>
+            </button>
+
+            <button onclick="switchTab('teachers-tab', this)" class="menu-grid-btn p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-chalkboard-user text-2xl text-purple-400"></i>
+                <p class="text-xs font-bold text-white">إدارة وحسابات المعلمين</p>
+            </button>
+
+            <button onclick="switchTab('lectures-tab', this)" class="menu-grid-btn p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-video text-2xl text-blue-400"></i>
+                <p class="text-xs font-bold text-white">رفع الفيديوهات للسيرفر</p>
+            </button>
+
+            <button onclick="switchTab('support-tab', this)" class="menu-grid-btn p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-comments text-2xl text-cyan-400"></i>
+                <p class="text-xs font-bold text-white">التذاكر وبث الإشعار</p>
+            </button>
+
+            <button onclick="switchTab('security-tab', this)" class="menu-grid-btn p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2">
+                <i class="fa-solid fa-shield-halved text-2xl text-red-500"></i>
+                <p class="text-xs font-bold text-white">الحظر وسجلات الأمان</p>
+            </button>
+        </section>
+
+        <!-- مجمع الأقسام والخيارات الكاملة -->
+        <section class="w-full">
+            
+            <!-- 1. الخيارات الكاملة لإعدادات المظهر والهوية البصرية للمنصة -->
+            <div id="settings-tab" class="admin-tab-content active-tab admin-dark-card p-6 md:p-8 space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-sliders text-emerald-400"></i> الإعدادات المتقدمة لهوية المنصة</h2>
+                    <p class="text-[11px] text-gray-400">تحكم كامل في مظهر ومحتوى التطبيق والموقع الإلكتروني دون الحاجة لكتابة كود</p>
+                </div>
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-3">
+                            <p class="text-xs font-bold text-emerald-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-font"></i> نصوص وهوية البراند</p>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">اسم المنصة التعليمية</label>
+                                <input type="text" value="NovaPlatform" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">شعار المنصة الرئيسي (Logo)</label>
+                                <input type="file" class="w-full bg-[#161616] border border-[#333] rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">أيقونة المتصفح المصغرة (Favicon)</label>
+                                <input type="file" class="w-full bg-[#161616] border border-[#333] rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-3">
+                            <p class="text-xs font-bold text-emerald-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-palette"></i> مظهر ومنظومة الألوان الرقمية</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 mb-1">اللون الرئيسي (الهيدر والأزرار)</label>
+                                    <input type="color" value="#801A24" class="w-full h-8 bg-transparent border-0 cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 mb-1">اللون الفرعي (الروابط والتلميحات)</label>
+                                    <input type="color" value="#059669" class="w-full h-8 bg-transparent border-0 cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 mb-1">خلفية لوحة الطالب</label>
+                                    <input type="color" value="#111111" class="w-full h-8 bg-transparent border-0 cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 mb-1">لون نصوص العناوين</label>
+                                    <input type="color" value="#ffffff" class="w-full h-8 bg-transparent border-0 cursor-pointer">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">وضع الرؤية الافتراضي للطلاب</label>
+                                <select class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+                                    <option>الوضع الداكن الموفر للطاقة (Dark Mode)</option>
+                                    <option>الوضع المضيء الناصع (Light Mode)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-3">
+                            <p class="text-xs font-bold text-emerald-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-link"></i> قنوات تواصل المنصة</p>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">رابط قناة التلغرام للمنصة</label>
+                                <input type="url" placeholder="https://t.me/..." class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-left text-white focus:outline-none" dir="ltr">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">رابط صفحة الفيسبوك</label>
+                                <input type="url" placeholder="https://facebook.com/..." class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-left text-white focus:outline-none" dir="ltr">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">رابط الدعم الفني المباشر (واتساب)</label>
+                                <input type="url" placeholder="https://wa.me/..." class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-left text-white focus:outline-none" dir="ltr">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow-lg"><i class="fa-solid fa-floppy-disk ml-1"></i> حفظ وتحديث مظهر المنصة فوراً</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 2. الخيارات الكاملة للمالية وبوابات الشحن -->
+            <div id="finance-tab" class="admin-tab-content admin-dark-card p-6 md:p-8 space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-wallet text-amber-400"></i> المنظومة المالية المتكاملة وإدارة كروت الشحن</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-3">
+                        <p class="text-xs font-bold text-amber-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-plus-circle"></i> إضافة / تعديل بوابة مالية محددة</p>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1">اسم بوابة الدفع</label>
+                            <input type="text" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-400 mb-1">الرقم المخصص لاستلام الأموال</label>
+                            <input type="text" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white text-left focus:outline-none" dir="ltr">
+                        </div>
+                        <button type="button" class="w-full py-2 bg-amber-600 text-white text-xs font-bold rounded-lg transition">تفعيل البوابة</button>
+                    </div>
+
+                    <div class="bg-[#111] p-4 rounded-xl border border-gray-800 space-y-3 md:col-span-2">
+                        <p class="text-xs font-bold text-amber-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-wand-magic-sparkles"></i> مولد ومصنع الأكواد الذكي</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">قيمة الكرت (ل.س)</label>
+                                <input type="number" placeholder="25000" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">عدد الكروت</label>
+                                <input type="number" placeholder="100" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-gray-400 mb-1">انتهاء الصلاحية</label>
+                                <input type="date" class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <button type="button" class="flex-1 py-2 bg-zinc-800 text-white text-xs font-bold rounded-lg">توليد وحفظ الأكواد</button>
+                            <button type="button" class="py-2 px-4 bg-amber-600 text-white text-xs font-bold rounded-lg"><i class="fa-solid fa-print"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#111] p-4 rounded-xl border border-gray-800">
+                    <p class="text-xs font-bold text-white mb-3"><i class="fa-solid fa-clock-rotate-left text-amber-500"></i> طلبات الشحن والتحويلات المعلقة بانتظار المراجعة</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400 font-bold">
+                                    <th class="pb-2">اسم الطالب</th>
+                                    <th class="pb-2">المبلغ</th>
+                                    <th class="pb-2">عبر وسيلة</th>
+                                    <th class="pb-2">رقم الحوالة</th>
+                                    <th class="pb-2 text-left">الإجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/40 text-[11px]">
+                                <tr>
+                                    <td class="py-3 text-white">وسيم النجار</td>
+                                    <td class="py-3 text-emerald-400 font-bold">50,000 ل.س</td>
+                                    <td class="py-3 text-amber-500">سيريتل كاش</td>
+                                    <td class="py-3 font-mono text-gray-400">TXN-9823719283</td>
+                                    <td class="py-3 text-left space-x-1 space-x-reverse">
+                                        <button class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
+                                        <button class="bg-red-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">رفض</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. قسم المعلمين المطور: تصفية البحث، الحصص اللايف، التقدم في المنهج + الخانة الخاصة بالقبض والرواتب وتأييدها يدوياً -->
+            <div id="teachers-tab" class="admin-tab-content admin-dark-card p-6 md:p-8 space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-chalkboard-user text-purple-400"></i> منظومة تعقب المعلمين الشاملة، مستوى المنهج، وتأييد مستحقات القبض والرواتب</h2>
+                    <p class="text-[11px] text-gray-400">ابحث عن المدرس لمراقبة الحصص المباشرة الحالية، وتتبع مقدار الإنجاز في الخطة الدراسية، بالإضافة لتأييد حساباته المالية وصرف دفعات القبض يدويًا.</p>
+                </div>
+
+                <!-- شريط البحث والمحرك الذكي للفحص السريع -->
+                <div class="bg-[#111] p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="relative w-full md:w-96">
+                        <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-purple-400 text-xs"></i>
+                        <input type="text" onkeyup="searchTeacher(this.value)" placeholder="اكتب اسم المدرس للبحث الفوري وعرض حصصه وحساباته..." class="w-full bg-[#161616] border border-[#333] rounded-xl pr-10 pl-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div class="text-[11px] text-gray-400 flex gap-4">
+                        <span><i class="fa-solid fa-circle text-[9px] text-red-500 ml-1"></i> تبث الآن: <b class="text-white" id="live-count">1</b></span>
+                        <span><i class="fa-solid fa-circle text-[9px] text-purple-500 ml-1"></i> إجمالي المدرسين: <b class="text-white">3</b></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- جدول المعلمين الرئيسي على اليمين -->
+                    <div class="bg-[#111] p-5 rounded-xl border border-gray-800 lg:col-span-1 space-y-4">
+                        <p class="text-xs font-bold text-white border-b border-gray-800 pb-2"><i class="fa-solid fa-users-viewfinder text-purple-400"></i> اختر المعلم للمراقبة والمالية</p>
+                        
+                        <div id="teachers-list" class="space-y-2">
+                            <!-- بطاقة مدرس 1 -->
+                            <div onclick="selectTeacher('محمد الحمصي', 'الفيزياء الحديثة', '65%', 'الحث الكهرومغناطيسي', 'live', 450000, 300000, 150000)" class="p-3 bg-[#161616] border border-purple-500/30 rounded-xl cursor-pointer hover:border-purple-500 transition flex justify-between items-center teacher-row">
+                                <div>
+                                    <p class="text-xs font-bold text-white name-field">أ. محمد الحمصي</p>
+                                    <p class="text-[10px] text-gray-400">مادة الفيزياء</p>
+                                </div>
+                                <span class="px-2 py-0.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-full text-[9px] font-bold">مباشر الآن</span>
+                            </div>
+
+                            <!-- بطاقة مدرس 2 -->
+                            <div onclick="selectTeacher('رانيا العلي', 'العلوم والأحياء', '82%', 'الهندسة الوراثية والـ DNA', 'offline', 600000, 600000, 0)" class="p-3 bg-[#161616] border border-gray-800 rounded-xl cursor-pointer hover:border-purple-500 transition flex justify-between items-center teacher-row">
+                                <div>
+                                    <p class="text-xs font-bold text-white name-field">أ. رانيا العلي</p>
+                                    <p class="text-[10px] text-gray-400">علم الأحياء</p>
+                                </div>
+                                <span class="px-2 py-0.5 bg-zinc-800 text-gray-400 rounded-full text-[9px]">غير متصل</span>
+                            </div>
+
+                            <!-- بطاقة مدرس 3 -->
+                            <div onclick="selectTeacher('عبيد الشمري', 'اللغة العربية', '40%', 'قواعد النحو والصرف المعمق', 'scheduled', 350000, 150000, 200000)" class="p-3 bg-[#161616] border border-gray-800 rounded-xl cursor-pointer hover:border-purple-500 transition flex justify-between items-center teacher-row">
+                                <div>
+                                    <p class="text-xs font-bold text-white name-field">أ. عبيد الشمري</p>
+                                    <p class="text-[10px] text-gray-400">اللغة العربية</p>
+                                </div>
+                                <span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-[9px]">مجدول اليوم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- لوحة فحص المنهج والقبض المالي للمعلم المختار على اليسار -->
+                    <div class="bg-[#111] p-5 rounded-xl border border-gray-800 lg:col-span-2 space-y-5">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                            <div>
+                                <p class="text-xs font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-line text-purple-400"></i> 
+                                    لوحة المتابعة الشاملة: <span id="display-teacher-name" class="text-purple-400">أ. محمد الحمصي</span>
+                                </p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">المادة الحالية: <span id="display-teacher-subject">الفيزياء الحديثة</span></p>
+                            </div>
+                            <span id="display-live-status" class="px-2.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold">بث مباشر الآن</span>
+                        </div>
+
+                        <!-- 💰 قسم حسابات القبض والراتب والمستحقات والتبويب المالي للمعلم -->
+                        <div class="bg-[#161616] p-4 rounded-xl border border-gray-800 space-y-4">
+                            <p class="text-xs font-bold text-purple-400"><i class="fa-solid fa-money-bill-wave ml-1"></i> الوضع المالي وتأييد مستحقات الراتب</p>
+                            
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="bg-[#111] p-2.5 rounded-lg text-center border border-zinc-800">
+                                    <p class="text-[9px] text-gray-400">إجمالي الراتب المستحق</p>
+                                    <p class="text-xs font-bold text-white font-mono mt-0.5" id="finance-total">450,000 ل.س</p>
+                                </div>
+                                <div class="bg-[#111] p-2.5 rounded-lg text-center border border-zinc-800">
+                                    <p class="text-[9px] text-gray-400">ما تم تقاضيه (المقبوض)</p>
+                                    <p class="text-xs font-bold text-emerald-400 font-mono mt-0.5" id="finance-paid">300,000 ل.س</p>
+                                </div>
+                                <div class="bg-[#111] p-2.5 rounded-lg text-center border border-zinc-800">
+                                    <p class="text-[9px] text-gray-400">المتبقي له في المنصة</p>
+                                    <p class="text-xs font-bold text-red-400 font-mono mt-0.5" id="finance-remaining">150,000 ل.س</p>
+                                </div>
+                            </div>
+
+    
+                            <!-- نموذج تسجيل عملية قبض يدوي فوري لتحديث الحساب -->
+                            <div class="pt-2 border-t border-zinc-800/60 flex flex-col sm:flex-row items-end gap-3">
+                                <div class="flex-1 w-full">
+                                    <label class="block text-[10px] text-gray-400 mb-1">تسجيل دفعة مالية جديدة يدويًا للمدرس (ل.س)</label>
+                                    <input type="number" id="payout-amount" placeholder="مثال: 50000" class="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                </div>
+                                <button type="button" onclick="processPayoutHand()" class="w-full sm:w-auto px-4 py-2 bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs rounded-lg transition whitespace-nowrap">
+                                    <i class="fa-solid fa-file-invoice-dollar ml-1"></i> تأييد وصرف الدفعة
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- تقدم المنهج الفعلي للمدرس -->
+                        <div class="space-y-2 bg-[#161616] p-4 rounded-xl border border-gray-800/60">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-300 font-bold"><i class="fa-solid fa-graduation-cap text-purple-400 ml-1"></i> مستوى التقدم وإنجاز الخطة الدراسية</span>
+                                <span class="font-mono text-purple-400 font-bold text-sm" id="display-progress-text">65%</span>
+                            </div>
+                            <div class="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+                                <div id="display-progress-bar" class="bg-purple-600 h-full rounded-full transition-all duration-500" style="width: 65%"></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 pt-1">المرحلة الدراسية الحالية في المنهج: <b class="text-gray-200" id="display-current-unit">الحث الكهرومغناطيسي</b></p>
+                        </div>
+
+                        <!-- جدول حصص اللايف المفصل للمدرس المختار -->
+                        <div class="space-y-3">
+                            <p class="text-xs font-bold text-white"><i class="fa-solid fa-video text-purple-400"></i> سجل ومواعيد الحصص المباشرة (Live Schedule)</p>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-right text-xs">
+                                    <thead>
+                                        <tr class="border-b border-gray-800 text-gray-400 font-bold">
+                                            <th class="pb-2">عنوان الحصة</th>
+                                            <th class="pb-2">التاريخ والتوقيت</th>
+                                            <th class="pb-2 text-center">الحضور الفعلي</th>
+                                            <th class="pb-2 text-left">الحالة التنفيذية</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="live-classes-table" class="divide-y divide-gray-800/40 text-[11px]">
+                                        <tr>
+                                            <td class="py-2.5 text-white font-medium">مراجعة قوانين فاراداي وكيرشوف</td>
+                                            <td class="py-2.5 text-gray-400">اليوم - 04:00 مساءً</td>
+                                            <td class="py-2.5 text-center text-emerald-400 font-bold">412 طالب</td>
+                                            <td class="py-2.5 text-left"><span class="text-emerald-400 font-bold"><i class="fa-solid fa-signal text-[9px] animate-pulse"></i> يتم بثها حالياً</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 text-white font-medium">مقدمة في الفيزياء النووية</td>
+                                            <td class="py-2.5 text-gray-400">الخميس القادم - 02:00 ظهراً</td>
+                                            <td class="py-2.5 text-center text-gray-500">--</td>
+                                            <td class="py-2.5 text-left"><span class="text-amber-500 font-bold">مجدولة منتظرة</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2.5 text-white font-medium">حل الاختبار الشامل الأول بالكهرباء</td>
+                                            <td class="py-2.5 text-gray-400">الأسبوع الماضي</td>
+                                            <td class="py-2.5 text-center text-gray-400">1,050 طالب</td>
+                                            <td class="py-2.5 text-left"><span class="text-gray-500">تمت بنجاح (منتهية)</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. نظام رفع الفيديوهات الاحترافي للسيرفر -->
+            <div id="lectures-tab" class="admin-tab-content admin-dark-card p-6 md:p-8 space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-server text-blue-400"></i> وحدة رفع الفيديوهات الرقمية وحفظها على السيرفر الخاص بالمنصة</h2>
+                </div>
+
+                <form class="space-y-6 bg-[#111] p-6 rounded-xl border border-gray-800">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1.5 font-bold">عنوان المحاضرة والدرس</label>
+                            <input type="text" placeholder="المحاضرة الأولى في الكيمياء العضوية" class="w-full bg-[#161616] border border-[#333] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1.5 font-bold">المرحلة / الصف الدراسي المستهدف</label>
+                            <select class="w-full bg-[#161616] border border-[#333] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                                <option>الصف الأول الثانوي</option>
+                                <option>الصف الثاني الثانوي</option>
+                                <option>الصف الثالث الثانوي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1.5 font-bold">سعر فتح مشاهدة هذه المحاضرة (ل.س)</label>
+                            <input type="number" placeholder="15000" class="w-full bg-[#161616] border border-[#333] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center bg-[#151515] hover:border-blue-500 transition relative">
+                        <input type="file" accept="video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="space-y-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-500"></i>
+                            <p class="text-xs font-bold text-white">اضغط هنا لاختيار ملف الفيديو من جهازك، أو قم بسحبه وإفلاته هنا</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-gray-400">
+                            <span>جاري معالجة ورفع الفيديو وتشفيره على السيرفر الشخصي...</span>
+                            <span class="text-blue-400">68%</span>
+                        </div>
+                        <div class="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-blue-600 h-full rounded-full" style="width: 68%"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-left">
+                        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl"><i class="fa-solid fa-upload ml-1"></i> ابدأ الرفع والمعالجة على السيرفر الآن</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 5. مركز تذاكر الدعم الفني وبث الإشعارات -->
+            <div id="support-tab" class="admin-tab-content admin-dark-card p-6 md:p-8 space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-[#111] p-5 rounded-xl border border-gray-800 space-y-4 lg:col-span-1 flex flex-col justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-cyan-400 border-b border-gray-800 pb-2"><i class="fa-solid fa-bullhorn"></i> إرسال وبث إشعار جماعي فوري</p>
+                            <div class="space-y-3 pt-3">
+                                <textarea rows="4" placeholder="اكتب هنا نص التنبيه لوحة الطالب..." class="w-full bg-[#161616] border border-[#333] rounded-lg px-3 py-2 text-xs text-white focus:outline-none"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="w-full py-2 bg-cyan-700 text-white text-xs font-bold rounded-lg">بث الإشعار الآن</button>
+                    </div>
+
+                    <div class="bg-[#111] p-5 rounded-xl border border-gray-800 lg:col-span-2">
+                        <p class="text-xs font-bold text-white mb-3"><i class="fa-solid fa-headset text-cyan-400"></i> رسائل وتذاكر الدعم الفني الواردة من الطلاب</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right text-xs">
+                                <thead>
+                                    <tr class="border-b border-gray-800 text-gray-400 font-bold">
+                                        <th class="pb-2">رقم التذكرة</th>
+                                        <th class="pb-2">اسم الطالب</th>
+                                        <th class="pb-2">نوع وموضوع الشكوى</th>
+                                        <th class="pb-2 text-left">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800/40 text-[11px]">
+                                    <tr>
+                                        <td class="py-3 text-gray-400">#TK-8912</td>
+                                        <td class="py-3 text-white font-bold">زياد الخالد</td>
+                                        <td class="py-3 text-gray-300">مشكلة في تسجيل كود بطاقة شحن</td>
+                                        <td class="py-3 text-left">
+                                            <button class="bg-cyan-700 text-white px-3 py-1 rounded-lg text-[10px]">فتح والرد الفوري</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. مركز الحظر وسجلات الأمان الصارمة -->
+            <div id="security-tab" class="admin-tab-content admin-dark-card p-6 md:p-8 space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-shield text-red-500"></i> سجلات الأمان ومكافحة مشاركة الحسابات والغش</h2>
+                </div>
+
+                <div class="bg-[#111] p-4 rounded-xl border border-gray-800">
+                    <p class="text-xs font-bold text-white mb-3"><i class="fa-solid fa-ban text-red-500"></i> الطلاب المحظورين تلقائياً بواسطة نظام حماية الأجهزة</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400 font-bold">
+                                    <th class="pb-2">اسم الطالب المخالف</th>
+                                    <th class="pb-2">سبب الحظر التلقائي</th>
+                                    <th class="pb-2">الأجهزة المرصودة</th>
+                                    <th class="pb-2 text-left">الإجراء اليدوي</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/40 text-[11px]">
+                                <tr>
+                                    <td class="py-3 font-bold text-red-400">خالد الحمصي</td>
+                                    <td class="py-3 text-gray-200">تجاوز الحد (دخول متزامن من جهازين)</td>
+                                    <td class="py-3 font-mono text-[10px] text-gray-400">iPhone 14 + Windows PC</td>
+                                    <td class="py-3 text-left">
+                                        <button class="bg-zinc-800 border border-gray-700 text-white px-3 py-1 rounded-lg text-[10px]">فك الحظر وتصفير الأجهزة</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- الفوتر السفلي -->
+    <footer class="w-full text-center text-xs text-gray-500 py-6 border-t border-gray-400/10 mt-6">
+        &copy; 2026 NovaPlatform. نظام الإدارة الفنية الشامل وغرفة العمليات البرمجية الموحدة.
+    </footer>
+
+    <!-- سكربت التحكم والعمليات الحسابية والصرف الفوري للتفاعل والفلترة الذكية -->
+    <script>
+        // المتغيرات المالية للمحاكاة الحية الفورية لكل معلم يتم اختياره
+        let currentTeacherTotal = 450000;
+        let currentTeacherPaid = 300000;
+        let currentTeacherRemaining = 150000;
+
+        // دالة التنقل بين التبويبات الرئيسية
+        function switchTab(tabId, buttonElement) {
+            const contents = document.querySelectorAll('.admin-tab-content');
+            contents.forEach(content => content.classList.remove('active-tab'));
+
+            const buttons = document.querySelectorAll('.menu-grid-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active-tab');
+            buttonElement.classList.add('active');
+        }
+
+        // دالة البحث الفوري داخل قائمة المدرسين
+        function searchTeacher(keyword) {
+            const rows = document.querySelectorAll('.teacher-row');
+            rows.forEach(row => {
+                const name = row.querySelector('.name-field').innerText;
+                if(name.includes(keyword)) {
+                    row.style.display = 'flex';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    // دالة تبديل بيانات المدرس وعرض كشف حساب القبض والحصص ديناميكياً
+        function selectTeacher(name, subject, progress, currentUnit, status, totalEarned, paidAmount, remainingAmount) {
+            document.getElementById('display-teacher-name').innerText = 'أ. ' + name;
+            document.getElementById('display-teacher-subject').innerText = subject;
+            document.getElementById('display-progress-text').innerText = progress;
+            document.getElementById('display-progress-bar').style.width = progress;
+            document.getElementById('display-current-unit').innerText = currentUnit;
+
+            // إسناد المبالغ المالية الجديدة لتحديث الواجهة الرقمية للقبض
+            currentTeacherTotal = totalEarned;
+            currentTeacherPaid = paidAmount;
+            currentTeacherRemaining = remainingAmount;
+            updateFinanceUI();
+
+            const statusLabel = document.getElementById('display-live-status');
+            const tableBody = document.getElementById('live-classes-table');
+
+            if (status === 'live') {
+                statusLabel.innerText = 'بث مباشر الآن';
+                statusLabel.className = 'px-2.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold animate-pulse';
+                tableBody.innerHTML = `
+                    <tr>
+                        <td class="py-2.5 text-white font-medium">مراجعة قوانين فاراداي وكيرشوف</td>
+                        <td class="py-2.5 text-gray-400">اليوم - 04:00 مساءً</td>
+                        <td class="py-2.5 text-center text-emerald-400 font-bold">412 طالب</td>
+                        <td class="py-2.5 text-left"><span class="text-emerald-400 font-bold"><i class="fa-solid fa-signal text-[9px] animate-pulse"></i> يتم بثها حالياً</span></td>
+                    </tr>
+                    <tr>
+                        <td class="py-2.5 text-white font-medium">مقدمة في الفيزياء النووية</td>
+                        <td class="py-2.5 text-gray-400">الخميس القادم - 02:00 ظهراً</td>
+                        <td class="py-2.5 text-center text-gray-500">--</td>
+                        <td class="py-2.5 text-left"><span class="text-amber-500 font-bold">مجدولة منتظرة</span></td>
+                    </tr>
+                `;
+            } else if (status === 'offline') {
+                statusLabel.innerText = 'غير متصل حالياً';
+                statusLabel.className = 'px-2.5 py-1 bg-zinc-700 text-gray-400 rounded-lg text-[10px] font-bold';
+                tableBody.innerHTML = `
+                    <tr>
+                        <td class="py-2.5 text-white font-medium">شرح تركيب الـ DNA وتضاعفه</td>
+                        <td class="py-2.5 text-gray-400">الأسبوع الماضي</td>
+                        <td class="py-2.5 text-center text-gray-400">890 طالب</td>
+                        <td class="py-2.5 text-left"><span class="text-gray-500">تمت بنجاح (منتهية)</span></td>
+                    </tr>
+                `;
+            } else {
+                statusLabel.innerText = 'مجدول اليوم';
+                statusLabel.className = 'px-2.5 py-1 bg-amber-600 text-white rounded-lg text-[10px] font-bold';
+                tableBody.innerHTML = `
+                    <tr>
+                        <td class="py-2.5 text-white font-medium">قواعد النحو والصرف المعمق</td>
+                        <td class="py-2.5 text-gray-400">اليوم - 06:00 مساءً</td>
+                        <td class="py-2.5 text-center text-gray-500">منتظر</td>
+                        <td class="py-2.5 text-left"><span class="text-amber-400 font-bold">يبدأ قريباً</span></td>
+                    </tr>
+                `;
+            }
+        }
+
+        // دالة تحديث الأرقام بداخل واجهة كشف الحساب المالي
+        function updateFinanceUI() {
+            document.getElementById('finance-total').innerText = currentTeacherTotal.toLocaleString() + ' ل.س';
+            document.getElementById('finance-paid').innerText = currentTeacherPaid.toLocaleString() + ' ل.س';
+            document.getElementById('finance-remaining').innerText = currentTeacherRemaining.toLocaleString() + ' ل.س';
+        }
+
+        // دالة تأييد وتسجيل الدفعات المالية للمدرسين يدويًا
+        function processPayoutHand() {
+            const amountInput = document.getElementById('payout-amount');
+            const amount = parseInt(amountInput.value);
+
+            if (!amount || amount <= 0) {
+                alert('الرجاء إدخال مبلغ صحيح ومقبول لتأييد عملية القبض!');
+                return;
+            }
+
+            if (amount > currentTeacherRemaining) {
+                alert('خطأ: المبلغ المُراد صرفه يتجاوز إجمالي المتبقي الفعلي في ذمة المعلم!');
+                return;
+            }
+
+            // تعديل الحسابات الحية بداخل الصفحة تزامناً مع الدفعة المسجلة
+            currentTeacherPaid += amount;
+            currentTeacherRemaining -= amount;
+            
+            updateFinanceUI();
+            amountInput.value = '';
+            alert('تم تأييد الدفعة المالية وتسجيلها بنجاح داخل حساب المعلم المختار!');
+        }
+    </script>
+</body>
+</html>
