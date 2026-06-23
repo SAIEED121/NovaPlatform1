@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | اختيار نوع الحساب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #dcd9d4;
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.8), rgba(220, 217, 212, 0.8)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            background-attachment: fixed;
+        }
+        .main-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        .inner-box {
+            background-color: #111;
+            border: 1px solid #222;
+        }
+        .btn-burgundy {
+            background-color: #801A24;
+            transition: background-color 0.2s;
+        }
+        .btn-burgundy:hover {
+            background-color: #a32230;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-sans antialiased text-gray-200">
+
+    <!-- الهيدر العلوي -->
+    <header class="w-full p-6 bg-transparent relative z-10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                Nova<span class="font-light text-gray-800">Platform</span>
+            </div>
+            <div class="flex items-center space-x-4 space-x-reverse opacity-50">
+                <i class="fa-solid fa-graduation-cap text-2xl text-gray-800"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="w-full max-w-6xl mx-auto my-auto flex flex-col items-center justify-center p-4 relative z-10">
+        
+        <div class="text-center mb-12 space-y-1">
+            <p class="text-xs font-bold text-[#801A24] tracking-widest uppercase">الخطوة 1 من 2</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-900">اختيار نوع الحساب</h1>
+            <p class="text-sm text-gray-600 font-medium pt-1">اختر المسار الذي يناسبك للبدء في المنصة</p>
+        </div>
+
+        <!-- شبكة الكروت: [الإدارة ➔ المعلم ➔ الطالب] -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-4 max-w-5xl">
+            
+            <!-- كارت الإدارة -->
+            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+                <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
+                    <i class="fa-solid fa-desktop text-4xl"></i>
+                </div>
+                <div class="text-center flex-1 flex flex-col justify-between w-full">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-2">خانة الإدارة</h2>
+                        <p class="text-xs text-gray-400 leading-relaxed px-2">تقارير شاملة ولوحة تحكم متكاملة من الية انجيود، خانة الحساب.</p>
+                    </div>
+                    <div class="pt-6">
+                        <a href="admin.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                            إنشاء حساب
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- كارت المعلم -->
+            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+                <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
+                    <i class="fa-solid fa-chalkboard-user text-4xl"></i>
+                </div>
+                <div class="text-center flex-1 flex flex-col justify-between w-full">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-2">خانة المعلم</h2>
+                        <p class="text-xs text-gray-400 leading-relaxed px-2">أدوات لإدارة الفصول ومتابعة الطلاب خانة، حائبية الحسابية.</p>
+                    </div>
+                    <div class="pt-6">
+                        <a href="teacher.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                            إنشاء حساب
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- كارت الطالب -->
+            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+                <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
+                    <i class="fa-solid fa-user-graduate text-4xl"></i>
+                </div>
+                <div class="text-center flex-1 flex flex-col justify-between w-full">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-2">خانة الطالب</h2>
+                        <p class="text-xs text-gray-400 leading-relaxed px-2">المتّبعل إلى جميع المناهج والموارد مجيع الطالب بالاقتنسائية.</p>
+                    </div>
+                    <div class="pt-6">
+                        <a href="student.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                            إنشاء حساب
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- الفوتر السفلي -->
+    <footer class="w-full text-center text-xs text-gray-500 py-6 bg-transparent relative z-10">
+        &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
+    </footer>
+
+</body>
+</html>
