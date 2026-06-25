@@ -7,38 +7,76 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+        
         body {
-            background-color: #dcd9d4;
-            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.8), rgba(220, 217, 212, 0.8)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            font-family: 'Cairo', sans-serif;
+            background-color: #e3e0da;
+            /* نقوش هندسية فخمة في الخلفية */
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(128, 26, 36, 0.03) 0px, transparent 50%),
+                radial-gradient(at 80% 80%, rgba(128, 26, 36, 0.03) 0px, transparent 50%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23801a24' fill-opacity='0.04'%3E%3Cpath fill-rule='evenodd' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 9c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm1 61c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zM11 72c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM61 5c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM42 32c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-18 19c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm53 2c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 42c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm58-20c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM27 16c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm37 46c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/svg%3E");
             background-attachment: fixed;
         }
-        .main-card {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+
+        /* حركات ومؤثرات زجاجية متطورة للكروت */
+        .glass-card {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
+
+        /* الأنيميشن عند مرور الماوس */
+        .glass-card:hover {
+            transform: translateY(-10px);
+            background: rgba(30, 30, 30, 0.98);
+            border-color: rgba(128, 26, 36, 0.4);
+            box-shadow: 0 25px 50px rgba(128, 26, 36, 0.15);
+        }
+
         .inner-box {
-            background-color: #111;
-            border: 1px solid #222;
+            background-color: rgba(17, 17, 17, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
         }
+        
+        .glass-card:hover .inner-box {
+            background-color: rgba(17, 17, 17, 0.9);
+            color: #801A24;
+        }
+
         .btn-burgundy {
             background-color: #801A24;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(128, 26, 36, 0.2);
         }
-        .btn-burgundy:hover {
+        
+        .glass-card:hover .btn-burgundy {
             background-color: #a32230;
+            box-shadow: 0 6px 20px rgba(163, 34, 48, 0.4);
+            transform: scale(1.02);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between font-sans antialiased text-gray-200">
+<body class="min-h-screen flex flex-col justify-between antialiased text-gray-200 select-none">
 
     <!-- الهيدر العلوي -->
     <header class="w-full p-6 bg-transparent relative z-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
-                Nova<span class="font-light text-gray-800">Platform</span>
+            <div class="flex flex-col md:flex-row md:items-baseline md:gap-3">
+                <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                    Nova<span class="font-light text-gray-800">Platform</span>
+                </div>
+                <!-- إضافة الجملة المطلوبة هنا -->
+                <span class="text-xs font-semibold text-gray-500 bg-gray-300/50 px-2 py-0.5 rounded-md mt-1 md:mt-0">
+                    النظام التعليمي الأقوى
+                </span>
             </div>
-            <div class="flex items-center space-x-4 space-x-reverse opacity-50">
+            <div class="flex items-center space-x-4 space-x-reverse opacity-40">
                 <i class="fa-solid fa-graduation-cap text-2xl text-gray-800"></i>
             </div>
         </div>
@@ -47,19 +85,19 @@
     <!-- المحتوى الرئيسي -->
     <main class="w-full max-w-6xl mx-auto my-auto flex flex-col items-center justify-center p-4 relative z-10">
         
-        <div class="text-center mb-12 space-y-1">
-            <p class="text-xs font-bold text-[#801A24] tracking-widest uppercase">الخطوة 1 من 2</p>
-            <h1 class="text-3xl md:text-4xl font-black text-gray-900">اختيار نوع الحساب</h1>
-            <p class="text-sm text-gray-600 font-medium pt-1">اختر المسار الذي يناسبك للبدء في المنصة</p>
+        <div class="text-center mb-12 space-y-2">
+            <p class="text-xs font-bold text-[#801A24] tracking-widest uppercase bg-[#801A24]/10 px-3 py-1 rounded-full inline-block">الخطوة 1 من 2</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">اختيار نوع الحساب</h1>
+            <p class="text-sm text-gray-600 font-medium">اختر المسار الذي يناسبك للبدء في المنصة</p>
         </div>
 
         <!-- شبكة الكروت: [الإدارة ➔ المعلم ➔ الطالب] -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-4 max-w-5xl">
             
             <!-- كارت الإدارة -->
-            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[410px]">
                 <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
-                    <i class="fa-solid fa-desktop text-4xl"></i>
+                    <i class="fa-solid fa-desktop text-4xl transition-transform duration-300"></i>
                 </div>
                 <div class="text-center flex-1 flex flex-col justify-between w-full">
                     <div>
@@ -67,7 +105,7 @@
                         <p class="text-xs text-gray-400 leading-relaxed px-2">تقارير شاملة ولوحة تحكم متكاملة من الية انجيود، خانة الحساب.</p>
                     </div>
                     <div class="pt-6">
-                        <a href="admin.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                        <a href="admin-login.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
                             إنشاء حساب
                         </a>
                     </div>
@@ -75,9 +113,9 @@
             </div>
 
             <!-- كارت المعلم -->
-            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[410px]">
                 <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
-                    <i class="fa-solid fa-chalkboard-user text-4xl"></i>
+                    <i class="fa-solid fa-chalkboard-user text-4xl transition-transform duration-300"></i>
                 </div>
                 <div class="text-center flex-1 flex flex-col justify-between w-full">
                     <div>
@@ -85,7 +123,7 @@
                         <p class="text-xs text-gray-400 leading-relaxed px-2">أدوات لإدارة الفصول ومتابعة الطلاب خانة، حائبية الحسابية.</p>
                     </div>
                     <div class="pt-6">
-                        <a href="teacher.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                        <a href="teacher-login.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
                             إنشاء حساب
                         </a>
                     </div>
@@ -93,9 +131,9 @@
             </div>
 
             <!-- كارت الطالب -->
-            <div class="main-card rounded-2xl p-6 flex flex-col justify-between min-h-[400px]">
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between min-h-[410px]">
                 <div class="w-full h-32 inner-box rounded-xl mb-6 flex items-center justify-center text-gray-400">
-                    <i class="fa-solid fa-user-graduate text-4xl"></i>
+                    <i class="fa-solid fa-user-graduate text-4xl transition-transform duration-300"></i>
                 </div>
                 <div class="text-center flex-1 flex flex-col justify-between w-full">
                     <div>
@@ -103,7 +141,7 @@
                         <p class="text-xs text-gray-400 leading-relaxed px-2">المتّبعل إلى جميع المناهج والموارد مجيع الطالب بالاقتنسائية.</p>
                     </div>
                     <div class="pt-6">
-                        <a href="student.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
+                        <a href="student-login.html" class="btn-burgundy w-full block text-center py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase">
                             إنشاء حساب
                         </a>
                     </div>
