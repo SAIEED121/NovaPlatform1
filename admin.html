@@ -440,6 +440,53 @@
                         </div>
 
                     </div>
+
+                    <div class="border-t border-gray-800 pt-6 space-y-3 mt-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xs font-bold text-emerald-400"><i class="fa-solid fa-chalkboard-user"></i> إدارة حسابات وتوليد إيميلات المعلمين</h3>
+                                <p class="text-[10px] text-gray-500 mt-0.5">قم بتوليد إيميلات خاصة للمعلمين للتسجيل بها، أو التحكم الفوري في تفعيل وحذف حساباتهم.</p>
+                            </div>
+                            <button onclick="generateTeacherEmail()" class="bg-emerald-500 hover:bg-emerald-600 text-black text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors">
+                                <i class="fa-solid fa-plus"></i> توليد إيميل معلم جديد
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto text-[11px]">
+                            <table class="w-full text-right">
+                                <thead>
+                                    <tr class="border-b border-gray-800 text-gray-500">
+                                        <th class="pb-2">الإيميل المستخرج</th>
+                                        <th class="pb-2">اسم المعلم</th>
+                                        <th class="pb-2">المادة الدراسية</th>
+                                        <th class="pb-2 text-center">حالة الحساب (نشط / معطل)</th>
+                                        <th class="pb-2 text-center">إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teachers-table-body" class="divide-y divide-gray-800/30 text-gray-300">
+                                    <tr class="hover:bg-white/5 teacher-row">
+                                        <td class="py-3 font-mono text-emerald-400 font-bold select-all">teacher.said@nova.com</td>
+                                        <td class="py-3 font-bold text-white">أ. سعيد أحمد</td>
+                                        <td class="py-3">الفيزياء</td>
+                                        <td class="py-3 flex justify-center">
+                                            <div class="flex items-center relative cursor-pointer">
+                                                <input type="checkbox" id="teacher-1" class="teacher-toggle hidden" checked>
+                                                <label for="teacher-1" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
+                                                    <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
+                                                </label>
+                                                <span class="text-[10px] text-emerald-400 font-bold mr-2 teacher-status">نشط (يعمل)</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 text-center">
+                                            <button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                                                <i class="fa-solid fa-trash-can"></i> حذف
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -826,8 +873,57 @@
             });
         }
 
+        function initTeacherToggles() {
+            document.querySelectorAll('.teacher-toggle').forEach(item => {
+                if (item.dataset.listened) return;
+                item.dataset.listened = true;
+
+                item.addEventListener('change', function() {
+                    const labelSpan = this.parentElement.querySelector('.teacher-status');
+                    if (this.checked) {
+                        labelSpan.innerText = 'نشط (يعمل)';
+                        labelSpan.className = 'text-[10px] text-emerald-400 font-bold mr-2 teacher-status';
+                    } else {
+                        labelSpan.innerText = 'معطل (موقوف)';
+                        labelSpan.className = 'text-[10px] text-rose-400 font-bold mr-2 teacher-status';
+                    }
+                });
+            });
+        }
+
+        function generateTeacherEmail() {
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            const generatedEmail = `teacher.${randomId}@nova.com`;
+            const tableBody = document.getElementById('teachers-table-body');
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-white/5 teacher-row border-b border-gray-800/30 text-gray-300';
+            newRow.innerHTML = `
+                <td class="py-3 font-mono text-emerald-400 font-bold select-all">${generatedEmail}</td>
+                <td class="py-3 font-bold text-white">معلم جديد معلق</td>
+                <td class="py-3">لم تحدد بعد</td>
+                <td class="py-3 flex justify-center">
+                    <div class="flex items-center relative cursor-pointer">
+                        <input type="checkbox" id="teacher-${randomId}" class="teacher-toggle hidden" checked>
+                        <label for="teacher-${randomId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
+                            <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
+                        </label>
+                        <span class="text-[10px] text-emerald-400 font-bold mr-2 teacher-status">نشط (يعمل)</span>
+                    </div>
+                </td>
+                <td class="py-3 text-center">
+                    <button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                        <i class="fa-solid fa-trash-can"></i> حذف
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+            initTeacherToggles();
+            alert(`تم توليد إيميل جديد بنجاح:\n${generatedEmail}\n\nقم بنسخه وإعطائه للمعلم ليسجل به.`);
+        }
+
         updateStudentSubscriptionRows();
         setInterval(updateStudentSubscriptionRows, 1000);
+        initTeacherToggles();
     // دالة تبديل بيانات المدرس وعرض كشف حساب القبض والحصص ديناميكياً
         function selectTeacher(name, subject, progress, currentUnit, status, totalEarned, paidAmount, remainingAmount) {
             document.getElementById('display-teacher-name').innerText = 'أ. ' + name;
