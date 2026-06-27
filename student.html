@@ -80,6 +80,16 @@
 
     <main class="w-full max-w-7xl mx-auto p-4 md:p-8 flex-1 space-y-8 relative z-10">
 
+        <div id="grace-period-banner" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6 flex justify-between items-center text-right">
+            <div>
+                <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-triangle-exclamation animate-pulse"></i> تنبيه: انتهى اشتراكك الحالي!
+                </h4>
+                <p class="text-[11px] text-gray-400 mt-1">متبقي لديك <span class="text-amber-400 font-bold" id="grace-days-count">3</span> أيام كمهلة لتجديد الاشتراك، برجاء الشحن لتجنب إغلاق المنصة بالكامل.</p>
+            </div>
+            <button onclick="location.href='#payment-section'" class="bg-amber-500 hover:bg-amber-600 text-black text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors">تجديد الآن</button>
+        </div>
+
         <section class="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div class="premium-dark-card p-5 flex items-center justify-between">
                 <div><p class="text-xs text-gray-400 font-medium">المواد المشترك بها</p><p class="text-2xl font-black text-white mt-1">4 مواد</p></div>
@@ -323,6 +333,46 @@
     <footer class="w-full text-center text-xs text-gray-600 py-6 border-t border-gray-400/10 mt-6">
         &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
     </footer>
+
+    <div id="block-screen" class="hidden fixed inset-0 bg-[#09090b]/95 z-[9999] flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
+        <div class="bg-[#18181b] border border-red-500/20 p-8 rounded-2xl max-w-sm space-y-4 shadow-2xl">
+            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center text-2xl mx-auto">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white">تم إغلاق الحساب مؤقتاً</h3>
+            <p class="text-[11px] text-gray-400 leading-relaxed">انتهت مهلة الـ 3 أيام المتاحة لتجديد اشتراكك. يرجى التواصل مع الإدارة أو شحن حسابك لتفعيل المنصة مجدداً.</p>
+            <button onclick="location.href='#support'" class="w-full bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold py-2 rounded-lg transition-colors">تواصل مع الدعم الفني</button>
+        </div>
+    </div>
+
+    <script>
+        const studentSubscription = {
+            isActive: false,
+            graceDaysLeft: 3
+        };
+
+        function checkSubscriptionAccess() {
+            const banner = document.getElementById('grace-period-banner');
+            const blockScreen = document.getElementById('block-screen');
+            const graceCount = document.getElementById('grace-days-count');
+
+            if (!studentSubscription.isActive) {
+                if (studentSubscription.graceDaysLeft > 0) {
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        graceCount.innerText = studentSubscription.graceDaysLeft;
+                    }
+                } else {
+                    if (blockScreen) {
+                        blockScreen.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSubscriptionAccess);
+    </script>
 
 </body>
 </html>
