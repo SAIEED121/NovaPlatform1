@@ -59,13 +59,13 @@
                 <!-- خانة البريد الإلكتروني -->
                 <div class="flex flex-col space-y-1">
                     <label class="text-xs font-semibold text-gray-300">البريد الإلكتروني الحسابي</label>
-                    <input type="email" placeholder="teacher@novaplatform.com" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                    <input id="teacher-email" name="teacher-email" type="email" placeholder="teacher@novaplatform.com" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
                 </div>
 
                 <!-- خانة كلمة المرور -->
                 <div class="flex flex-col space-y-1">
                     <label class="text-xs font-semibold text-gray-300">كلمة المرور</label>
-                    <input type="password" placeholder="••••••••" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                    <input id="teacher-password" name="teacher-password" type="password" placeholder="••••••••" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
                 </div>
 
                 <!-- قائمة اختيار المادة التعليمية الخاصة بالمدرس -->
@@ -86,9 +86,10 @@
                 </div>
 
                 <!-- زر الدخول المباشر للوحة المعلم -->
-                <button type="submit" onclick="window.location.href='teacher.html'; return false;" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-4">
+                <button type="submit" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-4">
                     دخول لوحة التحكم الذكية
                 </button>
+                <div id="teacher-login-alert" class="hidden mt-3 rounded-lg border border-[#801A24]/40 bg-[#801A24]/10 px-3 py-2 text-sm text-[#f5c2c7] text-center"></div>
             </form>
 
             <!-- تنويه أمان أسفل الكارت -->
@@ -106,6 +107,40 @@
     <footer class="w-full text-center text-xs text-gray-500 py-6 bg-transparent relative z-10">
         &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('form-teacher-login');
+            const emailInput = document.getElementById('teacher-email');
+            const passwordInput = document.getElementById('teacher-password');
+            const alertBox = document.getElementById('teacher-login-alert');
+
+            if (!form || !emailInput || !passwordInput) return;
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const enteredEmail = emailInput.value.trim();
+                const enteredPassword = passwordInput.value;
+
+                if (enteredEmail === 'teacher@nova.com' && enteredPassword === 'teacher123') {
+                    if (alertBox) {
+                        alertBox.textContent = '';
+                        alertBox.classList.add('hidden');
+                    }
+                    window.location.href = 'teacher.html';
+                    return;
+                }
+
+                if (alertBox) {
+                    alertBox.textContent = 'عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة!';
+                    alertBox.classList.remove('hidden');
+                } else {
+                    alert('عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
