@@ -289,17 +289,19 @@
                                     <th class="pb-2">المبلغ</th>
                                     <th class="pb-2">عبر وسيلة</th>
                                     <th class="pb-2">رقم الحوالة</th>
+                                    <th class="pb-2">كود الطالب</th>
                                     <th class="pb-2 text-left">الإجراء</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-800/40 text-[11px]">
+                            <tbody id="pending-payments-tbody" class="divide-y divide-gray-800/40 text-[11px]">
                                 <tr>
                                     <td class="py-3 text-white">وسيم النجار</td>
                                     <td class="py-3 text-emerald-400 font-bold">50,000 ل.س</td>
                                     <td class="py-3 text-amber-500">سيريتل كاش</td>
                                     <td class="py-3 font-mono text-gray-400">TXN-9823719283</td>
+                                    <td class="py-3 font-mono text-gray-300">#NV-8821</td>
                                     <td class="py-3 text-left space-x-1 space-x-reverse">
-                                        <button onclick="approvePaymentAndCreateAccount(this, 'وسيم النجار', 'علمي علوم')" class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
+                                        <button onclick="approvePaymentAndCreateAccount(this, 'وسيم النجار', 'علمي علوم', '#NV-8821')" class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
                                         <button class="bg-red-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">رفض</button>
                                     </td>
                                 </tr>
@@ -326,7 +328,8 @@
                                         <th class="pb-2">اسم الطالب</th>
                                         <th class="pb-2">الحساب المستخرج (الإيميل)</th>
                                         <th class="pb-2">كلمة المرور</th>
-                                        <th class="pb-2">المرحلة والتخصص</th>
+                                        <th class="pb-2">المرحلة/التخصص</th>
+                                        <th class="pb-2">المواد المختارة</th>
                                         <th class="pb-2 text-center">حالة الصلاحية (تشغيل الفيديوهات)</th>
                                         <th class="pb-2 text-center">إجراءات</th>
                                     </tr>
@@ -338,8 +341,11 @@
                                         <td class="py-3 font-mono text-emerald-400 select-all">student.8821@nova.com</td>
                                         <td class="py-3 font-mono text-gray-400 select-all">pass8821</td>
                                         <td class="py-3">
-                                            <span class="text-white">الصف الثالث الثانوي</span>
-                                            <span class="mr-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[9px] font-bold">علمي علوم</span>
+                                            <span class="inline-flex items-center gap-1 text-white"><i class="fa-solid fa-graduation-cap text-[#801A24]"></i> الصف الثالث الثانوي - علمي</span>
+                                        </td>
+                                        <td class="py-3 max-w-[240px]">
+                                            <span class="bg-[#801A24]/10 text-[#a32230] border border-[#801A24]/20 px-2 py-0.5 rounded-md text-[11px] font-semibold inline-block m-0.5">فيزياء</span>
+                                            <span class="bg-[#801A24]/10 text-[#a32230] border border-[#801A24]/20 px-2 py-0.5 rounded-md text-[11px] font-semibold inline-block m-0.5">كيمياء</span>
                                         </td>
                                         <td class="py-3 flex justify-center">
                                             <div class="flex items-center relative cursor-pointer">
@@ -800,7 +806,55 @@
             });
         }
 
-        function approvePaymentAndCreateAccount(buttonElement, studentName, defaultBranch) {
+        function formatGradeBranch(grade, branch) {
+            const gradeText = grade || 'غير محدد';
+            const branchText = branch && branch.trim() && branch !== 'عام' ? branch.trim() : '';
+            return branchText ? `${gradeText} - ${branchText}` : gradeText;
+        }
+
+        function renderSubjectBadges(subjects) {
+            const list = Array.isArray(subjects) ? subjects.filter(Boolean) : [];
+            if (list.length === 0) {
+                return '<span class="text-[11px] text-gray-500">عام / لا يوجد</span>';
+            }
+            return list.map(subject => `
+                <span class="bg-[#801A24]/10 text-[#a32230] border border-[#801A24]/20 px-2 py-0.5 rounded-md text-[11px] font-semibold inline-block m-0.5">
+                    ${subject}
+                </span>
+            `).join('');
+        }
+
+        function buildStudentRowMarkup({ studentCode, name, email, password, grade, branch, subjects, isEnabled = true, rowId = '' }) {
+            const gradeBranchText = formatGradeBranch(grade, branch);
+            const subjectBadges = renderSubjectBadges(subjects);
+            const toggleId = rowId || `user-${Math.random().toString(36).slice(2, 8)}`;
+            return `
+                <td class="py-3 font-mono text-gray-600">${studentCode}</td>
+                <td class="py-3 font-bold text-white">${name}</td>
+                <td class="py-3 font-mono text-emerald-400 select-all">${email}</td>
+                <td class="py-3 font-mono text-gray-400 select-all">${password}</td>
+                <td class="py-3">
+                    <span class="inline-flex items-center gap-1 text-white"><i class="fa-solid fa-graduation-cap text-[#801A24]"></i> ${gradeBranchText}</span>
+                </td>
+                <td class="py-3 max-w-[240px]">${subjectBadges}</td>
+                <td class="py-3 flex justify-center">
+                    <div class="flex items-center relative cursor-pointer">
+                        <input type="checkbox" id="${toggleId}" class="toggle-checkbox hidden" ${isEnabled ? 'checked' : ''}>
+                        <label for="${toggleId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
+                            <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
+                        </label>
+                        <span class="text-[10px] ${isEnabled ? 'text-emerald-400' : 'text-rose-400'} font-bold mr-2 status-text">${isEnabled ? 'شاحن (مفتوح)' : 'غير شاحن (مغلق)'}</span>
+                    </div>
+                </td>
+                <td class="py-3 text-center">
+                    <button onclick="this.closest('tr').remove(); existingStudentEmails.delete('${email}');" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                        <i class="fa-solid fa-trash-can"></i> حذف
+                    </button>
+                </td>
+            `;
+        }
+
+        function approvePaymentAndCreateAccount(buttonElement, studentName, defaultBranch, studentCode) {
             const pendingRow = buttonElement.closest('tr');
             if (pendingRow) pendingRow.remove();
 
@@ -816,39 +870,58 @@
 
             existingStudentEmails.add(generatedEmail);
             const generatedPassword = `pass${randomId}`;
+            const finalStudentCode = studentCode || `#NV-${randomId}`;
 
             const tableBody = document.getElementById('students-table-body');
             if (tableBody) {
                 const newRow = document.createElement('tr');
                 newRow.className = 'hover:bg-white/5 student-row border-b border-gray-800/30 text-gray-300';
-                newRow.innerHTML = `
-                    <td class="py-3 font-mono text-gray-600">#NV-${randomId}</td>
-                    <td class="py-3 font-bold text-white">${name}</td>
-                    <td class="py-3 font-mono text-emerald-400 select-all">${generatedEmail}</td>
-                    <td class="py-3 font-mono text-gray-400 select-all">${generatedPassword}</td>
-                    <td class="py-3">
-                        <span class="text-white">الصف الثالث الثانوي</span>
-                        <span class="mr-1 px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[9px] font-bold">${branch}</span>
-                    </td>
-                    <td class="py-3 flex justify-center">
-                        <div class="flex items-center relative cursor-pointer">
-                            <input type="checkbox" id="user-${randomId}" class="toggle-checkbox hidden" checked>
-                            <label for="user-${randomId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
-                                <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
-                            </label>
-                            <span class="text-[10px] text-emerald-400 font-bold mr-2 status-text">شاحن (مفتوح)</span>
-                        </div>
-                    </td>
-                    <td class="py-3 text-center">
-                        <button onclick="this.closest('tr').remove(); existingStudentEmails.delete('${generatedEmail}');" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
-                            <i class="fa-solid fa-trash-can"></i> حذف
-                        </button>
-                    </td>
-                `;
+                newRow.innerHTML = buildStudentRowMarkup({
+                    studentCode: finalStudentCode,
+                    name,
+                    email: generatedEmail,
+                    password: generatedPassword,
+                    grade: 'الصف الثالث الثانوي',
+                    branch,
+                    subjects: ['فيزياء', 'كيمياء'],
+                    isEnabled: true,
+                    rowId: `user-${randomId}`
+                });
                 tableBody.appendChild(newRow);
                 if (typeof initStudentToggles === 'function') initStudentToggles();
                 alert(`تم قبول طلب الشحن وتوليد حساب فريد بنجاح!\n\nاسم الطالب: ${name}\nالإيميل الخاص به: ${generatedEmail}\nكلمة المرور: ${generatedPassword}\n\nالحساب مأمن ومستحيل يتكرر مع طالب آخر.`);
             }
+        }
+
+        function renderPendingPayments() {
+            const tbody = document.getElementById('pending-payments-tbody');
+            if (!tbody) return;
+
+            const pendingRequests = JSON.parse(localStorage.getItem('novaPendingRequests') || '[]');
+            const paymentRequests = pendingRequests.filter(item => item.type === 'payment-receipt');
+
+            tbody.innerHTML = '';
+
+            if (paymentRequests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-3 text-center text-gray-500">لا توجد طلبات شحن معلقة حالياً.</td></tr>';
+                return;
+            }
+
+            paymentRequests.forEach(request => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-3 text-white">${request.studentName || 'طالب غير محدد'}</td>
+                    <td class="py-3 text-emerald-400 font-bold">${request.amount || '—'}</td>
+                    <td class="py-3 text-amber-500">${request.method || '—'}</td>
+                    <td class="py-3 font-mono text-gray-400">${request.transferNumber || '—'}</td>
+                    <td class="py-3 font-mono text-gray-300">${request.studentCode || '—'}</td>
+                    <td class="py-3 text-left space-x-1 space-x-reverse">
+                        <button onclick="approvePaymentAndCreateAccount(this, '${request.studentName || 'طالب غير محدد'}', 'علمي علوم', '${request.studentCode || ''}')" class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
+                        <button class="bg-red-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">رفض</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         function generateStudentAccount() {
@@ -861,30 +934,17 @@
             const tableBody = document.getElementById('students-table-body');
             const newRow = document.createElement('tr');
             newRow.className = 'hover:bg-white/5 student-row border-b border-gray-800/30 text-gray-300';
-            newRow.innerHTML = `
-                <td class="py-3 font-mono text-gray-600">#NV-${randomId}</td>
-                <td class="py-3 font-bold text-white">${studentName}</td>
-                <td class="py-3 font-mono text-emerald-400 select-all">${generatedEmail}</td>
-                <td class="py-3 font-mono text-gray-400 select-all">${generatedPassword}</td>
-                <td class="py-3">
-                    <span class="text-white">الصف الثالث الثانوي</span>
-                    <span class="mr-1 px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[9px] font-bold">${studentBranch}</span>
-                </td>
-                <td class="py-3 flex justify-center">
-                    <div class="flex items-center relative cursor-pointer">
-                        <input type="checkbox" id="user-${randomId}" class="toggle-checkbox hidden" checked>
-                        <label for="user-${randomId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
-                            <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
-                        </label>
-                        <span class="text-[10px] text-emerald-400 font-bold mr-2 status-text">شاحن (مفتوح)</span>
-                    </div>
-                </td>
-                <td class="py-3 text-center">
-                    <button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
-                        <i class="fa-solid fa-trash-can"></i> حذف
-                    </button>
-                </td>
-            `;
+            newRow.innerHTML = buildStudentRowMarkup({
+                studentCode: `#NV-${randomId}`,
+                name: studentName,
+                email: generatedEmail,
+                password: generatedPassword,
+                grade: 'الصف الثالث الثانوي',
+                branch: studentBranch,
+                subjects: ['فيزياء', 'أحياء'],
+                isEnabled: true,
+                rowId: `user-${randomId}`
+            });
             tableBody.appendChild(newRow);
             initStudentToggles();
             alert(`تم توليد حساب الطالب بنجاح!\nالإيميل: ${generatedEmail}\nالباسورد: ${generatedPassword}\n\nخذه كوبي وأعطه للطالب.`);
@@ -920,6 +980,33 @@
                 });
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPendingPayments();
+
+            const savedGrade = localStorage.getItem('studentGrade') || '';
+            const savedBranch = localStorage.getItem('studentBranch') || '';
+            const savedSubjects = JSON.parse(localStorage.getItem('studentSubjects')) || [];
+            const tableBody = document.getElementById('students-table-body');
+
+            if (tableBody && (savedGrade || savedBranch || savedSubjects.length)) {
+                const dynamicRow = document.createElement('tr');
+                dynamicRow.className = 'hover:bg-white/5 student-row border-b border-gray-800/30 text-gray-300';
+                dynamicRow.innerHTML = buildStudentRowMarkup({
+                    studentCode: '#NV-NEW',
+                    name: 'طالب مسجل حديثاً',
+                    email: 'student.new@nova.com',
+                    password: '—',
+                    grade: savedGrade || 'الصف الأول الثانوي',
+                    branch: savedBranch || '',
+                    subjects: savedSubjects,
+                    isEnabled: true,
+                    rowId: 'user-dynamic'
+                });
+                tableBody.insertBefore(dynamicRow, tableBody.firstChild);
+                if (typeof initStudentToggles === 'function') initStudentToggles();
+            }
+        });
 
         function generateTeacherEmail() {
             const randomId = Math.floor(1000 + Math.random() * 9000);
