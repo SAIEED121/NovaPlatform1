@@ -16,6 +16,7 @@
             background-color: #1a1a1a;
             border: 1px solid #333;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: visible;
         }
         .btn-burgundy {
             background-color: #801A24;
@@ -89,22 +90,22 @@
 
                 <div class="flex flex-col space-y-1">
                     <label class="text-xs font-semibold text-gray-300">المرحلة الدراسية</label>
-                    <select id="student-grade" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
-                        <option value="" disabled selected class="text-gray-500">اختر سنتك الدراسية...</option>
-                        <optgroup label="المرحلة الثانوية" class="bg-[#1a1a1a]">
-                            <option value="sec-1">الصف الأول الثانوي</option>
-                            <option value="sec-2">الصف الثاني الثانوي</option>
-                            <option value="sec-3">الصف الثالث الثانوي</option>
+                    <select id="student-grade" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-xs outline-none focus:border-[#801A24] cursor-pointer" required>
+                        <option value="" disabled selected>اختر مرحلتك الدراسية...</option>
+                        <optgroup label="المرحلة الثانوية">
+                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
                         </optgroup>
-                        <optgroup label="المرحلة الإعدادية" class="bg-[#1a1a1a]">
-                            <option value="prep-1">الصف الأول الإعدادي</option>
-                            <option value="prep-2">الصف الثاني الإعدادي</option>
-                            <option value="prep-3">الصف الثالث الإعدادي</option>
+                        <optgroup label="المرحلة الإعدادية">
+                            <option value="الصف الأول الإعدادي">الصف الأول الإعدادي</option>
+                            <option value="الصف الثاني الإعدادي">الصف الثاني الإعدادي</option>
+                            <option value="الصف الثالث الإعدادي">الصف الثالث الإعدادي</option>
                         </optgroup>
-                        <optgroup label="المرحلة الابتدائية" class="bg-[#1a1a1a]">
-                            <option value="prim-4">الصف الرابع الابتدائي</option>
-                            <option value="prim-5">الصف الخامس الابتدائي</option>
-                            <option value="prim-6">الصف السادس الابتدائي</option>
+                        <optgroup label="المرحلة الابتدائية">
+                            <option value="الصف الرابع الابتدائي">الصف الرابع الابتدائي</option>
+                            <option value="الصف الخامس الابتدائي">الصف الخامس الابتدائي</option>
+                            <option value="الصف السادس الابتدائي">الصف السادس الابتدائي</option>
                         </optgroup>
                     </select>
                 </div>
@@ -162,13 +163,20 @@
             const loginInput = document.getElementById('student-login-code');
 
             if (gradeSelect && branchContainer) {
-                gradeSelect.addEventListener('change', function() {
-                    if (this.value === 'sec-3') {
+                const toggleBranchContainer = () => {
+                    if (gradeSelect.value === 'الصف الثالث الثانوي') {
                         branchContainer.classList.remove('hidden');
+                        branchContainer.classList.add('flex');
+                        branchContainer.style.opacity = '1';
+                        branchContainer.style.transition = 'all 0.25s ease';
                     } else {
                         branchContainer.classList.add('hidden');
+                        branchContainer.classList.remove('flex');
                     }
-                });
+                };
+
+                gradeSelect.addEventListener('change', toggleBranchContainer);
+                toggleBranchContainer();
             }
 
             if (loginForm && loginInput) {
