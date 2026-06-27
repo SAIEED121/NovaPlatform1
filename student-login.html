@@ -3,513 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaPlatform | لوحة تحكم الطالب المتكاملة</title>
+    <title>NovaPlatform | بوابة الطالب</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Cairo', sans-serif;
             background-color: #dcd9d4;
-            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.9), rgba(220, 217, 212, 0.9)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.8), rgba(220, 217, 212, 0.8)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
             background-attachment: fixed;
         }
-        .premium-dark-card {
+        .main-card {
             background-color: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            border: 1px solid #333;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: visible;
         }
-        .sunken-stat-box {
-            background-color: #111111;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8);
-        }
-        .interactive-subject-card {
-            background-color: #151515;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease, box-shadow 0.4s ease;
-        }
-        .interactive-subject-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(128, 26, 36, 0.5);
-            box-shadow: 0 24px 38px rgba(0, 0, 0, 0.7), 0 0 20px rgba(128, 26, 36, 0.25);
-        }
-        .btn-burgundy-royal {
+        .btn-burgundy {
             background-color: #801A24;
-            box-shadow: 0 4px 14px rgba(128, 26, 36, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease;
+            transition: background-color 0.2s;
         }
-        .btn-burgundy-royal:hover {
+        .btn-burgundy:hover {
             background-color: #a32230;
-            box-shadow: 0 6px 20px rgba(128, 26, 36, 0.5);
         }
-        .pulse-live {
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            animation: pulse-green 2s infinite;
-        }
-        @keyframes pulse-green {
-            0% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
+        /* إخفاء الاستمارات بشكل افتراضي للتبديل السلس */
+        .auth-form { display: none; }
+        .active-form { display: block; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased text-gray-200">
+<body class="min-h-screen flex flex-col justify-between font-sans antialiased text-gray-200">
 
-    <header class="w-full p-5 sticky top-0 z-50 backdrop-blur-md bg-[#dcd9d4]/80 border-b border-gray-400/20">
+    <header class="w-full p-6 bg-transparent relative z-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
-                    Nova<span class="font-light text-gray-800">Platform</span>
-                </div>
-                <span class="text-[10px] bg-[#801A24] text-white px-2.5 py-1 rounded-md font-bold">بوابة الطالب</span>
+            <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                Nova<span class="font-light text-gray-800">Platform</span>
             </div>
-            
-            <div class="flex items-center gap-4 text-gray-900">
-                <div class="text-right hidden sm:block">
-                    <p class="text-sm font-black">مرحباً، أحمد يوسف</p>
-                    <div class="flex items-center gap-2 mt-1">
-                        <p id="display-grade" class="text-xs text-[#801A24] font-bold">أولى ثانوي</p>
-                    </div>
-                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#801A24]/10 border border-[#801A24]/20 text-[#a32230] font-mono text-[11px] mt-1">
-                        <i class="fa-solid fa-id-card"></i> كود الطالب: <span id="display-student-code">#NV-8821</span>
-                    </div>
-                </div>
-                <div class="h-5 w-[1px] bg-gray-400/40 hidden sm:block"></div>
-                <a href="index.html" class="text-xs bg-[#1a1a1a] text-white hover:bg-[#333] px-4 py-2.5 rounded-xl font-bold transition">تسجيل خروج</a>
-            </div>
+            <a href="index.html" class="text-sm font-bold text-gray-800 hover:text-[#801A24] transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
+            </a>
         </div>
     </header>
 
-    <main class="w-full max-w-7xl mx-auto p-4 md:p-8 flex-1 space-y-8 relative z-10">
-
-        <div id="grace-period-banner" class="hidden bg-[#161616] border border-[#801A24]/40 rounded-xl p-4 mb-6 flex justify-between items-center text-right">
-            <div>
-                <h4 class="text-xs font-bold text-gray-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-triangle-exclamation animate-pulse text-[#a32230]"></i> <span class="text-[#a32230]">تنبيه: انتهى اشتراكك الحالي!</span>
-                </h4>
-                <p class="text-[11px] text-gray-300 mt-1">متبقي لديك <span class="text-[#a32230] font-bold" id="grace-days-count">3</span> أيام كمهلة لتجديد الاشتراك، برجاء الشحن لتجنب إغلاق المنصة بالكامل.</p>
-            </div>
-            <button onclick="location.href='#payment-section'" class="bg-[#801A24] hover:bg-[#a32230] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all">تجديد الآن</button>
-        </div>
-
-        <section class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div class="premium-dark-card p-5 flex items-center justify-between">
-                <div><p class="text-xs text-gray-400 font-medium">المواد المشترك بها</p><p class="text-2xl font-black text-white mt-1">4 مواد</p></div>
-                <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-blue-400"><i class="fa-solid fa-book-open text-lg"></i></div>
-            </div>
-            <div class="premium-dark-card p-5 flex items-center justify-between">
-                <div><p class="text-xs text-gray-400 font-medium">الامتحانات المكتملة</p><p class="text-2xl font-black text-emerald-400 mt-1">12 امتحان</p></div>
-                <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-emerald-400"><i class="fa-solid fa-square-check text-lg"></i></div>
-            </div>
+    <main class="w-full max-w-md mx-auto my-auto p-4 relative z-10">
+        <div class="main-card rounded-2xl p-8 flex flex-col justify-between">
             
-            <div class="premium-dark-card p-5 flex flex-col justify-between gap-3">
-                <div class="flex items-center justify-between w-full">
-                    <div><p class="text-xs text-gray-400 font-medium">رصيد المحفظة الحالي</p><p class="text-2xl font-black text-amber-400 mt-1">25,000 ل.س</p></div>
-                    <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-amber-400"><i class="fa-solid fa-wallet text-lg"></i></div>
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-[11px] mt-1">
-                    <a href="recharge.html" class="bg-amber-500 hover:bg-amber-600 text-black font-bold py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-plus-circle"></i> شحن رصيد
-                    </a>
-                    <a href="renew.html" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-1.5 px-2 rounded-lg text-center transition flex items-center justify-center gap-1 border border-white/5">
-                        <i class="fa-solid fa-sync"></i> تجديد الاشتراك
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="payment-section" class="premium-dark-card p-6 md:p-8 space-y-6">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-gray-800/60 pb-5">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-credit-card text-[#801A24]"></i> خيارات الدفع
-                </h2>
-                <span class="text-[11px] text-gray-400">اختر وسيلة الدفع المناسبة لتجديد اشتراكك فوراً</span>
+            <div class="flex border-b border-gray-700 mb-6 text-center">
+                <button id="tab-login" onclick="switchForm('login')" class="flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]">تسجيل الدخول</button>
+                <button id="tab-register" onclick="switchForm('register')" class="flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition">إنشاء حساب جديد</button>
             </div>
 
-            <div class="bg-[#18181b] border border-gray-800 p-5 rounded-2xl space-y-4 text-right">
-                <div class="flex justify-between items-center border-b border-gray-800 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">تفعيل تلقائي</span>
-                        <h4 class="text-xs font-bold text-white">الدفع عبر بايننس (Binance Pay / USDT)</h4>
-                    </div>
-                    <div class="text-amber-400 text-lg">
-                        <i class="fa-brands fa-bitcoin"></i>
-                    </div>
+            <form id="form-login" class="auth-form active-form space-y-4">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-white">مرحباً بك مجدداً يا بطل</h2>
+                    <p class="text-xs text-gray-400 mt-1">سجل دخولك لمتابعة دروسك</p>
                 </div>
 
-                <p class="text-[11px] text-gray-400 leading-relaxed">يرجى تحويل قيمة الاشتراك بعملة USDT (شبكة TRC20) إلى العنوان التالي، أو مسح رمز الاستجابة السريعة (QR Code):</p>
-
-                <div class="space-y-1.5">
-                    <label class="text-[10px] text-gray-500 block">عنوان محفظة USDT (TRC-20)</label>
-                    <div class="flex gap-2">
-                        <button onclick="navigator.clipboard.writeText('TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1'); alert('تم نسخ عنوان المحفظة بنجاح!');" class="bg-amber-500 hover:bg-amber-600 text-black text-[11px] font-bold px-3 rounded-lg transition-colors flex items-center gap-1 shrink-0">
-                            <i class="fa-regular fa-copy"></i> نسخ
-                        </button>
-                        <input type="text" readonly value="TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1" class="w-full p-2 bg-[#0f0f12] border border-gray-800 rounded-lg text-left font-mono text-[10px] text-amber-400 outline-none select-all">
-                    </div>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كود الطالب</label>
+                    <input id="student-login-code" type="text" placeholder="مثال: #NV-8821" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="flex flex-col items-center justify-center border border-gray-800 rounded-xl p-3 bg-[#0f0f12]">
-                        <span class="text-[9px] text-gray-500 mb-2">امسح الكود للدفع المباشر</span>
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1" alt="Binance QR" class="w-20 h-20 border border-gray-700 p-1 bg-white rounded-lg">
-                    </div>
-                    
-                    <div class="space-y-2 flex flex-col justify-center">
-                        <label class="text-[10px] text-gray-400 block">قم برفع لقطة شاشة لإيصال التحويل (Screenshot)</label>
-                        <input type="file" accept="image/*" class="w-full text-[10px] text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-zinc-800 file:text-gray-300 hover:file:bg-zinc-700 cursor-pointer">
-                        <input type="hidden" id="submit-student-code" value="#NV-8821">
-                        <button onclick="submitPaymentReceipt()" class="w-full bg-zinc-800 hover:bg-zinc-700 border border-gray-700 text-white text-[10px] font-bold py-2 rounded-lg transition-colors">
-                            تأكيد عملية الدفع
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="premium-dark-card p-6 md:p-8">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6 border-b border-gray-800/60 pb-5">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-days text-[#801A24]"></i> جدول الحصص الأسبوعي ومواعيد البث المباشر
-                </h2>
-                <span class="text-xs text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 font-medium w-fit">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> بتوقيت الجمهورية العربية السورية
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                
-                <div class="p-4 rounded-2xl bg-black/40 border border-emerald-500/30 flex flex-col justify-between gap-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[9px] bg-emerald-500 text-black font-black px-2 py-0.5 rounded uppercase tracking-wider">مباشر الآن</span>
-                            <h4 class="text-sm font-bold text-white mt-2">مادة الفيزياء (مراجعة الباب الأول)</h4>
-                            <p class="text-xs text-gray-400 mt-0.5">أ. محمد أحمد</p>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-xs text-emerald-400 font-bold">اليوم</p>
-                            <p class="text-[10px] text-gray-500 font-medium">08:00 مساءً</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-emerald-500/5 border border-emerald-500/10 p-2.5 rounded-xl flex items-center gap-2">
-                        <input type="checkbox" id="attendanceCheck" class="w-4 h-4 rounded accent-emerald-500 cursor-pointer" onchange="document.getElementById('liveBtn').classList.toggle('pointer-events-none'); document.getElementById('liveBtn').classList.toggle('opacity-50');">
-                        <label for="attendanceCheck" class="text-[11px] text-emerald-300 font-medium cursor-pointer select-none">أؤكد حضوري الفعلي للحصة الآن</label>
-                    </div>
-
-                    <a id="liveBtn" href="live-room.html" class="pulse-live pointer-events-none opacity-50 w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-black font-black text-xs rounded-xl flex items-center justify-center gap-2 transition-all">
-                        <i class="fa-solid fa-right-to-bracket text-[10px]"></i> تسجيل حضور ودخول البث
-                    </a>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كلمة المرور</label>
+                    <input type="password" placeholder="أدخل كلمة المرور" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-black/20 border border-white/5 flex flex-col justify-between gap-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[9px] bg-neutral-800 text-gray-400 font-bold px-2 py-0.5 rounded">قادمة غداً</span>
-                            <h4 class="text-sm font-bold text-neutral-200 mt-2">اللغة العربية (شرح البلاغة)</h4>
-                            <p class="text-xs text-gray-500 mt-0.5">أ. خالد محمود</p>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-xs text-gray-400 font-bold">الأربعاء</p>
-                            <p class="text-[10px] text-gray-500 font-medium">05:00 مساءً</p>
-                        </div>
-                    </div>
-                    <button disabled class="w-full py-2.5 bg-neutral-800 text-neutral-500 font-bold text-xs rounded-xl flex items-center justify-center gap-2 cursor-not-allowed">
-                        <i class="fa-solid fa-lock text-[10px]"></i> مغلق (يفتح بموعد الحصة)
-                    </button>
+                <button type="submit" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-2">
+                    دخول المنصة
+                </button>
+            </form>
+
+            <form id="form-register" class="auth-form space-y-4 max-h-[85vh] overflow-y-auto pr-2">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-white">حساب طالب جديد</h2>
+                    <p class="text-xs text-gray-400 mt-1">انضم إلينا واختر مرحلتك الدراسية</p>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-black/20 border border-white/5 flex flex-col justify-between gap-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="text-[9px] bg-neutral-800 text-gray-400 font-bold px-2 py-0.5 rounded">بعد 3 أيام</span>
-                            <h4 class="text-sm font-bold text-neutral-200 mt-2">اللغة الإنجليزية (Grammar)</h4>
-                            <p class="text-xs text-gray-500 mt-0.5">مس سارة علي</p>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-xs text-gray-400 font-bold">السبت</p>
-                            <p class="text-[10px] text-gray-500 font-medium">07:00 مساءً</p>
-                        </div>
-                    </div>
-                    <button disabled class="w-full py-2.5 bg-neutral-800 text-neutral-500 font-bold text-xs rounded-xl flex items-center justify-center gap-2 cursor-not-allowed">
-                        <i class="fa-solid fa-lock text-[10px]"></i> مغلق (يفتح بموعد الحصة)
-                    </button>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">الاسم الثلاثي</label>
+                    <input type="text" placeholder="أدخل اسمك بالكامل" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
                 </div>
 
-            </div>
-        </section>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">البريد الإلكتروني</label>
+                    <input type="email" placeholder="example@email.com" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
-            <div class="lg:col-span-3 space-y-8">
-                <section class="premium-dark-card p-6 md:p-8">
-                    <div class="flex justify-between items-center mb-6 border-b border-gray-800/60 pb-5">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-graduation-cap text-[#801A24]"></i> موادك الدراسية والمحتوى المطروح
-                        </h2>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="interactive-subject-card subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]" data-branch="علمي علوم">
-                            <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-md font-bold border border-blue-500/20">علمي</span>
-                                    <span class="text-xs text-gray-400 font-medium">أ. محمد أحمد</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white mb-1">مادة الفيزياء</h3>
-                                <p class="text-xs text-gray-400 font-light mb-4 leading-relaxed">شرح كامل متضمناً المنهج الجديد والامتحانات الدورية المخصصة للباب الأول والثاني.</p>
-                                
-                                <div class="grid grid-cols-3 gap-2 mb-4 text-[10px] text-gray-300 text-center">
-                                    <div class="bg-black/30 p-2 rounded-lg border border-white/5">
-                                        <i class="fa-solid fa-video text-red-400 block mb-1"></i>
-                                        <span><b>14</b> حصة</span>
-                                    </div>
-                                    <div class="bg-black/30 p-2 rounded-lg border border-white/5">
-                                        <i class="fa-solid fa-file-pdf text-amber-400 block mb-1"></i>
-                                        <span><b>5</b> ملفات</span>
-                                    </div>
-                                    <div class="bg-black/30 p-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5">
-                                        <i class="fa-solid fa-pen-clip text-emerald-400 block mb-1"></i>
-                                        <span class="text-emerald-400 font-bold"><b>3</b> امتحانات</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <a href="subject.html" class="btn-burgundy-royal block text-center w-full py-2.5 rounded-xl text-white font-bold text-xs">دخول المحاضرات والمنهج والامتحانات</a>
-                            </div>
-                        </div>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">المرحلة الدراسية</label>
+                    <select id="student-grade" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-xs outline-none focus:border-[#801A24] cursor-pointer" required>
+                        <option value="" disabled selected>اختر مرحلتك الدراسية...</option>
+                        <optgroup label="المرحلة الثانوية">
+                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                        </optgroup>
+                        <optgroup label="المرحلة الإعدادية">
+                            <option value="الصف الأول الإعدادي">الصف الأول الإعدادي</option>
+                            <option value="الصف الثاني الإعدادي">الصف الثاني الإعدادي</option>
+                            <option value="الصف الثالث الإعدادي">الصف الثالث الإعدادي</option>
+                        </optgroup>
+                        <optgroup label="المرحلة الابتدائية">
+                            <option value="الصف الأول الابتدائي">الصف الأول الابتدائي</option>
+                            <option value="الصف الثاني الابتدائي">الصف الثاني الابتدائي</option>
+                            <option value="الصف الثالث الابتدائي">الصف الثالث الابتدائي</option>
+                            <option value="الصف الرابع الابتدائي">الصف الرابع الابتدائي</option>
+                            <option value="الصف الخامس الابتدائي">الصف الخامس الابتدائي</option>
+                            <option value="الصف السادس الابتدائي">الصف السادس الابتدائي</option>
+                        </optgroup>
+                    </select>
+                </div>
 
-                        <div class="interactive-subject-card subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]" data-branch="مشترك">
-                            <div>
-                                <div class="flex justify-between items-start mb-3">
-                                    <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-md font-bold border border-purple-500/20">عام</span>
-                                    <span class="text-xs text-gray-400 font-medium">أ. خالد محمود</span>
-                                </div>
-                                <h3 class="text-base font-bold text-white mb-1">اللغة العربية</h3>
-                                <p class="text-xs text-gray-400 font-light mb-4 leading-relaxed">قواعد النحو والبلاغة الكاملة مع الاختبارات التقويمية الدورية لتقييم مستواك.</p>
-                                
-                                <div class="grid grid-cols-3 gap-2 mb-4 text-[10px] text-gray-300 text-center">
-                                    <div class="bg-black/30 p-2 rounded-lg border border-white/5">
-                                        <i class="fa-solid fa-video text-red-400 block mb-1"></i>
-                                        <span><b>20</b> حصة</span>
-                                    </div>
-                                    <div class="bg-black/30 p-2 rounded-lg border border-white/5">
-                                        <i class="fa-solid fa-file-pdf text-amber-400 block mb-1"></i>
-                                        <span><b>8</b> ملفات</span>
-                                    </div>
-                                    <div class="bg-black/30 p-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5">
-                                        <i class="fa-solid fa-pen-clip text-emerald-400 block mb-1"></i>
-                                        <span class="text-emerald-400 font-bold"><b>5</b> امتحانات</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <a href="subject.html" class="btn-burgundy-royal block text-center w-full py-2.5 rounded-xl text-white font-bold text-xs">دخول المحاضرات والمنهج والامتحانات</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                <div id="branch-container" class="hidden space-y-1.5 text-right mt-3">
+                    <label class="text-[11px] text-gray-400 block font-bold">التخصص الدراسي</label>
+                    <select id="student-branch" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-xs outline-none focus:border-[#801A24] cursor-pointer">
+                        <option value="" disabled selected>اختر التخصص...</option>
+                        <option value="علمي">علمي</option>
+                        <option value="أدبي">أدبي</option>
+                    </select>
+                </div>
 
-            <div class="lg:col-span-1 space-y-6">
-                
-                <section class="premium-dark-card p-5">
-                    <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2 border-b border-gray-800 pb-3">
-                        <i class="fa-solid fa-bullhorn text-[#801A24]"></i> إشعارات الإدارة الرسمية
-                    </h3>
-                    <div class="space-y-3 max-h-[180px] overflow-y-auto pr-1">
-                        <div class="p-2 rounded-lg bg-black/40 border-r-2 border-[#801A24] text-[11px]">
-                            <p class="text-gray-200 font-bold">بدء حجز مذكرات التوقعات النهائية</p>
-                            <span class="text-[9px] text-gray-500">منذ ساعتين</span>
-                        </div>
-                        <div class="p-2 rounded-lg bg-black/20 border-r-2 border-zinc-700 text-[11px]">
-                            <p class="text-gray-400">تعديل مواعيد الدعم الفني خلال عطلة نهاية الأسبوع</p>
-                            <span class="text-[9px] text-gray-500">أمس</span>
-                        </div>
-                    </div>
-                </section>
+                <div id="subjects-container" class="hidden space-y-2 text-right mt-3 p-3 bg-[#111] border border-gray-800/80 rounded-xl">
+                    <label class="text-[11px] text-emerald-400 block font-bold mb-1"><i class="fa-solid fa-book-open ml-1"></i> اختر موادك الدراسية للتسجيل:</label>
+                    <div id="subjects-list" class="grid grid-cols-2 gap-2 text-xs text-gray-300"></div>
+                </div>
 
-                <section class="premium-dark-card p-5">
-                    <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2 border-b border-gray-800 pb-3">
-                        <i class="fa-solid fa-pen-to-square text-[#801A24]"></i> ملاحظاتك الخاصة
-                    </h3>
-                    <textarea class="w-full h-24 p-2.5 bg-black/50 border border-gray-800 rounded-xl text-xs text-gray-200 focus:outline-none focus:border-[#801A24] resize-none" placeholder="اكتب نقاطك السريعة لكي لا تنساها..."></textarea>
-                    <button class="w-full mt-2 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs rounded-lg transition">حفظ</button>
-                </section>
-            </div>
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كلمة المرور</label>
+                    <input type="password" placeholder="أكتب كلمة مرور قوية" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <button type="submit" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-2">
+                    تسجيل الحساب والبدء
+                </button>
+            </form>
 
         </div>
-
-        <section class="premium-dark-card p-6">
-            <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800/60 pb-3">
-                <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> سجل عمليات الشحن وتتبع الحساب المالي
-            </h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-xs text-gray-300">
-                    <thead>
-                        <tr class="border-b border-gray-800 text-gray-400">
-                            <th class="pb-2 font-bold">رقم العملية</th>
-                            <th class="pb-2 font-bold">التاريخ</th>
-                            <th class="pb-2 font-bold">طريقة الشحن</th>
-                            <th class="pb-2 font-bold">المبلغ</th>
-                            <th class="pb-2 font-bold">الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-800/40">
-                        <tr>
-                            <td class="py-3 font-mono">#RE-9082</td>
-                            <td class="py-3">2026/06/20</td>
-                            <td class="py-3">بطاقة شحن رقمية</td>
-                            <td class="py-3 text-emerald-400 font-bold">+10,000 ل.س</td>
-                            <td class="py-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10px]">ناجحة</span></td>
-                        </tr>
-                        <tr>
-                            <td class="py-3 font-mono">#RE-8911</td>
-                            <td class="py-3">2026/06/01</td>
-                            <td class="py-3">تحويل الهرم / الحوالات</td>
-                            <td class="py-3 text-emerald-400 font-bold">+15,000 ل.س</td>
-                            <td class="py-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10px]">ناجحة</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
     </main>
 
-    <a href="support.html" class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-[#801A24] hover:bg-[#a32230] text-white rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 group" title="تواصل مع الدعم الفني">
-        <i class="fa-solid fa-headset text-lg group-hover:rotate-12 transition-transform"></i>
-    </a>
-
-    <footer class="w-full text-center text-xs text-gray-600 py-6 border-t border-gray-400/10 mt-6">
+    <footer class="w-full text-center text-xs text-gray-500 py-6 bg-transparent relative z-10">
         &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
     </footer>
 
-    <div id="block-screen" class="hidden fixed inset-0 bg-[#09090b]/95 z-[9999] flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm">
-        <div class="bg-[#18181b] border border-red-500/20 p-8 rounded-2xl max-w-sm space-y-4 shadow-2xl">
-            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center text-2xl mx-auto">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <h3 class="text-sm font-bold text-white">تم إغلاق الحساب مؤقتاً</h3>
-            <p class="text-[11px] text-gray-400 leading-relaxed">انتهت مهلة الـ 3 أيام المتاحة لتجديد اشتراكك. يرجى التواصل مع الإدارة أو شحن حسابك لتفعيل المنصة مجدداً.</p>
-            <button onclick="location.href='#support'" class="w-full bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold py-2 rounded-lg transition-colors">تواصل مع الدعم الفني</button>
-        </div>
-    </div>
-
     <script>
-        const studentProfile = {
-            grade: "الصف الثالث الثانوي",
-            branch: "علمي علوم"
-        };
+        function switchForm(type) {
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
 
-        const studentSubscription = {
-            isActive: false,
-            graceDaysLeft: 3
-        };
-
-        function filterSubjectsByBranch() {
-            const cards = document.querySelectorAll('.subject-card');
-            cards.forEach(card => {
-                const subjectBranch = card.getAttribute('data-branch');
-                if (studentProfile.grade === "الصف الثالث الثانوي" && subjectBranch) {
-                    if (subjectBranch === studentProfile.branch || subjectBranch === "مشترك") {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                } else {
-                    card.classList.remove('hidden');
-                }
-            });
-        }
-
-        function checkSubscriptionAccess() {
-            const banner = document.getElementById('grace-period-banner');
-            const blockScreen = document.getElementById('block-screen');
-            const graceCount = document.getElementById('grace-days-count');
-
-            if (!studentSubscription.isActive) {
-                if (studentSubscription.graceDaysLeft > 0) {
-                    if (banner) {
-                        banner.classList.remove('hidden');
-                        graceCount.innerText = studentSubscription.graceDaysLeft;
-                    }
-                } else {
-                    if (blockScreen) {
-                        blockScreen.classList.remove('hidden');
-                        document.body.style.overflow = 'hidden';
-                    }
-                }
+            if(type === 'login') {
+                loginForm.classList.add('active-form');
+                registerForm.classList.remove('active-form');
+                tabLogin.className = "flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]";
+                tabRegister.className = "flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition";
+            } else {
+                registerForm.classList.add('active-form');
+                loginForm.classList.remove('active-form');
+                tabRegister.className = "flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]";
+                tabLogin.className = "flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition";
             }
-        }
-
-        function submitPaymentReceipt() {
-            const studentCode = document.getElementById('submit-student-code') ? document.getElementById('submit-student-code').value : '#NV-UNKNOWN';
-            const fileInput = document.querySelector('input[type="file"]');
-            
-            if (fileInput && fileInput.files.length === 0) {
-                alert("برجاء رفع صورة إيصال التحويل أولاً!");
-                return;
-            }
-
-            alert(`تم إرسال الإيصال بنجاح!\nكود الطالب المرفق تلقائياً: ${studentCode}\n\nسيتم مراجعة طلبك وتفعيل الحساب من قبل الإدارة خلال دقائق.`);
-            if(fileInput) fileInput.value = '';
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Read stored registration info from localStorage
-            const savedGrade = localStorage.getItem('studentGrade') || 'الصف الأول الثانوي';
-            const savedBranch = localStorage.getItem('studentBranch') || '';
-            const savedSubjects = JSON.parse(localStorage.getItem('studentSubjects')) || [];
+            const gradeSelect = document.getElementById('student-grade');
+            const branchContainer = document.getElementById('branch-container');
+            const branchSelect = document.getElementById('student-branch');
+            const subjectsContainer = document.getElementById('subjects-container');
+            const subjectsList = document.getElementById('subjects-list');
 
-            // A. Update Grade and Branch text header
-            const displayGradeObj = document.getElementById('display-grade');
-            if (displayGradeObj) {
-                displayGradeObj.textContent = savedBranch ? `${savedGrade} - ${savedBranch}` : savedGrade;
-            } else {
-                // Fallback selector scan if ID is missing
-                const fallbackElements = document.querySelectorAll('p, span');
-                fallbackElements.forEach(el => {
-                    if (el.textContent.trim() === 'أولى ثانوي' || el.classList.contains('text-[#a32230]')) {
-                        el.textContent = savedBranch ? `${savedGrade} - ${savedBranch}` : savedGrade;
+            if(gradeSelect) {
+                gradeSelect.addEventListener('change', function() {
+                    if (this.value.includes('الثانوي')) {
+                        branchContainer.classList.remove('hidden');
+                    } else {
+                        branchContainer.classList.add('hidden');
+                        subjectsContainer.classList.add('hidden');
+                        if(branchSelect) branchSelect.value = "";
                     }
                 });
             }
 
-            // B. Dynamically update the "المواد المشترك بها" statistics count
-            const allDivs = document.querySelectorAll('div');
-            allDivs.forEach(card => {
-                if (card.textContent.includes('المواد المشترك بها')) {
-                    const countHeading = card.querySelector('h3, p, span.text-3xl, div.text-3xl');
-                    if (countHeading) {
-                        countHeading.textContent = `${savedSubjects.length} مواد`;
+            if(branchSelect) {
+                branchSelect.addEventListener('change', function() {
+                    subjectsContainer.classList.remove('hidden');
+                    subjectsList.innerHTML = ''; 
+                    let htmlContent = '';
+                    if (this.value === 'علمي') {
+                        const scientificSubjects = ['فيزياء', 'كيمياء', 'أحياء', 'جيولوجيا', 'رياضيات بحتة', 'رياضيات تطبيقية'];
+                        htmlContent = scientificSubjects.map(sub => `
+                            <label class="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                <input type="checkbox" name="selected_subjects" value="${sub}" class="accent-[#801A24]">
+                                <span>${sub}</span>
+                            </label>
+                        `).join('');
+                    } else if (this.value === 'أدبي') {
+                        const literarySubjects = ['تاريخ', 'جغرافيا', 'فلسفة ومنطق', 'علم نفس واجتماع'];
+                        htmlContent = literarySubjects.map(sub => `
+                            <label class="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                <input type="checkbox" name="selected_subjects" value="${sub}" class="accent-[#801A24]">
+                                <span>${sub}</span>
+                            </label>
+                        `).join('');
                     }
-                }
-            });
+                    subjectsList.innerHTML = htmlContent;
+                });
+            }
 
-            // C. Inject the responsive layout badges displaying specific subject names
-            const gridContainer = document.querySelector('.grid');
-            if (gridContainer && savedSubjects.length > 0) {
-                const subjectsContainerCard = document.createElement('div');
-                subjectsContainerCard.className = 'col-span-full bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl text-right mt-4';
+            const loginForm = document.getElementById('form-login');
+            const loginInput = document.getElementById('student-login-code');
 
-                subjectsContainerCard.innerHTML = `
-                    <h4 class="text-sm font-bold text-gray-200 mb-3"><i class="fa-solid fa-book-bookmark text-[#801A24] ml-2"></i> موادك الدراسية النشطة هذا الترم:</h4>
-                    <div class="flex flex-wrap gap-2">
-                        ${savedSubjects.map(sub => `
-                            <span class="bg-[#801A24]/10 text-[#a32230] border border-[#801A24]/30 px-3 py-1 rounded-xl text-xs font-semibold shadow-sm transition-all">
-                                ${sub}
-                            </span>
-                        `).join('')}
-                    </div>
-                `;
-                gridContainer.parentNode.appendChild(subjectsContainerCard);
+            if (loginForm && loginInput) {
+                loginForm.addEventListener('submit', function(event) {
+                    const value = loginInput.value.trim();
+                    const studentCodePattern = /^#NV-\d{4,}$/i;
+                    const manualCredentialPattern = /^(student|admin|teacher)\d{3,}$/i;
+
+                    if (!value || (!studentCodePattern.test(value) && !manualCredentialPattern.test(value))) {
+                        event.preventDefault();
+                        alert('يرجى إدخال كود الطالب بصيغة #NV-8821 أو بيانات دخول صحيحة');
+                        return;
+                    }
+
+                    event.preventDefault();
+                    window.location.href = 'student.html';
+                });
             }
         });
     </script>
-
 </body>
 </html>
