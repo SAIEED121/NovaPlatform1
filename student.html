@@ -116,6 +116,54 @@
             </div>
         </section>
 
+        <section id="payment-section" class="premium-dark-card p-6 md:p-8 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-gray-800/60 pb-5">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-credit-card text-[#801A24]"></i> خيارات الدفع
+                </h2>
+                <span class="text-[11px] text-gray-400">اختر وسيلة الدفع المناسبة لتجديد اشتراكك فوراً</span>
+            </div>
+
+            <div class="bg-[#18181b] border border-gray-800 p-5 rounded-2xl space-y-4 text-right">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">تفعيل تلقائي</span>
+                        <h4 class="text-xs font-bold text-white">الدفع عبر بايننس (Binance Pay / USDT)</h4>
+                    </div>
+                    <div class="text-amber-400 text-lg">
+                        <i class="fa-brands fa-bitcoin"></i>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-gray-400 leading-relaxed">يرجى تحويل قيمة الاشتراك بعملة USDT (شبكة TRC20) إلى العنوان التالي، أو مسح رمز الاستجابة السريعة (QR Code):</p>
+
+                <div class="space-y-1.5">
+                    <label class="text-[10px] text-gray-500 block">عنوان محفظة USDT (TRC-20)</label>
+                    <div class="flex gap-2">
+                        <button onclick="navigator.clipboard.writeText('TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1'); alert('تم نسخ عنوان المحفظة بنجاح!');" class="bg-amber-500 hover:bg-amber-600 text-black text-[11px] font-bold px-3 rounded-lg transition-colors flex items-center gap-1 shrink-0">
+                            <i class="fa-regular fa-copy"></i> نسخ
+                        </button>
+                        <input type="text" readonly value="TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1" class="w-full p-2 bg-[#0f0f12] border border-gray-800 rounded-lg text-left font-mono text-[10px] text-amber-400 outline-none select-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="flex flex-col items-center justify-center border border-gray-800 rounded-xl p-3 bg-[#0f0f12]">
+                        <span class="text-[9px] text-gray-500 mb-2">امسح الكود للدفع المباشر</span>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=TY82jsK91mNsnQpW27xMvLpQ1902jsnQW1" alt="Binance QR" class="w-20 h-20 border border-gray-700 p-1 bg-white rounded-lg">
+                    </div>
+                    
+                    <div class="space-y-2 flex flex-col justify-center">
+                        <label class="text-[10px] text-gray-400 block">قم برفع لقطة شاشة لإيصال التحويل (Screenshot)</label>
+                        <input type="file" accept="image/*" class="w-full text-[10px] text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-zinc-800 file:text-gray-300 hover:file:bg-zinc-700 cursor-pointer">
+                        <button onclick="alert('تم إرسال الإيصال بنجاح! سيتم مراجعة طلبك وتفعيل الحساب خلال دقائق.');" class="w-full bg-zinc-800 hover:bg-zinc-700 border border-gray-700 text-white text-[10px] font-bold py-2 rounded-lg transition-colors">
+                            تأكيد عملية الدفع
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="premium-dark-card p-6 md:p-8">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6 border-b border-gray-800/60 pb-5">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -199,7 +247,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="interactive-subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]">
+                        <div class="interactive-subject-card subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]" data-branch="علمي علوم">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
                                     <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-md font-bold border border-blue-500/20">علمي</span>
@@ -228,7 +276,7 @@
                             </div>
                         </div>
 
-                        <div class="interactive-subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]">
+                        <div class="interactive-subject-card subject-card rounded-2xl p-5 flex flex-col justify-between min-h-[300px]" data-branch="مشترك">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
                                     <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-md font-bold border border-purple-500/20">عام</span>
@@ -346,10 +394,31 @@
     </div>
 
     <script>
+        const studentProfile = {
+            grade: "الصف الثالث الثانوي",
+            branch: "علمي علوم"
+        };
+
         const studentSubscription = {
             isActive: false,
             graceDaysLeft: 3
         };
+
+        function filterSubjectsByBranch() {
+            const cards = document.querySelectorAll('.subject-card');
+            cards.forEach(card => {
+                const subjectBranch = card.getAttribute('data-branch');
+                if (studentProfile.grade === "الصف الثالث الثانوي" && subjectBranch) {
+                    if (subjectBranch === studentProfile.branch || subjectBranch === "مشترك") {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                } else {
+                    card.classList.remove('hidden');
+                }
+            });
+        }
 
         function checkSubscriptionAccess() {
             const banner = document.getElementById('grace-period-banner');
@@ -371,7 +440,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', checkSubscriptionAccess);
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSubscriptionAccess();
+            filterSubjectsByBranch();
+        });
     </script>
 
 </body>
