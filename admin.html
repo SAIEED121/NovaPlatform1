@@ -337,6 +337,10 @@
 
                                         <th class="pb-2">المرحلة الدراسية</th>
 
+                                        <th class="pb-2">نوع الاشتراك</th>
+
+                                        <th class="pb-2">حالة التجديد والمهلة</th>
+
                                         <th class="pb-2 text-center">حالة الصلاحية (تشغيل الفيديوهات)</th>
 
                                     </tr>
@@ -345,13 +349,27 @@
 
                                 <tbody class="divide-y divide-gray-800/30 text-gray-300">
 
-                                    <tr class="hover:bg-white/5">
+                                    <tr class="hover:bg-white/5 student-subscription-row" data-subscription-type="شهري" data-expire-at="2026-07-15T00:00:00" data-grace-days="3">
 
                                         <td class="py-3 font-mono text-gray-600">#NV-8821</td>
 
                                         <td class="py-3 font-bold text-white">سعيد محمد أحمد</td>
 
                                         <td class="py-3">الصف الثالث الثانوي</td>
+
+                                        <td class="py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">شهري</span>
+                                        </td>
+
+                                        <td class="py-3">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="subscription-status-badge inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
+                                                    <i class="fa-solid fa-circle-check"></i>
+                                                    <span>اشتراك نشط</span>
+                                                </span>
+                                                <span class="subscription-meta-text text-[10px] text-gray-500">ينتهي في 15/07/2026</span>
+                                            </div>
+                                        </td>
 
                                         <td class="py-3 flex justify-center">
 
@@ -365,7 +383,7 @@
 
                                                 </label>
 
-                                                <span class="text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
+                                                <span class="access-status-text text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
 
                                             </div>
 
@@ -373,13 +391,27 @@
 
                                     </tr>
 
-                                    <tr class="hover:bg-white/5">
+                                    <tr class="hover:bg-white/5 student-subscription-row" data-subscription-type="ربع سنوي" data-expire-at="2026-06-25T00:00:00" data-grace-days="3">
 
                                         <td class="py-3 font-mono text-gray-600">#NV-4412</td>
 
                                         <td class="py-3 font-bold text-white">عبدالرحمن إبراهيم</td>
 
                                         <td class="py-3">الصف الثالث الثانوي</td>
+
+                                        <td class="py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold">ربع سنوي</span>
+                                        </td>
+
+                                        <td class="py-3">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="subscription-status-badge inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
+                                                    <i class="fa-solid fa-circle-check"></i>
+                                                    <span>اشتراك نشط</span>
+                                                </span>
+                                                <span class="subscription-meta-text text-[10px] text-gray-500">ينتهي في 25/06/2026</span>
+                                            </div>
+                                        </td>
 
                                         <td class="py-3 flex justify-center">
 
@@ -393,7 +425,7 @@
 
                                                 </label>
 
-                                                <span class="text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
+                                                <span class="access-status-text text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
 
                                             </div>
 
@@ -716,6 +748,71 @@
             buttonElement.classList.add('active');
         }
 
+        function updateStudentSubscriptionRows() {
+            const rows = document.querySelectorAll('.student-subscription-row');
+
+            rows.forEach(row => {
+                const checkbox = row.querySelector('.toggle-checkbox');
+                const label = row.querySelector('.toggle-label');
+                const dot = row.querySelector('.toggle-dot');
+                const statusBadge = row.querySelector('.subscription-status-badge');
+                const metaText = row.querySelector('.subscription-meta-text');
+                const accessText = row.querySelector('.access-status-text');
+                const expireAt = row.getAttribute('data-expire-at');
+                const graceDays = parseInt(row.getAttribute('data-grace-days') || '3', 10);
+                const expiryDate = new Date(expireAt);
+                const graceEndDate = new Date(expiryDate.getTime() + graceDays * 24 * 60 * 60 * 1000);
+                const now = new Date();
+                const isExpired = now > expiryDate;
+                const isInGrace = isExpired && now <= graceEndDate;
+                const isBlocked = !isExpired || now > graceEndDate;
+                const isEnabled = checkbox.checked;
+
+                if (isBlocked) {
+                    checkbox.checked = false;
+                    label.className = 'toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300';
+                    dot.className = 'toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300';
+                    statusBadge.className = 'subscription-status-badge inline-flex items-center gap-1 text-[10px] text-red-400 font-bold';
+                    statusBadge.innerHTML = '<i class="fa-solid fa-ban"></i><span>تم حظر الحساب - انتهت المهلة</span>';
+                    metaText.className = 'subscription-meta-text text-[10px] text-red-500';
+                    metaText.innerText = 'انتهت المهلة - تم منع الوصول';
+                    accessText.className = 'access-status-text text-[10px] text-red-400 font-bold mr-2';
+                    accessText.innerText = 'محظور (مغلق)';
+                } else if (isInGrace) {
+                    const remainingDays = Math.max(0, Math.ceil((graceEndDate - now) / (1000 * 60 * 60 * 24)));
+                    label.className = isEnabled
+                        ? 'toggle-label block w-9 h-4.5 bg-emerald-500 rounded-full p-0.5 transition-colors duration-300'
+                        : 'toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300';
+                    dot.className = isEnabled
+                        ? 'toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-4 transition-transform duration-300'
+                        : 'toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300';
+                    statusBadge.className = 'subscription-status-badge inline-flex items-center gap-1 text-[10px] text-amber-400 font-bold';
+                    statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i><span>مهلة ' + remainingDays + ' أيام متبقية</span>';
+                    metaText.className = 'subscription-meta-text text-[10px] text-amber-500';
+                    metaText.innerText = 'الاشتراك منتهي ولكن لا يزال ضمن المهلة الحرجة';
+                    accessText.className = isEnabled
+                        ? 'access-status-text text-[10px] text-amber-400 font-bold mr-2'
+                        : 'access-status-text text-[10px] text-gray-400 font-bold mr-2';
+                    accessText.innerText = isEnabled ? 'شاحن (مفتوح)' : 'مغلق';
+                } else {
+                    label.className = isEnabled
+                        ? 'toggle-label block w-9 h-4.5 bg-emerald-500 rounded-full p-0.5 transition-colors duration-300'
+                        : 'toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300';
+                    dot.className = isEnabled
+                        ? 'toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-4 transition-transform duration-300'
+                        : 'toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300';
+                    statusBadge.className = 'subscription-status-badge inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold';
+                    statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>اشتراك نشط</span>';
+                    metaText.className = 'subscription-meta-text text-[10px] text-gray-500';
+                    metaText.innerText = 'الاشتراك ساري حتى تاريخ التجديد';
+                    accessText.className = isEnabled
+                        ? 'access-status-text text-[10px] text-emerald-400 font-bold mr-2'
+                        : 'access-status-text text-[10px] text-gray-400 font-bold mr-2';
+                    accessText.innerText = isEnabled ? 'شاحن (مفتوح)' : 'مغلق';
+                }
+            });
+        }
+
         // دالة البحث الفوري داخل قائمة المدرسين
         function searchTeacher(keyword) {
             const rows = document.querySelectorAll('.teacher-row');
@@ -728,6 +825,9 @@
                 }
             });
         }
+
+        updateStudentSubscriptionRows();
+        setInterval(updateStudentSubscriptionRows, 1000);
     // دالة تبديل بيانات المدرس وعرض كشف حساب القبض والحصص ديناميكياً
         function selectTeacher(name, subject, progress, currentUnit, status, totalEarned, paidAmount, remainingAmount) {
             document.getElementById('display-teacher-name').innerText = 'أ. ' + name;
