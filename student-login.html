@@ -225,17 +225,24 @@
 
             if (loginForm && loginInput) {
                 loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
                     const value = loginInput.value.trim();
                     const studentCodePattern = /^#NV-\d{4}$/i;
                     const manualCredentialPattern = /^(student|admin|teacher)\d{3,}$/i;
 
                     if (!value || (!studentCodePattern.test(value) && !manualCredentialPattern.test(value))) {
-                        event.preventDefault();
                         alert('يرجى إدخال كود الطالب بصيغة صحيحة مثل #NV-8821');
                         return;
                     }
 
-                    event.preventDefault();
+                    if (gradeSelect) localStorage.setItem('studentGrade', gradeSelect.value);
+                    if (branchSelect) localStorage.setItem('studentBranch', branchSelect.value);
+
+                    const checkedSubjects = [];
+                    const checkboxes = document.querySelectorAll('input[name="selected_subjects"]:checked');
+                    checkboxes.forEach(cb => checkedSubjects.push(cb.value));
+                    localStorage.setItem('studentSubjects', JSON.stringify(checkedSubjects));
+
                     window.location.href = 'student.html';
                 });
             }
