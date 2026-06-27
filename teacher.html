@@ -372,12 +372,46 @@
                     <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-cloud-arrow-up text-[#801A24]"></i> رفع كتب وملازم مخصصة لهذا الصف
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="lecture-title-input" placeholder="عنوان الكتاب أو الملزمة" class="bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
-                        <input type="file" id="lecture-file-input" class="bg-[#111] text-white border border-gray-700 rounded-xl p-2.5 focus:outline-none focus:border-[#801A24] text-sm">
-                        <button onclick="handleUploadFile()" class="btn-burgundy-royal rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plus"></i> رفع وإضافة للطلاب
-                        </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">المرحلة / الصف الدراسي</label>
+                            <select id="teacher-grade-select" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24] w-full">
+                                <optgroup label="المرحلة الابتدائية">
+                                    <option value="primary-all">الابتدائي (جميع الصفوف)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الإعدادية">
+                                    <option value="prep-all">الإعدادي (جميع الصفوف)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - الشعبة العلمية">
+                                    <option value="3-sci-physics">الثانوية العامة | علمي (فيزياء / كيمياء / أحياء / جيولوجيا / رياضة)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - الشعبة الأدبية">
+                                    <option value="3-lit-history">الثانوية العامة | أدبي (تاريخ / جغرافيا / فلسفة / علم نفس)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - مواد مشتركة">
+                                    <option value="3-common">الثانوية العامة | مواد مشتركة (لغة عربية / لغة إنجليزية / لغة ثانية)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">المادة الدراسية</label>
+                            <select id="teacher-subject-select" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24] w-full">
+                                <option value="" disabled selected>اختر المادة</option>
+                            </select>
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">عنوان الكتاب أو الملزمة</label>
+                            <input type="text" id="lecture-title-input" placeholder="عنوان الكتاب أو الملزمة" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">اختر ملف المحتوى</label>
+                            <input type="file" id="lecture-file-input" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-2.5 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="xl:col-span-1 flex items-end">
+                            <button onclick="handleUploadFile()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus"></i> رفع وإضافة للطلاب
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -1326,6 +1360,49 @@
                 toast.style.opacity = "0";
             }, 3000);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const gradeSelect = document.getElementById('teacher-grade-select');
+            const subjectSelect = document.getElementById('teacher-subject-select');
+
+            if (gradeSelect && subjectSelect) {
+                const allOptions = Array.from(subjectSelect.options);
+
+                gradeSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
+                    subjectSelect.innerHTML = '';
+
+                    if (selectedValue === 'primary-all' || selectedValue === 'prep-all') {
+                        appendSubjectOption("مواد عامة مشتركة", "general");
+                    } else if (selectedValue === '3-sci-physics') {
+                        appendSubjectOption("الفيزياء", "physics");
+                        appendSubjectOption("الكيمياء", "chemistry");
+                        appendSubjectOption("الأحياء", "biology");
+                        appendSubjectOption("الجيولوجيا", "geology");
+                        appendSubjectOption("الرياضيات البحتة والتطبيقية", "math");
+                    } else if (selectedValue === '3-lit-history') {
+                        appendSubjectOption("التاريخ", "history");
+                        appendSubjectOption("الجغرافيا", "geography");
+                        appendSubjectOption("الفلسفة والمنطق", "philosophy");
+                        appendSubjectOption("علم النفس والاجتماع", "psychology");
+                    } else if (selectedValue === '3-common') {
+                        appendSubjectOption("اللغة العربية", "arabic");
+                        appendSubjectOption("اللغة الإنجليزية", "english");
+                        appendSubjectOption("اللغة الأجنبية الثانية", "french-german");
+                    }
+                });
+
+                gradeSelect.dispatchEvent(new Event('change'));
+            }
+
+            function appendSubjectOption(text, value) {
+                const opt = document.createElement('option');
+                opt.text = text;
+                opt.value = value;
+                opt.className = "text-white bg-[#111]";
+                subjectSelect.appendChild(opt);
+            }
+        });
 
         function logout() {
             showToast("تم تسجيل الخروج بنجاح.");
