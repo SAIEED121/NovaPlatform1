@@ -299,7 +299,7 @@
                                     <td class="py-3 text-amber-500">سيريتل كاش</td>
                                     <td class="py-3 font-mono text-gray-400">TXN-9823719283</td>
                                     <td class="py-3 text-left space-x-1 space-x-reverse">
-                                        <button class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
+                                        <button onclick="approvePaymentAndCreateAccount(this, 'وسيم النجار', 'علمي علوم')" class="bg-emerald-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">قبول</button>
                                         <button class="bg-red-600 px-3 py-1 rounded-lg text-white font-bold text-[10px]">رفض</button>
                                     </td>
                                 </tr>
@@ -780,6 +780,8 @@
             });
         }
 
+        const existingStudentEmails = new Set(['student.8821@nova.com']);
+
         function initStudentToggles() {
             document.querySelectorAll('.toggle-checkbox').forEach(item => {
                 if (item.dataset.listened) return;
@@ -796,6 +798,57 @@
                     }
                 });
             });
+        }
+
+        function approvePaymentAndCreateAccount(buttonElement, studentName, defaultBranch) {
+            const pendingRow = buttonElement.closest('tr');
+            if (pendingRow) pendingRow.remove();
+
+            const name = prompt('تأكيد اسم الطالب بالكامل:', studentName) || studentName;
+            const branch = prompt('أدخل التخصص (علمي علوم / علمي رياضة / أدبي / عام):', defaultBranch) || defaultBranch;
+
+            let randomId;
+            let generatedEmail;
+            do {
+                randomId = Math.floor(1000 + Math.random() * 9000);
+                generatedEmail = `student.${randomId}@nova.com`;
+            } while (existingStudentEmails.has(generatedEmail));
+
+            existingStudentEmails.add(generatedEmail);
+            const generatedPassword = `pass${randomId}`;
+
+            const tableBody = document.getElementById('students-table-body');
+            if (tableBody) {
+                const newRow = document.createElement('tr');
+                newRow.className = 'hover:bg-white/5 student-row border-b border-gray-800/30 text-gray-300';
+                newRow.innerHTML = `
+                    <td class="py-3 font-mono text-gray-600">#NV-${randomId}</td>
+                    <td class="py-3 font-bold text-white">${name}</td>
+                    <td class="py-3 font-mono text-emerald-400 select-all">${generatedEmail}</td>
+                    <td class="py-3 font-mono text-gray-400 select-all">${generatedPassword}</td>
+                    <td class="py-3">
+                        <span class="text-white">الصف الثالث الثانوي</span>
+                        <span class="mr-1 px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[9px] font-bold">${branch}</span>
+                    </td>
+                    <td class="py-3 flex justify-center">
+                        <div class="flex items-center relative cursor-pointer">
+                            <input type="checkbox" id="user-${randomId}" class="toggle-checkbox hidden" checked>
+                            <label for="user-${randomId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
+                                <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
+                            </label>
+                            <span class="text-[10px] text-emerald-400 font-bold mr-2 status-text">شاحن (مفتوح)</span>
+                        </div>
+                    </td>
+                    <td class="py-3 text-center">
+                        <button onclick="this.closest('tr').remove(); existingStudentEmails.delete('${generatedEmail}');" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                            <i class="fa-solid fa-trash-can"></i> حذف
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(newRow);
+                if (typeof initStudentToggles === 'function') initStudentToggles();
+                alert(`تم قبول طلب الشحن وتوليد حساب فريد بنجاح!\n\nاسم الطالب: ${name}\nالإيميل الخاص به: ${generatedEmail}\nكلمة المرور: ${generatedPassword}\n\nالحساب مأمن ومستحيل يتكرر مع طالب آخر.`);
+            }
         }
 
         function generateStudentAccount() {
