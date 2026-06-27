@@ -159,25 +159,27 @@
         document.addEventListener('DOMContentLoaded', function() {
             const gradeSelect = document.getElementById('student-grade');
             const branchContainer = document.getElementById('branch-container');
-            const loginForm = document.getElementById('form-login');
-            const loginInput = document.getElementById('student-login-code');
 
-            if (gradeSelect && branchContainer) {
-                const toggleBranchContainer = () => {
-                    if (gradeSelect.value === 'الصف الثالث الثانوي') {
+            const toggleBranchContainer = () => {
+                if (gradeSelect && branchContainer) {
+                    // إذا اختار الطالب الصف الثالث الثانوي، نظهر خانة التخصص
+                    if (gradeSelect.value === "الصف الثالث الثانوي") {
                         branchContainer.classList.remove('hidden');
-                        branchContainer.classList.add('flex');
-                        branchContainer.style.opacity = '1';
-                        branchContainer.style.transition = 'all 0.25s ease';
                     } else {
+                        // مع باقي المراحل تختفي الخانة تلقائياً
                         branchContainer.classList.add('hidden');
-                        branchContainer.classList.remove('flex');
                     }
-                };
+                }
+            };
 
+            if (gradeSelect) {
                 gradeSelect.addEventListener('change', toggleBranchContainer);
+                // تشغيل الدالة مرة عند تحميل الصفحة للتأكد من الحالة الابتدائية
                 toggleBranchContainer();
             }
+
+            const loginForm = document.getElementById('form-login');
+            const loginInput = document.getElementById('student-login-code');
 
             if (loginForm && loginInput) {
                 loginForm.addEventListener('submit', function(event) {
