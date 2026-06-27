@@ -308,137 +308,57 @@
                     </div>
 
                     <div class="border-t border-gray-800 pt-6 space-y-3 mt-6">
-
                         <div class="flex justify-between items-center">
-
                             <div>
-
-                                <h3 class="text-xs font-bold text-emerald-400"><i class="fa-solid fa-user-shield"></i> التحكم الفوري في شحن حسابات الطلاب وتفعيل المحاضرات</h3>
-
-                                <p class="text-[10px] text-gray-500 mt-0.5">قم بتفعيل المفتاح ليتم فتح جميع الفيديوهات المحمية للطالب تلقائياً، أو إغلاقه لمنعه.</p>
-
+                                <h3 class="text-xs font-bold text-emerald-400"><i class="fa-solid fa-users-gear"></i> إدارة الطلاب وتوليد الحسابات اليدوية</h3>
+                                <p class="text-[10px] text-gray-500 mt-0.5">قم بتوليد حسابات يدوية (إيميل وباسورد) للطلاب الجدد، أو تحكم في تفعيل صلاحياتهم وتخصصاتهم.</p>
                             </div>
-
-                            <input type="text" placeholder="بحث سريع باسم الطالب..." class="p-1.5 bg-[#0f0f12] border border-gray-800 rounded text-[11px] text-white outline-none w-48">
-
+                            <button onclick="generateStudentAccount()" class="bg-emerald-500 hover:bg-emerald-600 text-black text-[10px] font-bold px-3 py-1.5 rounded-lg transition-colors">
+                                <i class="fa-solid fa-user-plus"></i> توليد حساب طالب جديد
+                            </button>
                         </div>
-
+                        
                         <div class="overflow-x-auto text-[11px]">
-
                             <table class="w-full text-right">
-
                                 <thead>
-
                                     <tr class="border-b border-gray-800 text-gray-500">
-
                                         <th class="pb-2">كود الطالب</th>
-
                                         <th class="pb-2">اسم الطالب</th>
-
-                                        <th class="pb-2">المرحلة الدراسية</th>
-
-                                        <th class="pb-2">نوع الاشتراك</th>
-
-                                        <th class="pb-2">حالة التجديد والمهلة</th>
-
+                                        <th class="pb-2">الحساب المستخرج (الإيميل)</th>
+                                        <th class="pb-2">كلمة المرور</th>
+                                        <th class="pb-2">المرحلة والتخصص</th>
                                         <th class="pb-2 text-center">حالة الصلاحية (تشغيل الفيديوهات)</th>
-
+                                        <th class="pb-2 text-center">إجراءات</th>
                                     </tr>
-
                                 </thead>
-
-                                <tbody class="divide-y divide-gray-800/30 text-gray-300">
-
-                                    <tr class="hover:bg-white/5 student-subscription-row" data-subscription-type="شهري" data-expire-at="2026-07-15T00:00:00" data-grace-days="3">
-
+                                <tbody id="students-table-body" class="divide-y divide-gray-800/30 text-gray-300">
+                                    <tr class="hover:bg-white/5 student-row">
                                         <td class="py-3 font-mono text-gray-600">#NV-8821</td>
-
                                         <td class="py-3 font-bold text-white">سعيد محمد أحمد</td>
-
-                                        <td class="py-3">الصف الثالث الثانوي</td>
-
+                                        <td class="py-3 font-mono text-emerald-400 select-all">student.8821@nova.com</td>
+                                        <td class="py-3 font-mono text-gray-400 select-all">pass8821</td>
                                         <td class="py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">شهري</span>
+                                            <span class="text-white">الصف الثالث الثانوي</span>
+                                            <span class="mr-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[9px] font-bold">علمي علوم</span>
                                         </td>
-
-                                        <td class="py-3">
-                                            <div class="flex flex-col gap-1">
-                                                <span class="subscription-status-badge inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
-                                                    <i class="fa-solid fa-circle-check"></i>
-                                                    <span>اشتراك نشط</span>
-                                                </span>
-                                                <span class="subscription-meta-text text-[10px] text-gray-500">ينتهي في 15/07/2026</span>
-                                            </div>
-                                        </td>
-
                                         <td class="py-3 flex justify-center">
-
                                             <div class="flex items-center relative cursor-pointer">
-
                                                 <input type="checkbox" id="user-1" class="toggle-checkbox hidden" checked>
-
                                                 <label for="user-1" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
-
                                                     <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
-
                                                 </label>
-
-                                                <span class="access-status-text text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
-
+                                                <span class="text-[10px] text-emerald-400 font-bold mr-2 status-text">شاحن (مفتوح)</span>
                                             </div>
-
                                         </td>
-
+                                        <td class="py-3 text-center">
+                                            <button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                                                <i class="fa-solid fa-trash-can"></i> حذف
+                                            </button>
+                                        </td>
                                     </tr>
-
-                                    <tr class="hover:bg-white/5 student-subscription-row" data-subscription-type="ربع سنوي" data-expire-at="2026-06-25T00:00:00" data-grace-days="3">
-
-                                        <td class="py-3 font-mono text-gray-600">#NV-4412</td>
-
-                                        <td class="py-3 font-bold text-white">عبدالرحمن إبراهيم</td>
-
-                                        <td class="py-3">الصف الثالث الثانوي</td>
-
-                                        <td class="py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold">ربع سنوي</span>
-                                        </td>
-
-                                        <td class="py-3">
-                                            <div class="flex flex-col gap-1">
-                                                <span class="subscription-status-badge inline-flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
-                                                    <i class="fa-solid fa-circle-check"></i>
-                                                    <span>اشتراك نشط</span>
-                                                </span>
-                                                <span class="subscription-meta-text text-[10px] text-gray-500">ينتهي في 25/06/2026</span>
-                                            </div>
-                                        </td>
-
-                                        <td class="py-3 flex justify-center">
-
-                                            <div class="flex items-center relative cursor-pointer">
-
-                                                <input type="checkbox" id="user-2" class="toggle-checkbox hidden" checked>
-
-                                                <label for="user-2" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
-
-                                                    <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
-
-                                                </label>
-
-                                                <span class="access-status-text text-[10px] text-emerald-400 font-bold mr-2">شاحن (مفتوح)</span>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
 
                     <div class="border-t border-gray-800 pt-6 space-y-3 mt-6">
@@ -860,6 +780,63 @@
             });
         }
 
+        function initStudentToggles() {
+            document.querySelectorAll('.toggle-checkbox').forEach(item => {
+                if (item.dataset.listened) return;
+                item.dataset.listened = true;
+
+                item.addEventListener('change', function() {
+                    const labelSpan = this.parentElement.querySelector('.status-text');
+                    if (this.checked) {
+                        labelSpan.innerText = 'شاحن (مفتوح)';
+                        labelSpan.className = 'text-[10px] text-emerald-400 font-bold mr-2 status-text';
+                    } else {
+                        labelSpan.innerText = 'غير شاحن (مغلق)';
+                        labelSpan.className = 'text-[10px] text-rose-400 font-bold mr-2 status-text';
+                    }
+                });
+            });
+        }
+
+        function generateStudentAccount() {
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            const generatedEmail = `student.${randomId}@nova.com`;
+            const generatedPassword = `pass${randomId}`;
+            const studentName = prompt('أدخل اسم الطالب بالكامل:') || 'طالب جديد معلق';
+            const studentBranch = prompt('أدخل التخصص (علمي علوم / علمي رياضة / أدبي / عام):') || 'عام';
+
+            const tableBody = document.getElementById('students-table-body');
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-white/5 student-row border-b border-gray-800/30 text-gray-300';
+            newRow.innerHTML = `
+                <td class="py-3 font-mono text-gray-600">#NV-${randomId}</td>
+                <td class="py-3 font-bold text-white">${studentName}</td>
+                <td class="py-3 font-mono text-emerald-400 select-all">${generatedEmail}</td>
+                <td class="py-3 font-mono text-gray-400 select-all">${generatedPassword}</td>
+                <td class="py-3">
+                    <span class="text-white">الصف الثالث الثانوي</span>
+                    <span class="mr-1 px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[9px] font-bold">${studentBranch}</span>
+                </td>
+                <td class="py-3 flex justify-center">
+                    <div class="flex items-center relative cursor-pointer">
+                        <input type="checkbox" id="user-${randomId}" class="toggle-checkbox hidden" checked>
+                        <label for="user-${randomId}" class="toggle-label block w-9 h-4.5 bg-gray-700 rounded-full p-0.5 transition-colors duration-300">
+                            <span class="toggle-dot block w-3.5 h-3.5 bg-white rounded-full shadow transform translate-x-0 transition-transform duration-300"></span>
+                        </label>
+                        <span class="text-[10px] text-emerald-400 font-bold mr-2 status-text">شاحن (مفتوح)</span>
+                    </div>
+                </td>
+                <td class="py-3 text-center">
+                    <button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-red-400 transition-colors px-2 py-1">
+                        <i class="fa-solid fa-trash-can"></i> حذف
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+            initStudentToggles();
+            alert(`تم توليد حساب الطالب بنجاح!\nالإيميل: ${generatedEmail}\nالباسورد: ${generatedPassword}\n\nخذه كوبي وأعطه للطالب.`);
+        }
+
         // دالة البحث الفوري داخل قائمة المدرسين
         function searchTeacher(keyword) {
             const rows = document.querySelectorAll('.teacher-row');
@@ -923,6 +900,7 @@
 
         updateStudentSubscriptionRows();
         setInterval(updateStudentSubscriptionRows, 1000);
+        initStudentToggles();
         initTeacherToggles();
     // دالة تبديل بيانات المدرس وعرض كشف حساب القبض والحصص ديناميكياً
         function selectTeacher(name, subject, progress, currentUnit, status, totalEarned, paidAmount, remainingAmount) {
