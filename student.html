@@ -71,7 +71,7 @@
                 <div class="text-right hidden sm:block">
                     <p class="text-sm font-black">مرحباً، أحمد يوسف</p>
                     <div class="flex items-center gap-2 mt-1">
-                        <p class="text-xs text-[#801A24] font-bold">أولى ثانوي</p>
+                        <p id="display-grade" class="text-xs text-[#801A24] font-bold">أولى ثانوي</p>
                     </div>
                     <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#801A24]/10 border border-[#801A24]/20 text-[#a32230] font-mono text-[11px] mt-1">
                         <i class="fa-solid fa-id-card"></i> كود الطالب: <span id="display-student-code">#NV-8821</span>
@@ -460,8 +460,54 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            checkSubscriptionAccess();
-            filterSubjectsByBranch();
+            // Read stored registration info from localStorage
+            const savedGrade = localStorage.getItem('studentGrade') || 'الصف الأول الثانوي';
+            const savedBranch = localStorage.getItem('studentBranch') || '';
+            const savedSubjects = JSON.parse(localStorage.getItem('studentSubjects')) || [];
+
+            // A. Update Grade and Branch text header
+            const displayGradeObj = document.getElementById('display-grade');
+            if (displayGradeObj) {
+                displayGradeObj.textContent = savedBranch ? `${savedGrade} - ${savedBranch}` : savedGrade;
+            } else {
+                // Fallback selector scan if ID is missing
+                const fallbackElements = document.querySelectorAll('p, span');
+                fallbackElements.forEach(el => {
+                    if (el.textContent.trim() === 'أولى ثانوي' || el.classList.contains('text-[#a32230]')) {
+                        el.textContent = savedBranch ? `${savedGrade} - ${savedBranch}` : savedGrade;
+                    }
+                });
+            }
+
+            // B. Dynamically update the "المواد المشترك بها" statistics count
+            const allDivs = document.querySelectorAll('div');
+            allDivs.forEach(card => {
+                if (card.textContent.includes('المواد المشترك بها')) {
+                    const countHeading = card.querySelector('h3, p, span.text-3xl, div.text-3xl');
+                    if (countHeading) {
+                        countHeading.textContent = `${savedSubjects.length} مواد`;
+                    }
+                }
+            });
+
+            // C. Inject the responsive layout badges displaying specific subject names
+            const gridContainer = document.querySelector('.grid');
+            if (gridContainer && savedSubjects.length > 0) {
+                const subjectsContainerCard = document.createElement('div');
+                subjectsContainerCard.className = 'col-span-full bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl text-right mt-4';
+
+                subjectsContainerCard.innerHTML = `
+                    <h4 class="text-sm font-bold text-gray-200 mb-3"><i class="fa-solid fa-book-bookmark text-[#801A24] ml-2"></i> موادك الدراسية النشطة هذا الترم:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${savedSubjects.map(sub => `
+                            <span class="bg-[#801A24]/10 text-[#a32230] border border-[#801A24]/30 px-3 py-1 rounded-xl text-xs font-semibold shadow-sm transition-all">
+                                ${sub}
+                            </span>
+                        `).join('')}
+                    </div>
+                `;
+                gridContainer.parentNode.appendChild(subjectsContainerCard);
+            }
         });
     </script>
 
