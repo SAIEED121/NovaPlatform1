@@ -162,7 +162,8 @@
                     <div class="space-y-2 flex flex-col justify-center">
                         <label class="text-[10px] text-gray-400 block">قم برفع لقطة شاشة لإيصال التحويل (Screenshot)</label>
                         <input type="file" accept="image/*" class="w-full text-[10px] text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-zinc-800 file:text-gray-300 hover:file:bg-zinc-700 cursor-pointer">
-                        <button onclick="alert('تم إرسال الإيصال بنجاح! سيتم مراجعة طلبك وتفعيل الحساب خلال دقائق.');" class="w-full bg-zinc-800 hover:bg-zinc-700 border border-gray-700 text-white text-[10px] font-bold py-2 rounded-lg transition-colors">
+                        <input type="hidden" id="submit-student-code" value="#NV-8821">
+                        <button onclick="submitPaymentReceipt()" class="w-full bg-zinc-800 hover:bg-zinc-700 border border-gray-700 text-white text-[10px] font-bold py-2 rounded-lg transition-colors">
                             تأكيد عملية الدفع
                         </button>
                     </div>
@@ -444,6 +445,19 @@
                     }
                 }
             }
+        }
+
+        function submitPaymentReceipt() {
+            const studentCode = document.getElementById('submit-student-code') ? document.getElementById('submit-student-code').value : '#NV-UNKNOWN';
+            const fileInput = document.querySelector('input[type="file"]');
+            
+            if (fileInput && fileInput.files.length === 0) {
+                alert("برجاء رفع صورة إيصال التحويل أولاً!");
+                return;
+            }
+
+            alert(`تم إرسال الإيصال بنجاح!\nكود الطالب المرفق تلقائياً: ${studentCode}\n\nسيتم مراجعة طلبك وتفعيل الحساب من قبل الإدارة خلال دقائق.`);
+            if(fileInput) fileInput.value = '';
         }
 
         document.addEventListener('DOMContentLoaded', function() {
