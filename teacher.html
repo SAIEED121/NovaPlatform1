@@ -365,6 +365,25 @@
                 </button>
             </div>
 
+            <div class="bg-[#18181b] border border-gray-800 rounded-2xl p-4 space-y-3 mt-4 text-right">
+                <div>
+                    <h4 class="text-xs font-bold text-emerald-400"><i class="fa-solid fa-graduation-cap"></i> متابعة درجات الطلاب بالكود</h4>
+                    <p class="text-[10px] text-gray-500 mt-0.5">أدخل كود الطالب الموحد لعرض درجات الكويزات ونشاطه الدراسي الحالي.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="teacherLookupStudent()" class="bg-[#801A24] hover:bg-[#a32230] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0">
+                        بحث
+                    </button>
+                    <input type="text" id="teacher-search-code" placeholder="مثال: #NV-8821" class="w-full p-2 bg-[#0f0f12] border border-gray-800 rounded-lg text-center font-mono text-xs text-white outline-none focus:border-[#801A24]">
+                </div>
+
+                <div id="teacher-student-report" class="hidden border border-gray-800/60 rounded-xl p-3 bg-[#0f0f12] text-[11px] text-gray-400 space-y-2">
+                    <div class="text-white font-bold text-xs border-b border-gray-800 pb-1">تقرير الطالب: <span id="t-student-name" class="text-emerald-400"></span></div>
+                    <div><i class="fa-solid fa-square-poll-vertical ml-1 text-purple-400"></i> درجات الكويزات: <span id="t-student-grades" class="text-gray-200 font-mono"></span></div>
+                    <div><i class="fa-solid fa-clock-rotate-left ml-1 text-blue-400"></i> آخر محاضرة شاهدها: <span id="t-student-last-lecture" class="text-gray-200"></span></div>
+                </div>
+            </div>
+
             <!-- تبويب: الملازم والمستندات -->
             <div id="lectures-tab" class="tab-content space-y-6">
                 <!-- إضافة محاضرة أو ملف -->
@@ -1403,6 +1422,36 @@
                 subjectSelect.appendChild(opt);
             }
         });
+
+        // داتا وهمية للطلاب من منظور المعلم (لا تحتوي على أرقام هواتف أو بيانات مالية)
+        const teacherStudentDataMock = {
+            "#NV-8821": {
+                name: "سعيد محمد أحمد",
+                grades: "كويز 1: 9/10 | كويز 2: 10/10 | الواجب الأول: تم التسليم",
+                lastLecture: "الفيزياء الحديثة - الفصل الأول (مكتملة بنسبة 100%)"
+            }
+        };
+
+        function teacherLookupStudent() {
+            const codeInput = document.getElementById('teacher-search-code').value.trim();
+            const reportBox = document.getElementById('teacher-student-report');
+            
+            if(!codeInput) {
+                alert("برجاء إدخال كود الطالب أولاً!");
+                return;
+            }
+
+            const data = teacherStudentDataMock[codeInput];
+            if(data) {
+                reportBox.classList.remove('hidden');
+                document.getElementById('t-student-name').innerText = data.name;
+                document.getElementById('t-student-grades').innerText = data.grades;
+                document.getElementById('t-student-last-lecture').innerText = data.lastLecture;
+            } else {
+                reportBox.classList.add('hidden');
+                alert("عذراً، هذا الكود غير موجود أو ليس مسجلاً في موادك الدراسية!");
+            }
+        }
 
         function logout() {
             showToast("تم تسجيل الخروج بنجاح.");
