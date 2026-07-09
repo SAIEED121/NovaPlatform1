@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | لوحة تحكم المعلم التفاعلية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #dcd9d4;
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.85), rgba(220, 217, 212, 0.85)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            background-attachment: fixed;
+        }
+
+        .bg-svg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.08;
+        }
+
+        .premium-dark-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .sunken-stat-box {
+            background-color: #111111;
+            border: 1px solid #222222;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .interactive-class-card {
+            background-color: #151515;
+            border: 1px solid #262626;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        border-color 0.3s ease, 
+                        box-shadow 0.3s ease;
+        }
+        .interactive-class-card:hover {
+            transform: translateY(-6px);
+            border-color: #801A24;
+            box-shadow: 0 18px 28px rgba(0, 0, 0, 0.6), 
+                        0 0 12px rgba(128, 26, 36, 0.2);
+        }
+
+        .btn-burgundy-royal {
+            background-color: #801A24;
+            box-shadow: 0 4px 12px rgba(128, 26, 36, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+        }
+        .btn-burgundy-royal:hover {
+            background-color: #a32230;
+            box-shadow: 0 6px 16px rgba(128, 26, 36, 0.4);
+        }
+
+        /* تنسيق الأكورديون للمراحل */
+        .stage-collapse-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        .stage-collapse-content.open {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        /* تخصيص زر اختيار الملفات ليتناسب مع النمط الداكن */
+        input[type="file"]::file-selector-button {
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-inline-end: 1rem;
+            transition: background-color 0.2s ease;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #333;
+        }
+
+        /* تأثير التبويب النشط */
+        .tab-btn.active {
+            background-color: #801A24;
+            color: white;
+            border-color: #801A24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased text-gray-200">
+
+    <!-- الزخارف الخلفية -->
+    <div class="bg-svg-decorations">
+        <svg class="absolute top-[8%] right-[5%] w-64 h-44" viewBox="0 0 100 80" stroke="#000" stroke-width="0.12" fill="none">
+            <path d="M10,60 Q30,55 50,60 Q70,55 90,60 L90,20 Q70,15 50,20 Q30,15 10,20 Z"/>
+            <path d="M50,20 L50,60"/>
+        </svg>
+        <svg class="absolute bottom-[-20px] left-[-20px] w-80 h-80" viewBox="0 0 100 100" stroke="#000" stroke-width="0.12" fill="none">
+            <circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="45" stroke-dasharray="1,1"/>
+            <line x1="50" y1="5" x2="50" y2="95"/><line x1="5" y1="50" x2="95" y2="50"/>
+        </svg>
+    </div>
+
+    <!-- رأس الصفحة (Header) -->
+    <header class="w-full p-6 bg-transparent relative z-10 border-b border-gray-400/20">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                    Nova<span class="font-light text-gray-800">Platform</span>
+                </div>
+                <span class="text-[10px] bg-[#801A24] text-white px-2.5 py-1 rounded font-bold shadow-sm tracking-wide">بوابة المعلم</span>
+            </div>
+            <div class="flex items-center space-x-5 space-x-reverse text-gray-900">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-black">أ. محمد أحمد</p>
+                    <p class="text-xs text-[#801A24] font-bold">مدرس مادة الفيزياء</p>
+                </div>
+                <div class="h-5 w-[1px] bg-gray-400/40 hidden sm:block"></div>
+                <button onclick="logout()" class="text-xs bg-[#1a1a1a] text-white hover:bg-[#333] px-4 py-2 rounded-xl font-bold transition shadow-md">
+                    تسجيل خروج
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي (Main) -->
+    <main class="w-full max-w-7xl mx-auto p-4 md:p-8 flex-1 relative z-10">
+
+        <!-- ========================================== -->
+        <!-- الواجهة الرئيسية للوحة التحكم (Main Dashboard View) -->
+        <!-- ========================================== -->
+        <div id="main-dashboard-view" class="space-y-8">
+            
+            <!-- لوحة الترحيب والإحصائيات السريعة العامة -->
+            <section class="grid grid-cols-1 sm:grid-cols-4 gap-5">
+                <div class="premium-dark-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">إجمالي الطلاب بالمنصة</p>
+                        <p class="text-2xl font-black text-white mt-1">1,240 طالب</p>
+                    </div>
+                    <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-blue-400">
+                        <i class="fa-solid fa-users text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="premium-dark-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">الفصول النشطة</p>
+                        <p class="text-2xl font-black text-white mt-1">12 صفاً</p>
+                    </div>
+                    <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-purple-400">
+                        <i class="fa-solid fa-chalkboard text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="premium-dark-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">فيديوهات ومحاضرات السيرفر</p>
+                        <p class="text-2xl font-black text-emerald-400 mt-1">84 فيديو</p>
+                    </div>
+                    <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-circle-play text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="premium-dark-card p-5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">الأسئلة المعلقة للطلاب</p>
+                        <p class="text-2xl font-black text-amber-400 mt-1">9 استفسارات</p>
+                    </div>
+                    <div class="w-12 h-12 sunken-stat-box rounded-xl flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-comments text-lg"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- المراحل التعليمية بنظام الأكورديون التفاعلي الجديد -->
+            <section class="premium-dark-card p-6 md:p-8 mt-8">
+                <div class="border-b border-gray-800 pb-5 mb-6">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-school text-[#801A24]"></i> المراحل الدراسية وإدارة الصفوف والطلاب
+                    </h2>
+                    <p class="text-gray-400 text-xs mt-2">اختر المرحلة التعليمية لعرض صفوفها، واضغط على أي صف للدخول مباشرة إلى لوحة التحكم الخاصة به.</p>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <!-- 1. المرحلة الابتدائية -->
+                    <div class="bg-[#151515] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300">
+                        <button onclick="toggleStage('primary-collapse', this)" class="w-full p-5 flex justify-between items-center text-right text-white hover:bg-[#1f1f1f] transition-all">
+                            <span class="flex items-center gap-3 font-bold text-base">
+                                <i class="fa-solid fa-children text-[#801A24] text-xl"></i>
+                                المرحلة الابتدائية
+                            </span>
+                            <span class="text-xs text-gray-400 flex items-center gap-2">
+                                6 صفوف دراسية
+                                <i class="fa-solid fa-chevron-down transition-transform duration-300 transform"></i>
+                            </span>
+                        </button>
+                        <div id="primary-collapse" class="stage-collapse-content px-5 pb-5">
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+                                <button onclick="enterGrade('الصف الأول الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الأول الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثاني الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثاني الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثالث الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثالث الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الرابع الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الرابع الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الخامس الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الخامس الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف السادس الابتدائي', 'المرحلة الابتدائية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>السادس الابتدائي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. المرحلة الإعدادية -->
+                    <div class="bg-[#151515] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300">
+                        <button onclick="toggleStage('prep-collapse', this)" class="w-full p-5 flex justify-between items-center text-right text-white hover:bg-[#1f1f1f] transition-all">
+                            <span class="flex items-center gap-3 font-bold text-base">
+                                <i class="fa-solid fa-user-graduate text-[#801A24] text-xl"></i>
+                                المرحلة الإعدادية
+                            </span>
+                            <span class="text-xs text-gray-400 flex items-center gap-2">
+                                3 صفوف دراسية
+                                <i class="fa-solid fa-chevron-down transition-transform duration-300 transform"></i>
+                            </span>
+                        </button>
+                        <div id="prep-collapse" class="stage-collapse-content px-5 pb-5">
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+                                <button onclick="enterGrade('الصف الأول الإعدادي', 'المرحلة الإعدادية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الأول الإعدادي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثاني الإعدادي', 'المرحلة الإعدادية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثاني الإعدادي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثالث الإعدادي', 'المرحلة الإعدادية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثالث الإعدادي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. المرحلة الثانوية -->
+                    <div class="bg-[#151515] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300">
+                        <button onclick="toggleStage('sec-collapse', this)" class="w-full p-5 flex justify-between items-center text-right text-white hover:bg-[#1f1f1f] transition-all">
+                            <span class="flex items-center gap-3 font-bold text-base">
+                                <i class="fa-solid fa-book-open text-[#801A24] text-xl"></i>
+                                المرحلة الثانوية
+                            </span>
+                            <span class="text-xs text-gray-400 flex items-center gap-2">
+                                3 صفوف دراسية
+                                <i class="fa-solid fa-chevron-down transition-transform duration-300 transform"></i>
+                            </span>
+                        </button>
+                        <div id="sec-collapse" class="stage-collapse-content px-5 pb-5">
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+                                <button onclick="enterGrade('الصف الأول الثانوي', 'المرحلة الثانوية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الأول الثانوي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثاني الثانوي', 'المرحلة الثانوية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثاني الثانوي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                                <button onclick="enterGrade('الصف الثالث الثانوي', 'المرحلة الثانوية')" class="p-4 bg-[#111] hover:bg-[#801A24]/20 hover:border-[#801A24]/40 border border-gray-800 text-gray-200 rounded-xl text-sm font-bold transition-all text-right flex items-center justify-between">
+                                    <span>الثالث الثانوي</span> <i class="fa-solid fa-angle-left text-[#801A24]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex items-start gap-3 bg-[#801A24]/10 p-4 rounded-xl border border-[#801A24]/20">
+                    <i class="fa-solid fa-circle-info text-[#801A24] mt-1 text-sm"></i>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        <strong>ملاحظة هامة للمشرف:</strong> بمجرد دخول المعلم إلى أي صف، تظهر له لوحة تفاعلية مستقلة مخصصة كلياً لإدارة المحاضرات، بنوك الأسئلة، تقييمات الطلاب والواجبات المنزلية، دون تشتت بين الفصول.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- واجهة التحكم الذكية بالصف الدراسي المحدد (Grade Workspace) -->
+        <!-- ========================================== -->
+        <div id="grade-dashboard-view" class="hidden space-y-8">
+            
+            <!-- هيدر الصف والمرحلة الحالية مع زر العودة للرئيسية -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a] p-6 rounded-2xl border border-gray-800">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-[#801A24]/20 border border-[#801A24]/40 rounded-2xl flex items-center justify-center text-[#801A24] text-2xl">
+                        <i id="grade-header-icon" class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <span id="grade-header-stage" class="text-xs text-amber-500 font-bold block mb-1">المرحلة الثانوية</span>
+                        <h2 id="grade-header-title" class="text-xl font-black text-white">لوحة تحكم: الصف الأول الثانوي</h2>
+                    </div>
+                </div>
+                <button onclick="exitGrade()" class="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-bold transition shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right"></i> العودة للوحة التحكم الرئيسية
+                </button>
+            </div>
+
+            <!-- الإحصائيات الخاصة بالصف المختار -->
+            <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-[#111] border border-gray-800 p-4 rounded-xl text-right">
+                    <p class="text-xs text-gray-400 font-medium">الطلاب المسجلين</p>
+                    <p id="grade-stat-students" class="text-xl font-black text-white mt-1">450 طالب</p>
+                </div>
+                <div class="bg-[#111] border border-gray-800 p-4 rounded-xl text-right">
+                    <p class="text-xs text-gray-400 font-medium">نسبة حضور الطلاب</p>
+                    <p id="grade-stat-attendance" class="text-xl font-black text-emerald-400 mt-1">94.2%</p>
+                </div>
+                <div class="bg-[#111] border border-gray-800 p-4 rounded-xl text-right">
+                    <p class="text-xs text-gray-400 font-medium">الواجبات النشطة</p>
+                    <p id="grade-stat-homework" class="text-xl font-black text-blue-400 mt-1">4 واجبات</p>
+                </div>
+                <div class="bg-[#111] border border-gray-800 p-4 rounded-xl text-right">
+                    <p class="text-xs text-gray-400 font-medium">امتحانات منشورة</p>
+                    <p id="grade-stat-exams" class="text-xl font-black text-amber-400 mt-1">3 امتحانات</p>
+                </div>
+            </section>
+
+            <!-- القائمة التفاعلية للتبويبات لسهولة التحكم (تم إضافة تبويبات الفيديوهات والأسئلة) -->
+            <div class="flex overflow-x-auto pb-2 gap-2 border-b border-gray-800">
+                <button onclick="switchTab('lectures-tab', this)" class="tab-btn active px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf"></i> الملازم والمستندات
+                </button>
+                <button onclick="switchTab('videos-tab', this)" class="tab-btn px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-circle-play"></i> الفيديوهات والدروس المسجلة
+                </button>
+                <button onclick="switchTab('exams-tab', this)" class="tab-btn px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus"></i> الواجبات والامتحانات
+                </button>
+                <button onclick="switchTab('evaluations-tab', this)" class="tab-btn px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list"></i> جدول التقييمات ورصد الدرجات
+                </button>
+                <button onclick="switchTab('questions-tab', this)" class="tab-btn px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-comments"></i> أسئلة واستفسارات الطلاب
+                    <span id="questions-count-badge" class="bg-amber-500 text-black text-[10px] font-black px-1.5 py-0.5 rounded-full">2</span>
+                </button>
+                <button onclick="switchTab('live-tab', this)" class="tab-btn px-5 py-3 rounded-xl border border-gray-800 bg-[#111] text-gray-300 text-sm font-bold transition-all whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-tower-broadcast"></i> جدول مواعيد البث المباشر
+                </button>
+            </div>
+
+            <div class="bg-[#18181b] border border-gray-800 rounded-2xl p-4 space-y-3 mt-4 text-right">
+                <div>
+                    <h4 class="text-xs font-bold text-emerald-400"><i class="fa-solid fa-graduation-cap"></i> متابعة درجات الطلاب بالكود</h4>
+                    <p class="text-[10px] text-gray-500 mt-0.5">أدخل كود الطالب الموحد لعرض درجات الكويزات ونشاطه الدراسي الحالي.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="teacherLookupStudent()" class="bg-[#801A24] hover:bg-[#a32230] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0">
+                        بحث
+                    </button>
+                    <input type="text" id="teacher-search-code" placeholder="مثال: #NV-8821" class="w-full p-2 bg-[#0f0f12] border border-gray-800 rounded-lg text-center font-mono text-xs text-white outline-none focus:border-[#801A24]">
+                </div>
+
+                <div id="teacher-student-report" class="hidden border border-gray-800/60 rounded-xl p-3 bg-[#0f0f12] text-[11px] text-gray-400 space-y-2">
+                    <div class="text-white font-bold text-xs border-b border-gray-800 pb-1">تقرير الطالب: <span id="t-student-name" class="text-emerald-400"></span></div>
+                    <div><i class="fa-solid fa-square-poll-vertical ml-1 text-purple-400"></i> درجات الكويزات: <span id="t-student-grades" class="text-gray-200 font-mono"></span></div>
+                    <div><i class="fa-solid fa-clock-rotate-left ml-1 text-blue-400"></i> آخر محاضرة شاهدها: <span id="t-student-last-lecture" class="text-gray-200"></span></div>
+                </div>
+            </div>
+
+            <!-- تبويب: الملازم والمستندات -->
+            <div id="lectures-tab" class="tab-content space-y-6">
+                <!-- إضافة محاضرة أو ملف -->
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-[#801A24]"></i> رفع كتب وملازم مخصصة لهذا الصف
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">المرحلة / الصف الدراسي</label>
+                            <select id="teacher-grade-select" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24] w-full">
+                                <optgroup label="المرحلة الابتدائية">
+                                    <option value="primary-all">الابتدائي (جميع الصفوف)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الإعدادية">
+                                    <option value="prep-all">الإعدادي (جميع الصفوف)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - الشعبة العلمية">
+                                    <option value="3-sci-physics">الثانوية العامة | علمي (فيزياء / كيمياء / أحياء / جيولوجيا / رياضة)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - الشعبة الأدبية">
+                                    <option value="3-lit-history">الثانوية العامة | أدبي (تاريخ / جغرافيا / فلسفة / علم نفس)</option>
+                                </optgroup>
+                                <optgroup label="المرحلة الثانوية - مواد مشتركة">
+                                    <option value="3-common">الثانوية العامة | مواد مشتركة (لغة عربية / لغة إنجليزية / لغة ثانية)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">المادة الدراسية</label>
+                            <select id="teacher-subject-select" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24] w-full">
+                                <option value="" disabled selected>اختر المادة</option>
+                            </select>
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">عنوان الكتاب أو الملزمة</label>
+                            <input type="text" id="lecture-title-input" placeholder="عنوان الكتاب أو الملزمة" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="xl:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">اختر ملف المحتوى</label>
+                            <input type="file" id="lecture-file-input" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-2.5 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="xl:col-span-1 flex items-end">
+                            <button onclick="handleUploadFile()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus"></i> رفع وإضافة للطلاب
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ملازم الصف الحالية -->
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-[#801A24]"></i> الملازم والكتب المنشورة حالياً
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs md:text-sm text-gray-300">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400">
+                                    <th class="pb-3 pt-2 font-bold">اسم الملف والمستند</th>
+                                    <th class="pb-3 pt-2 font-bold">تاريخ النشر</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">التنزيلات</th>
+                                    <th class="pb-3 pt-2 font-bold text-left">التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lectures-table-body" class="divide-y divide-gray-800/50">
+                                <!-- محتوى ديناميكي من الـ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب جديد: الفيديوهات والدروس المسجلة (مع ميزة الرفع الداخلي على سيرفر المنصة) -->
+            <div id="videos-tab" class="tab-content hidden space-y-6">
+                <!-- رفع فيديو على السيرفر الخاص -->
+                <div class="premium-dark-card p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-gray-800 pb-3">
+                        <h3 class="text-md font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-[#801A24]"></i> رفع فيديو تعليمي جديد داخلياً على سيرفر المنصة الخاص
+                        </h3>
+                        <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full font-bold border border-emerald-500/20">
+                            <i class="fa-solid fa-server ml-1"></i> سعة تخزين السيرفر المتاحة: 457.5 GB
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">اسم الدرس أو الفيديو المسجل</label>
+                            <input type="text" id="video-title-input" placeholder="مثال: محاضرة شرح التيار الكهربي وقانون أوم" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="md:col-span-1">
+                            <label class="text-xs text-gray-400 block mb-1.5">اختر ملف الفيديو الخاص بك (.mp4, .mkv)</label>
+                            <input type="file" id="video-file-input" accept="video/*" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-2.5 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="md:col-span-1 flex items-end">
+                            <button onclick="simulateVideoUpload()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2 h-[46px]">
+                                <i class="fa-solid fa-upload"></i> بدء الرفع المشفر داخلياً
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- شريط تحميل وهمي للرفع للسيرفر -->
+                    <div id="upload-progress-container" class="hidden bg-[#111] border border-gray-800 p-4 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center text-xs">
+                            <span id="upload-status-text" class="text-amber-400 font-bold flex items-center gap-2">
+                                <i class="fa-solid fa-spinner animate-spin"></i> جاري نقل ومعالجة ملف الفيديو على سيرفرات NovaPlatform الخاصة...
+                            </span>
+                            <span id="upload-percentage" class="text-white font-bold">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden">
+                            <div id="upload-progress-bar" class="bg-[#801A24] h-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قائمة الفيديوهات المنشورة على السيرفر الخاص -->
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-square-play text-[#801A24]"></i> مكتبة الفيديو الخاصة بهذا الصف الدراسي
+                    </h3>
+                    
+                    <div id="videos-grid-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- سيتم بناء كروت الفيديو ديناميكياً من الـ JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب: الواجبات والامتحانات -->
+            <div id="exams-tab" class="tab-content hidden space-y-6">
+                <!-- لوحة إنشاء عناصر جديدة -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- إنشاء امتحان -->
+                    <div class="premium-dark-card p-6 space-y-4">
+                        <h3 class="text-md font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-3">
+                            <i class="fa-solid fa-graduation-cap text-[#801A24]"></i> بنك الامتحانات الذكية
+                        </h3>
+                        <div class="space-y-3">
+                            <input type="text" id="new-exam-title" placeholder="اسم الامتحان (مثال: اختبار الفصل الأول الشامل)" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="number" id="new-exam-duration" placeholder="المدة بالدقائق" class="bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                                <input type="number" id="new-exam-deg" placeholder="الدرجة الكلية" class="bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                            </div>
+                            <button onclick="createExam()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> نشر الامتحان الجديد فوراً
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- إنشاء واجب منزلي -->
+                    <div class="premium-dark-card p-6 space-y-4">
+                        <h3 class="text-md font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-3">
+                            <i class="fa-solid fa-house-chimney-user text-[#801A24]"></i> واجب منزلي جديد
+                        </h3>
+                        <div class="space-y-3">
+                            <input type="text" id="new-homework-title" placeholder="اسم الواجب (مثال: واجب الدرس الثاني)" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                            <input type="date" id="new-homework-deadline" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                            <button onclick="createHomework()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus"></i> تعيين الواجب للصف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول الواجبات والامتحانات الحالية -->
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-[#801A24]"></i> الامتحانات والواجبات النشطة حالياً
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs md:text-sm text-gray-300">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400">
+                                    <th class="pb-3 pt-2 font-bold">النوع</th>
+                                    <th class="pb-3 pt-2 font-bold">الاسم والبيان</th>
+                                    <th class="pb-3 pt-2 font-bold">الموعد النهائي/المدة</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">نسبة التسليم/الحل</th>
+                                    <th class="pb-3 pt-2 font-bold text-left">التحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exams-table-body" class="divide-y divide-gray-800/50">
+                                <!-- سيتم بناؤه تفاعلياً من الـ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب: جدول التقييمات ورصد الدرجات -->
+            <div id="evaluations-tab" class="tab-content hidden space-y-6">
+                <div class="premium-dark-card p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-800 pb-5 mb-6">
+                        <div>
+                            <h3 class="text-md font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-users text-[#801A24]"></i> قائمة حضور الطلاب وتقييم أداء الصف
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-1">يمكنك رصد وتعديل التقييمات وحالة حضور الطلاب وتحديث الدرجات يدوياً.</p>
+                        </div>
+                        <!-- خانة فلترة وبحث -->
+                        <input type="text" id="student-search-input" onkeyup="filterStudents()" placeholder="ابحث باسم الطالب..." class="bg-[#111] text-white text-xs border border-gray-700 rounded-xl px-4 py-2 w-full sm:w-64 focus:outline-none focus:border-[#801A24]">
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs md:text-sm text-gray-300">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400">
+                                    <th class="pb-3 pt-2 font-bold">كود الطالب</th>
+                                    <th class="pb-3 pt-2 font-bold">اسم الطالب بالكامل</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">نسبة الحضور والتفاعل</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">أخر تقييم</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">درجة أخر امتحان</th>
+                                    <th class="pb-3 pt-2 font-bold text-left">رصد التقييم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body" class="divide-y divide-gray-800/50">
+                                <!-- محتوى تفاعلي كامل مخصص لكل صف من الـ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب جديد: أسئلة واستفسارات الطلاب -->
+            <div id="questions-tab" class="tab-content hidden space-y-6">
+                <div class="premium-dark-card p-6">
+                    <div class="border-b border-gray-800 pb-4 mb-6">
+                        <h3 class="text-md font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-circle-question text-amber-500"></i> أسئلة الطلاب وحلقات النقاش للصف
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">هنا تظهر جميع الاستفسارات التي يطرحها الطلاب على المنصة مع إمكانية الرد عليها مباشرة لتظهر في حساباتهم فوراً.</p>
+                    </div>
+
+                    <div id="questions-list-container" class="space-y-4">
+                        <!-- سيتم بناؤه تفاعلياً من الـ JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب: البث المباشر المخصص مع جدول مواعيد متطور -->
+            <div id="live-tab" class="tab-content hidden space-y-6">
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-tower-broadcast text-[#801A24]"></i> جدولة بث مباشر مخصص لطلاب هذا الصف فقط
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-6">يمكنك تحديد تاريخ وتوقيت الحصة ورابط البث (سواء عبر البث المباشر الداخلي للمنصة أو Zoom/Meet) وسيظهر للطلاب المحدد اشتراكاتهم وتفعيل حساباتهم في هذا الصف.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">عنوان حصة البث</label>
+                            <input type="text" id="live-title-input" placeholder="مثال: مراجعة ليلة الامتحان" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">تحديد التاريخ والوقت</label>
+                            <input type="datetime-local" id="live-schedule-time" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">نوع/رابط البث</label>
+                            <input type="text" id="live-link-input" placeholder="ضع الرابط أو اكتب (بث المنصة الداخلي)" class="w-full bg-[#111] text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:border-[#801A24] text-sm">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="scheduleNewLive()" class="btn-burgundy-royal w-full rounded-xl p-3 text-white font-bold text-sm flex items-center justify-center gap-2 h-[46px]">
+                                <i class="fa-solid fa-plus"></i> جدولة الحصة وإدراجها بالجدول
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول مواعيد البث المباشر القادمة والمسجلة لطلاب الصف -->
+                <div class="premium-dark-card p-6">
+                    <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-amber-500"></i> جدول مواعيد البث المباشر المعتمدة لطلاب هذا الصف
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs md:text-sm text-gray-300">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-gray-400">
+                                    <th class="pb-3 pt-2 font-bold">عنوان البث</th>
+                                    <th class="pb-3 pt-2 font-bold">توقيت الحصة المباشرة</th>
+                                    <th class="pb-3 pt-2 font-bold">المنصة</th>
+                                    <th class="pb-3 pt-2 font-bold text-center">الحالة</th>
+                                    <th class="pb-3 pt-2 font-bold text-left">الإجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lives-table-body" class="divide-y divide-gray-800/50">
+                                <!-- سيتم بناؤه تفاعلياً من الـ JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- رسائل مخصصة بديلة للـ alert الممنوع في البيئة الإطارية -->
+        <div id="custom-toast" class="fixed bottom-6 left-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-[#1a1a1a] border border-[#801A24] text-white px-6 py-4 rounded-xl shadow-2xl max-w-sm flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+            <span id="toast-message" class="text-xs font-bold leading-relaxed">تمت العملية بنجاح!</span>
+        </div>
+
+    </main>
+
+    <!-- تذييل الصفحة (Footer) -->
+    <footer class="w-full text-center text-xs text-gray-500 py-6 bg-transparent relative z-10 border-t border-gray-400/10 mt-6">
+        &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
+    </footer>
+
+    <!-- السيناريوهات البرمجية التفاعلية -->
+    <script>
+        // داتا تجريبية لتجعل المنصة تبدو حية وقابلة للتعديل والتحكم بكل صف
+        const gradesData = {
+            "الصف الأول الثانوي": {
+                studentsCount: "450 طالب",
+                attendance: "94.2%",
+                homeworks: "4 واجبات",
+                exams: "3 امتحانات",
+                lectures: [
+                    { name: "شرح القياس الفيزيائي والخطأ في القياس.pdf", date: "2026-06-01", downloads: 312 },
+                    { name: "فيديو المحاضرة التأسيسية لعلم الفيزياء", date: "2026-05-28", downloads: 442 }
+                ],
+                videos: [
+                    { id: "vid-1", name: "المحاضرة الأولى: شرح مفهوم الكميات الفيزيائية الأساسية والمشتقة", date: "2026-06-15", duration: "45 دقيقة", size: "185 MB", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+                    { id: "vid-2", name: "حل بنك أسئلة الوزارة على الدرس الأول (القياس المباشر وغير المباشر)", date: "2026-06-18", duration: "32 دقيقة", size: "128 MB", src: "https://www.w3schools.com/html/movie.mp4" }
+                ],
+                questions: [
+                    { id: 1, student: "سيف الدين محمد الجندي", text: "يا مستر لو سمحت، في مسألة صيغة الأبعاد لمساحة السطح، ليه الـ Constant العددي مش بياثر في النتيجة النهائية؟ هل دايماً بنحذفه؟", date: "منذ ساعتين", answered: false, answer: "" },
+                    { id: 2, student: "إسراء هاني أبو طالب", text: "هل الخطأ النسبي دايماً هو الأكثر دلالة على دقة القياس؟ ولا ممكن نعتمد على الخطأ المطلق في حالات معينة؟", date: "أمس", answered: true, answer: "نعم يا بنتي، الخطأ النسبي دائماً هو الأكثر دلالة لأنه يعطينا النسبة المئوية للخطأ مقارنة بالقيمة الحقيقية، بينما المطلق لا يبين دقة القياس دون المقارنة بالقيمة الحقيقية." }
+                ],
+                scheduledLives: [
+                    { title: "مراجعة شاملة ليلة الامتحان - الفصل الأول", time: "2026-06-25 18:00", platform: "بث المنصة الداخلي", status: "مجدول", link: "#" },
+                    { title: "حل نموذج اختبار الوزارة الاسترشادي الأول", time: "2026-06-29 20:00", platform: "Zoom Cloud Meeting", status: "مجدول", link: "https://zoom.us" }
+                ],
+                currentExams: [
+                    { type: "امتحان", title: "اختبار الفصل الأول الشامل في القياس الفيزيائي", limit: "30 دقيقة", rate: "82%" },
+                    { type: "واجب", title: "حل مسائل صيغ الأبعاد المتقدمة", limit: "2026-06-30", rate: "90%" }
+                ],
+                students: [
+                    { code: "ST-1102", name: "أحمد محمود كامل زكي", attendance: "98%", evaluation: "ممتاز", lastGrade: "28/30" },
+                    { code: "ST-1105", name: "يوسف ممدوح صبري الشناوي", attendance: "91%", evaluation: "جيد جداً", lastGrade: "25/30" },
+                    { code: "ST-1109", name: "مصطفى جلال علي حسن", attendance: "85%", evaluation: "جيد", lastGrade: "21/30" },
+                    { code: "ST-1114", name: "سارة علاء عبد الرحمن الشريف", attendance: "100%", evaluation: "ممتاز", lastGrade: "30/30" },
+                    { code: "ST-1120", name: "ندى السعيد توفيق الشال", attendance: "92%", evaluation: "جيد جداً", lastGrade: "26/30" }
+                ]
+            },
+            "الصف الثاني الثانوي": {
+                studentsCount: "380 طالب",
+                attendance: "92.5%",
+                homeworks: "2 واجبين",
+                exams: "2 امتحانين",
+                lectures: [
+                    { name: "ملزمة الحركة الاهتزازية والحركة الموجية.pdf", date: "2026-06-10", downloads: 220 },
+                    { name: "محاضرة الصوت والموجات الميكانيكية", date: "2026-06-05", downloads: 340 }
+                ],
+                videos: [
+                    { id: "vid-3", name: "الحركة الإهتزازية وحساب التردد والزمن الدوري", date: "2026-06-11", duration: "50 دقيقة", size: "210 MB", src: "https://www.w3schools.com/html/movie.mp4" }
+                ],
+                questions: [
+                    { id: 1, student: "عمر جمال السويدي", text: "مساء الخير يا مستر، هل الموجات الكهرومغناطيسية كلها ليها نفس السرعة في الفراغ ولا السرعة بتختلف باختلاف التردد؟", date: "منذ 4 ساعات", answered: false, answer: "" }
+                ],
+                scheduledLives: [
+                    { title: "بث ترحيبي وشرح خطة الفصل الدراسي الثاني", time: "2026-06-27 17:00", platform: "بث المنصة الداخلي", status: "مجدول", link: "#" }
+                ],
+                currentExams: [
+                    { type: "امتحان", title: "اختبار الحركة الموجية التفاعلي", limit: "45 دقيقة", rate: "75%" },
+                    { type: "واجب", title: "واجب تطبيقات الموجات الطولية والمستعرضة", limit: "2026-06-28", rate: "88%" }
+                ],
+                students: [
+                    { code: "ST-2201", name: "عبدالله ياسر منير الرفاعي", attendance: "96%", evaluation: "ممتاز", lastGrade: "19/20" },
+                    { code: "ST-2204", name: "كريم مظهر جابر العوضي", attendance: "82%", evaluation: "مقبول", lastGrade: "14/20" },
+                    { code: "ST-2209", name: "فاطمة محمد حامد البري", attendance: "99%", evaluation: "ممتاز", lastGrade: "20/20" }
+                ]
+            },
+            "الصف الثالث الثانوي": {
+                studentsCount: "410 طالب",
+                attendance: "97.1%",
+                homeworks: "5 واجبات",
+                exams: "6 امتحانات",
+                lectures: [
+                    { name: "قانون أوم للدائرة المغلقة وقوانين كيرشوف.pdf", date: "2026-06-12", downloads: 395 },
+                    { name: "شيت T توصيل المقاومات وتوزيع التيار", date: "2026-06-08", downloads: 410 }
+                ],
+                videos: [
+                    { id: "vid-4", name: "شرح قانونا كيرشوف - المحاضرة الذهبية المكتملة", date: "2026-06-12", duration: "1:20 ساعة", size: "380 MB", src: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ],
+                questions: [
+                    { id: 1, student: "سناء جلال العوضي", text: "مستر جالي سؤال في توصيل المقاومات على التوازي وحصل عندي تداخل في حساب الجهد، إمتى بنعتبر السلك عديم المقاومة كوبري وبيلغي المقاومات اللي حواليه؟", date: "منذ ساعة", answered: false, answer: "" }
+                ],
+                scheduledLives: [
+                    { title: "ماراثون حل مسائل كيرشوف المركبة للثانوية العامة", time: "2026-06-24 15:00", platform: "بث المنصة الداخلي", status: "نشط الآن", link: "#" }
+                ],
+                currentExams: [
+                    { type: "امتحان", title: "امتحان تحديد المستوى الشامل في الكهربية التياريه", limit: "60 دقيقة", rate: "95%" },
+                    { type: "واجب", title: "تطبيق وحل مسائل كيرشوف الـ 20 الذهبية", limit: "2026-06-29", rate: "91%" }
+                ],
+                students: [
+                    { code: "ST-3301", name: "محمد إبراهيم السيد غانم", attendance: "100%", evaluation: "ممتاز", lastGrade: "50/50" },
+                    { code: "ST-3305", name: "إسراء مجدي عبدالفتاح", attendance: "96%", evaluation: "ممتاز", lastGrade: "48/50" },
+                    { code: "ST-3308", name: "رنا عبد العزيز جودة شحاتة", attendance: "88%", evaluation: "جيد", lastGrade: "39/50" },
+                    { code: "ST-3312", name: "خالد سعيد عبدالهادي حبيب", attendance: "92%", evaluation: "جيد جداً", lastGrade: "44/50" }
+                ]
+            }
+        };
+
+        // دالة لعرض الأكورديون للمراحل
+        function toggleStage(id, button) {
+            const collapse = document.getElementById(id);
+            const icon = button.querySelector('i.fa-chevron-down');
+            
+            // إغلاق أي أكورديون أخر مفتوح
+            document.querySelectorAll('.stage-collapse-content').forEach(el => {
+                if (el.id !== id && el.classList.contains('open')) {
+                    el.classList.remove('open');
+                    const parentBtn = el.previousElementSibling;
+                    const parentIcon = parentBtn.querySelector('i.fa-chevron-down');
+                    if (parentIcon) parentIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (collapse.classList.contains('open')) {
+                collapse.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                collapse.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        let currentActiveGrade = "";
+
+        // دالة الدخول إلى واجهة الصف المحدد
+        function enterGrade(gradeName, stageName) {
+            currentActiveGrade = gradeName;
+            
+            // إخفاء الواجهة الرئيسية وعرض واجهة التحكم بالصف
+            document.getElementById('main-dashboard-view').classList.add('hidden');
+            const gradeView = document.getElementById('grade-dashboard-view');
+            gradeView.classList.remove('hidden');
+
+            // جلب البيانات أو وضع بيانات تجريبية افتراضية إذا لم يكن في القائمة
+            const data = gradesData[gradeName] || {
+                studentsCount: "0 طلاب",
+                attendance: "100%",
+                homeworks: "0 واجبات",
+                exams: "0 امتحانات",
+                lectures: [],
+                videos: [],
+                questions: [],
+                scheduledLives: [],
+                currentExams: [],
+                students: [
+                    { code: "ST-NEW", name: "لم يتم تسجيل طلاب حتى الآن", attendance: "-", evaluation: "-", lastGrade: "-" }
+                ]
+            };
+
+            // تعديل واجهة العناوين والإحصائيات
+            document.getElementById('grade-header-stage').innerText = stageName;
+            document.getElementById('grade-header-title').innerText = "لوحة تحكم: " + gradeName;
+            
+            // تغيير أيقونة الهيدر بناءً على الصف
+            const iconEl = document.getElementById('grade-header-icon');
+            if (stageName.includes("ابتدائية")) {
+                iconEl.className = "fa-solid fa-children";
+            } else if (stageName.includes("إعدادية")) {
+                iconEl.className = "fa-solid fa-user-graduate";
+            } else {
+                iconEl.className = "fa-solid fa-book-open";
+            }
+
+            document.getElementById('grade-stat-students').innerText = data.studentsCount;
+            document.getElementById('grade-stat-attendance').innerText = data.attendance;
+            document.getElementById('grade-stat-homework').innerText = data.homeworks;
+            document.getElementById('grade-stat-exams').innerText = data.exams;
+
+            // بناء المحتوى تفاعلياً
+            renderLecturesTable(data.lectures);
+            renderVideosGrid(data.videos);
+            renderExamsTable(data.currentExams);
+            renderStudentsTable(data.students);
+            renderQuestionsList(data.questions);
+            renderLivesTable(data.scheduledLives);
+
+            // تصفير حقول الإدخال الافتراضية
+            document.getElementById('lecture-title-input').value = "";
+            document.getElementById('lecture-file-input').value = "";
+            document.getElementById('video-title-input').value = "";
+            document.getElementById('video-file-input').value = "";
+            document.getElementById('new-exam-title').value = "";
+            document.getElementById('new-exam-duration').value = "";
+            document.getElementById('new-exam-deg').value = "";
+            document.getElementById('new-homework-title').value = "";
+            document.getElementById('new-homework-deadline').value = "";
+            document.getElementById('live-title-input').value = "";
+            document.getElementById('live-schedule-time').value = "";
+            document.getElementById('live-link-input').value = "";
+
+            // تفعيل التبويب الأول تلقائياً
+            const firstTabButton = document.querySelector('.tab-btn');
+            if (firstTabButton) {
+                switchTab('lectures-tab', firstTabButton);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("تم الدخول إلى " + gradeName);
+        }
+
+        // دالة الخروج والعودة للوحة الرئيسية
+        function exitGrade() {
+            document.getElementById('grade-dashboard-view').classList.add('hidden');
+            document.getElementById('main-dashboard-view').classList.remove('hidden');
+            currentActiveGrade = "";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // دالة التبديل بين التبويبات داخل الصف
+        function switchTab(tabId, button) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            button.classList.add('active');
+        }
+
+        // بناء جدول الملازم والمستندات
+        function renderLecturesTable(lectures) {
+            const container = document.getElementById('lectures-table-body');
+            container.innerHTML = "";
+            if (lectures.length === 0) {
+                container.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-gray-500 text-xs">لا يوجد ملازم منشورة حالياً لهذا الصف.</td></tr>`;
+                return;
+            }
+            lectures.forEach((lec, idx) => {
+                container.innerHTML += `
+                    <tr>
+                        <td class="py-4 font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf text-red-500 text-sm"></i>
+                            ${lec.name}
+                        </td>
+                        <td class="py-4 text-gray-400 text-xs">${lec.date}</td>
+                        <td class="py-4 text-center text-emerald-400 font-bold">${lec.downloads} تنزيل</td>
+                        <td class="py-4 text-left">
+                            <button onclick="deleteLecture(${idx})" class="text-xs bg-red-900/40 hover:bg-red-950 border border-red-700/30 text-red-400 px-3 py-1.5 rounded-lg transition">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // بناء شبكة الفيديوهات والدروس المسجلة على السيرفر الخاص
+        function renderVideosGrid(videos) {
+            const container = document.getElementById('videos-grid-container');
+            container.innerHTML = "";
+            if (!videos || videos.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 text-sm">لا توجد محاضرات مرئية مسجلة في مكتبة السيرفر الخاص بهذا الصف حتى الآن.</div>`;
+                return;
+            }
+
+            videos.forEach((vid, idx) => {
+                container.innerHTML += `
+                    <div class="interactive-class-card rounded-2xl overflow-hidden flex flex-col justify-between border border-gray-800">
+                        <!-- مشغل فيديو محاكي فخم -->
+                        <div class="relative bg-black aspect-video flex items-center justify-center overflow-hidden group">
+                            <video class="w-full h-full object-cover" controls preload="metadata">
+                                <source src="${vid.src}" type="video/mp4">
+                                متصفحك لا يدعم تشغيل هذا الفيديو.
+                            </video>
+                            <span class="absolute top-2.5 right-2.5 bg-black/70 text-[10px] text-emerald-400 px-2 py-1 rounded font-mono font-bold flex items-center gap-1 border border-emerald-500/30">
+                                <i class="fa-solid fa-shield"></i> مشفر داخلياً
+                            </span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="text-xs font-black text-white leading-relaxed line-clamp-2">${vid.name}</h4>
+                            <div class="flex justify-between items-center text-[11px] text-gray-400 pt-2 border-t border-gray-800/60">
+                                <span><i class="fa-solid fa-clock ml-1 text-[#801A24]"></i> ${vid.duration}</span>
+                                <span><i class="fa-solid fa-server ml-1 text-blue-400"></i> ${vid.size}</span>
+                                <span>${vid.date}</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4">
+                            <button onclick="deleteVideo(${idx})" class="w-full text-center py-1.5 bg-red-950/40 hover:bg-red-900 border border-red-800/30 text-red-400 rounded-lg text-xs font-bold transition">
+                                <i class="fa-solid fa-trash ml-1"></i> حذف من السيرفر
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // محاكاة رفع فيديو على سيرفر المنصة الخاص مع شريط التقدم
+        function simulateVideoUpload() {
+            const title = document.getElementById('video-title-input').value.trim();
+            const file = document.getElementById('video-file-input').value;
+
+            if (!title) {
+                showToast("يرجى إدخال عنوان الدرس أو الفيديو المسجل أولاً!");
+                return;
+            }
+            if (!file) {
+                showToast("يرجى اختيار ملف الفيديو المراد رفعه!");
+                return;
+            }
+
+            const cleanFileName = file.split('\\').pop();
+            const container = document.getElementById('upload-progress-container');
+            const bar = document.getElementById('upload-progress-bar');
+            const percentage = document.getElementById('upload-percentage');
+            const statusText = document.getElementById('upload-status-text');
+
+            container.classList.remove('hidden');
+            bar.style.width = '0%';
+            percentage.innerText = '0%';
+            statusText.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> جاري إرسال حزم البيانات إلى السيرفر المشفر...`;
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    statusText.innerHTML = `<i class="fa-solid fa-shield-halved text-emerald-500"></i> تم التشفير بنجاح وحفظ الملف في خادم السيرفر الخاص!`;
+                    
+                    // إضافة الفيديو للمصفوفة وعرضه
+                    const dateStr = new Date().toISOString().split('T')[0];
+                    gradesData[currentActiveGrade].videos.unshift({
+                        id: 'vid-' + Date.now(),
+                        name: title,
+                        date: dateStr,
+                        duration: "52 دقيقة",
+                        size: "245 MB",
+                        src: "https://www.w3schools.com/html/mov_bbb.mp4"
+                    });
+
+                    renderVideosGrid(gradesData[currentActiveGrade].videos);
+                    showToast("تم رفع الفيديو على سيرفر المنصة بنجاح!");
+
+                    // تصفير الخانات وإخفاء البار بعد ثانيتين
+                    setTimeout(() => {
+                        container.classList.add('hidden');
+                        document.getElementById('video-title-input').value = "";
+                        document.getElementById('video-file-input').value = "";
+                    }, 2000);
+                }
+                bar.style.width = progress + '%';
+                percentage.innerText = progress + '%';
+            }, 300);
+        }
+
+        // حذف فيديو مسجل
+        function deleteVideo(idx) {
+            gradesData[currentActiveGrade].videos.splice(idx, 1);
+            renderVideosGrid(gradesData[currentActiveGrade].videos);
+            showToast("تم حذف ملف الفيديو من السيرفر بنجاح!");
+        }
+
+        // بناء لوحة أسئلة الطلاب وحلقات النقاش
+        function renderQuestionsList(questions) {
+            const container = document.getElementById('questions-list-container');
+            const badge = document.getElementById('questions-count-badge');
+            
+            if (!questions || questions.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-gray-500 text-sm">لا يوجد أسئلة أو نقاشات واردة من طلاب هذا الصف حالياً.</div>`;
+                badge.innerText = "0";
+                badge.classList.add('hidden');
+                return;
+            }
+
+            // تحديث شارة عدد الأسئلة غير المجابة
+            const unansweredCount = questions.filter(q => !q.answered).length;
+            badge.innerText = unansweredCount;
+            if (unansweredCount === 0) {
+                badge.classList.add('hidden');
+            } else {
+                badge.classList.remove('hidden');
+            }
+
+            container.innerHTML = "";
+            questions.forEach((q) => {
+                container.innerHTML += `
+                    <div class="bg-[#111] border ${q.answered ? 'border-gray-800' : 'border-amber-500/30'} rounded-2xl p-5 space-y-4">
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                                    ${q.student.charAt(0)}
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-black text-white">${q.student}</h4>
+                                    <span class="text-[10px] text-gray-500 block mt-0.5">${q.date}</span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] px-2.5 py-1 rounded-md font-bold ${q.answered ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">
+                                ${q.answered ? '<i class="fa-solid fa-circle-check ml-1"></i> تم الرد' : '<i class="fa-solid fa-circle-dot ml-1 animate-pulse"></i> في انتظار الإجابة'}
+                            </span>
+                        </div>
+                        
+                        <p class="text-xs text-gray-300 leading-relaxed bg-[#161616] p-3 rounded-xl border border-gray-800/80">
+                            ${q.text}
+                        </p>
+
+                        ${q.answered ? `
+                            <div class="bg-[#801A24]/5 border-r-2 border-[#801A24] p-3 rounded-l-xl rounded-r-sm space-y-1">
+                                <span class="text-[10px] text-[#801A24] font-black block">إجابتك للكل:</span>
+                                <p class="text-xs text-gray-300 leading-relaxed">${q.answer}</p>
+                            </div>
+                        ` : `
+                            <div class="space-y-2 pt-2">
+                                <textarea id="reply-text-${q.id}" rows="2" placeholder="اكتب إجابتك العلمية والوافية هنا لتظهر للطالب فوراً..." class="w-full bg-[#161616] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#801A24]"></textarea>
+                                <div class="flex justify-end">
+                                    <button onclick="submitAnswer(${q.id})" class="btn-burgundy-royal px-4 py-2 text-white font-bold text-xs rounded-lg flex items-center gap-1.5">
+                                        <i class="fa-solid fa-paper-plane"></i> إرسال الإجابة وحفظ
+                                    </button>
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+        }
+
+        // إرسال رد على سؤال الطالب
+        function submitAnswer(questionId) {
+            const input = document.getElementById(`reply-text-${questionId}`);
+            if (!input) return;
+            const replyVal = input.value.trim();
+            if (!replyVal) {
+                showToast("يرجى كتابة الرد أولاً!");
+                return;
+            }
+
+            const qList = gradesData[currentActiveGrade].questions;
+            const question = qList.find(q => q.id === questionId);
+            if (question) {
+                question.answered = true;
+                question.answer = replyVal;
+                renderQuestionsList(qList);
+                showToast("تم إرسال إجابتك بنجاح وسُجلت بالمنصة!");
+            }
+        }
+
+        // بناء جدول البث المباشر والمواعيد المجدولة لطلاب الصف
+        function renderLivesTable(lives) {
+            const container = document.getElementById('lives-table-body');
+            container.innerHTML = "";
+            if (!lives || lives.length === 0) {
+                container.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">لا يوجد جلسات بث مباشر مجدولة أو مسجلة حالياً لطلاب هذا الصف.</td></tr>`;
+                return;
+            }
+
+            lives.forEach((lv, idx) => {
+                const isActive = lv.status === "نشط الآن";
+                container.innerHTML += `
+                    <tr>
+                        <td class="py-4 font-bold text-white">${lv.title}</td>
+                        <td class="py-4 text-gray-300 font-mono text-xs">${lv.time}</td>
+                        <td class="py-4 text-xs font-semibold text-amber-500">${lv.platform}</td>
+                        <td class="py-4 text-center">
+                            <span class="text-[10px] px-2.5 py-1 rounded-md font-bold ${isActive ? 'bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse' : 'bg-gray-800 text-gray-400 border border-gray-700/50'}">
+                                ${lv.status}
+                            </span>
+                        </td>
+                        <td class="py-4 text-left">
+                            ${isActive ? `
+                                <a href="${lv.link}" target="_blank" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-bold transition shadow-md inline-block">
+                                    <i class="fa-solid fa-circle-play ml-1"></i> دخول البث الآن
+                                </a>
+                            ` : `
+                                <button onclick="deleteLive(${idx})" class="text-xs bg-[#1a1a1a] border border-gray-700 text-gray-400 hover:text-white hover:bg-gray-800 px-3 py-1.5 rounded-lg transition">
+                                    إلغاء الموعد
+                                </button>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // جدولة بث مباشر جديد
+        function scheduleNewLive() {
+            const title = document.getElementById('live-title-input').value.trim();
+            const time = document.getElementById('live-schedule-time').value;
+            const link = document.getElementById('live-link-input').value.trim();
+
+            if (!title) {
+                showToast("يرجى إدخال عنوان جلسة البث!");
+                return;
+            }
+            if (!time) {
+                showToast("يرجى اختيار التاريخ والوقت للبث!");
+                return;
+            }
+
+            const finalLink = link ? link : "#";
+            const formattedTime = time.replace('T', ' ');
+
+            gradesData[currentActiveGrade].scheduledLives.unshift({
+                title: title,
+                time: formattedTime,
+                platform: link.includes("zoom") ? "Zoom Cloud Meeting" : (link.includes("meet") ? "Google Meet" : "بث المنصة الداخلي"),
+                status: "مجدول",
+                link: finalLink
+            });
+
+            renderLivesTable(gradesData[currentActiveGrade].scheduledLives);
+            showToast("تمت جدولة البث المباشر وإعلام الطلاب بنجاح!");
+
+            // تصفير المدخلات
+            document.getElementById('live-title-input').value = "";
+            document.getElementById('live-schedule-time').value = "";
+            document.getElementById('live-link-input').value = "";
+        }
+
+        // حذف بث مباشر
+        function deleteLive(idx) {
+            gradesData[currentActiveGrade].scheduledLives.splice(idx, 1);
+            renderLivesTable(gradesData[currentActiveGrade].scheduledLives);
+            showToast("تم إلغاء موعد الحصة المباشرة وإشعار الطلاب!");
+        }
+
+        // بناء جدول الامتحانات والواجبات
+        function renderExamsTable(exams) {
+            const container = document.getElementById('exams-table-body');
+            container.innerHTML = "";
+            if (exams.length === 0) {
+                container.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500 text-xs">لا يوجد امتحانات أو واجبات نشطة حالياً.</td></tr>`;
+                return;
+            }
+            exams.forEach((ex, idx) => {
+                const isExam = ex.type === "امتحان";
+                container.innerHTML += `
+                    <tr>
+                        <td class="py-4">
+                            <span class="text-[10px] px-2.5 py-1 rounded-md font-bold ${isExam ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">
+                                ${ex.type}
+                            </span>
+                        </td>
+                        <td class="py-4 font-bold text-white">${ex.title}</td>
+                        <td class="py-4 text-gray-400 text-xs">${isExam ? "المدة: " : "آخر موعد: "} ${ex.limit}</td>
+                        <td class="py-4 text-center text-gray-200 font-bold">${ex.rate} من الطلاب</td>
+                        <td class="py-4 text-left">
+                            <button onclick="deleteExam(${idx})" class="text-xs bg-red-900/40 hover:bg-red-950 border border-red-700/30 text-red-400 px-3 py-1.5 rounded-lg transition">إيقاف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // بناء جدول الطلاب والتقييمات
+        function renderStudentsTable(students) {
+            const container = document.getElementById('students-table-body');
+            container.innerHTML = "";
+            students.forEach((std, idx) => {
+                container.innerHTML += `
+                    <tr class="student-row">
+                        <td class="py-4 font-mono text-xs text-gray-400">${std.code}</td>
+                        <td class="py-4 font-bold text-white student-name">${std.name}</td>
+                        <td class="py-4 text-center text-emerald-400 font-bold">${std.attendance}</td>
+                        <td class="py-4 text-center">
+                            <span class="px-2 py-1 rounded text-[10px] font-bold bg-[#333] text-gray-200" id="eval-badge-${idx}">
+                                ${std.evaluation}
+                            </span>
+                        </td>
+                        <td class="py-4 text-center text-amber-400 font-bold">${std.lastGrade}</td>
+                        <td class="py-4 text-left flex gap-1.5 justify-end">
+                            <button onclick="changeStudentEval(${idx}, 'ممتاز')" class="text-[10px] bg-emerald-950 hover:bg-emerald-900 border border-emerald-800/30 text-emerald-400 px-2.5 py-1.5 rounded-lg transition">ممتاز</button>
+                            <button onclick="changeStudentEval(${idx}, 'جيد جداً')" class="text-[10px] bg-blue-950 hover:bg-blue-900 border border-blue-800/30 text-blue-400 px-2.5 py-1.5 rounded-lg transition">جيد جداً</button>
+                            <button onclick="changeStudentEval(${idx}, 'متابعة')" class="text-[10px] bg-amber-950 hover:bg-amber-900 border border-amber-800/30 text-amber-400 px-2.5 py-1.5 rounded-lg transition">متابعة</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // البحث بين الطلاب
+        function filterStudents() {
+            const val = document.getElementById('student-search-input').value.toLowerCase();
+            document.querySelectorAll('.student-row').forEach(row => {
+                const name = row.querySelector('.student-name').innerText.toLowerCase();
+                if (name.includes(val)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // رصد درجة الطالب
+        function changeStudentEval(studentIdx, scoreText) {
+            if (!currentActiveGrade) return;
+            gradesData[currentActiveGrade].students[studentIdx].evaluation = scoreText;
+            const badge = document.getElementById(`eval-badge-${studentIdx}`);
+            if (badge) {
+                badge.innerText = scoreText;
+                showToast("تم تحديث تقييم الطالب بنجاح!");
+            }
+        }
+
+        // رفع ملف/كتاب
+        function handleUploadFile() {
+            const title = document.getElementById('lecture-title-input').value.trim();
+            const file = document.getElementById('lecture-file-input').value;
+
+            if (!title) {
+                showToast("الرجاء كتابة عنوان الملزمة أو الكتاب أولاً!");
+                return;
+            }
+
+            const cleanFileName = file ? file.split('\\').pop() : "ملف_تعليمي_مرفق.pdf";
+            
+            // إضافة للمات في الـ Array النشط
+            const dateStr = new Date().toISOString().split('T')[0];
+            gradesData[currentActiveGrade].lectures.unshift({
+                name: `${title} (${cleanFileName})`,
+                date: dateStr,
+                downloads: 0
+            });
+
+            renderLecturesTable(gradesData[currentActiveGrade].lectures);
+            showToast("تم رفع ونشر الملف لطلاب هذا الصف!");
+            document.getElementById('lecture-title-input').value = "";
+            document.getElementById('lecture-file-input').value = "";
+        }
+
+        // حذف ملف
+        function deleteLecture(idx) {
+            gradesData[currentActiveGrade].lectures.splice(idx, 1);
+            renderLecturesTable(gradesData[currentActiveGrade].lectures);
+            showToast("تم إزالة الملف بنجاح!");
+        }
+
+        // نشر امتحان
+        function createExam() {
+            const title = document.getElementById('new-exam-title').value.trim();
+            const duration = document.getElementById('new-exam-duration').value;
+            const deg = document.getElementById('new-exam-deg').value;
+
+            if (!title || !duration || !deg) {
+                showToast("الرجاء استيفاء جميع بيانات الامتحان!");
+                return;
+            }
+
+            gradesData[currentActiveGrade].currentExams.unshift({
+                type: "امتحان",
+                title: `${title} (درجة: ${deg})`,
+                limit: `${duration} دقيقة`,
+                rate: "0%"
+            });
+
+            renderExamsTable(gradesData[currentActiveGrade].currentExams);
+            showToast("تم جدولة ونشر الامتحان بنجاح!");
+            document.getElementById('new-exam-title').value = "";
+            document.getElementById('new-exam-duration').value = "";
+            document.getElementById('new-exam-deg').value = "";
+        }
+
+        // تعيين واجب
+        function createHomework() {
+            const title = document.getElementById('new-homework-title').value.trim();
+            const deadline = document.getElementById('new-homework-deadline').value;
+
+            if (!title || !deadline) {
+                showToast("الرجاء تحديد عنوان وتاريخ تسليم الواجب!");
+                return;
+            }
+
+            gradesData[currentActiveGrade].currentExams.unshift({
+                type: "واجب",
+                title: title,
+                limit: deadline,
+                rate: "0%"
+            });
+
+            renderExamsTable(gradesData[currentActiveGrade].currentExams);
+            showToast("تم تعيين الواجب لطلاب الصف!");
+            document.getElementById('new-homework-title').value = "";
+            document.getElementById('new-homework-deadline').value = "";
+        }
+
+        // إزالة/إيقاف امتحان أو واجب
+        function deleteExam(idx) {
+            gradesData[currentActiveGrade].currentExams.splice(idx, 1);
+            renderExamsTable(gradesData[currentActiveGrade].currentExams);
+            showToast("تم إيقاف النشر وحفظ الأرشيف!");
+        }
+
+        // دالة عرض التوست البديل لـ alert
+        function showToast(msg) {
+            const toast = document.getElementById('custom-toast');
+            document.getElementById('toast-message').innerText = msg;
+            
+            toast.style.transform = "translateY(0)";
+            toast.style.opacity = "1";
+
+            setTimeout(() => {
+                toast.style.transform = "translateY(20px)";
+                toast.style.opacity = "0";
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const gradeSelect = document.getElementById('teacher-grade-select');
+            const subjectSelect = document.getElementById('teacher-subject-select');
+
+            if (gradeSelect && subjectSelect) {
+                const allOptions = Array.from(subjectSelect.options);
+
+                gradeSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
+                    subjectSelect.innerHTML = '';
+
+                    if (selectedValue === 'primary-all' || selectedValue === 'prep-all') {
+                        appendSubjectOption("مواد عامة مشتركة", "general");
+                    } else if (selectedValue === '3-sci-physics') {
+                        appendSubjectOption("الفيزياء", "physics");
+                        appendSubjectOption("الكيمياء", "chemistry");
+                        appendSubjectOption("الأحياء", "biology");
+                        appendSubjectOption("الجيولوجيا", "geology");
+                        appendSubjectOption("الرياضيات البحتة والتطبيقية", "math");
+                    } else if (selectedValue === '3-lit-history') {
+                        appendSubjectOption("التاريخ", "history");
+                        appendSubjectOption("الجغرافيا", "geography");
+                        appendSubjectOption("الفلسفة والمنطق", "philosophy");
+                        appendSubjectOption("علم النفس والاجتماع", "psychology");
+                    } else if (selectedValue === '3-common') {
+                        appendSubjectOption("اللغة العربية", "arabic");
+                        appendSubjectOption("اللغة الإنجليزية", "english");
+                        appendSubjectOption("اللغة الأجنبية الثانية", "french-german");
+                    }
+                });
+
+                gradeSelect.dispatchEvent(new Event('change'));
+            }
+
+            function appendSubjectOption(text, value) {
+                const opt = document.createElement('option');
+                opt.text = text;
+                opt.value = value;
+                opt.className = "text-white bg-[#111]";
+                subjectSelect.appendChild(opt);
+            }
+        });
+
+        // داتا وهمية للطلاب من منظور المعلم (لا تحتوي على أرقام هواتف أو بيانات مالية)
+        const teacherStudentDataMock = {
+            "#NV-8821": {
+                name: "سعيد محمد أحمد",
+                grades: "كويز 1: 9/10 | كويز 2: 10/10 | الواجب الأول: تم التسليم",
+                lastLecture: "الفيزياء الحديثة - الفصل الأول (مكتملة بنسبة 100%)"
+            }
+        };
+
+        function teacherLookupStudent() {
+            const codeInput = document.getElementById('teacher-search-code').value.trim();
+            const reportBox = document.getElementById('teacher-student-report');
+            
+            if(!codeInput) {
+                alert("برجاء إدخال كود الطالب أولاً!");
+                return;
+            }
+
+            const data = teacherStudentDataMock[codeInput];
+            if(data) {
+                reportBox.classList.remove('hidden');
+                document.getElementById('t-student-name').innerText = data.name;
+                document.getElementById('t-student-grades').innerText = data.grades;
+                document.getElementById('t-student-last-lecture').innerText = data.lastLecture;
+            } else {
+                reportBox.classList.add('hidden');
+                alert("عذراً، هذا الكود غير موجود أو ليس مسجلاً في موادك الدراسية!");
+            }
+        }
+
+        function logout() {
+            showToast("تم تسجيل الخروج بنجاح.");
+        }
+    </script>
+</body>
+</html>

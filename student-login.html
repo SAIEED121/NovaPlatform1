@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | بوابة الطالب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #dcd9d4;
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.8), rgba(220, 217, 212, 0.8)), url('https://www.transparenttextures.com/patterns/gray-lines.png');
+            background-attachment: fixed;
+        }
+        .main-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: visible;
+        }
+        .btn-burgundy {
+            background-color: #801A24;
+            transition: background-color 0.2s;
+        }
+        .btn-burgundy:hover {
+            background-color: #a32230;
+        }
+        /* إخفاء الاستمارات بشكل افتراضي للتبديل السلس */
+        .auth-form { display: none; }
+        .active-form { display: block; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-sans antialiased text-gray-200">
+
+    <header class="w-full p-6 bg-transparent relative z-10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-2xl md:text-3xl font-black tracking-tight text-[#801A24]">
+                Nova<span class="font-light text-gray-800">Platform</span>
+            </div>
+            <a href="index.html" class="text-sm font-bold text-gray-800 hover:text-[#801A24] transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
+            </a>
+        </div>
+    </header>
+
+    <main class="w-full max-w-md mx-auto my-auto p-4 relative z-10">
+        <div class="main-card rounded-2xl p-8 flex flex-col justify-between">
+            
+            <div class="flex border-b border-gray-700 mb-6 text-center">
+                <button id="tab-login" onclick="switchForm('login')" class="flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]">تسجيل الدخول</button>
+                <button id="tab-register" onclick="switchForm('register')" class="flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition">إنشاء حساب جديد</button>
+            </div>
+
+            <form id="form-login" class="auth-form active-form space-y-4">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-white">مرحباً بك مجدداً يا بطل</h2>
+                    <p class="text-xs text-gray-400 mt-1">سجل دخولك لمتابعة دروسك</p>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كود الطالب</label>
+                    <input id="student-login-code" type="text" placeholder="مثال: #NV-8821" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كلمة المرور</label>
+                    <input type="password" placeholder="أدخل كلمة المرور" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <button type="submit" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-2">
+                    دخول المنصة
+                </button>
+            </form>
+
+            <form id="form-register" class="auth-form space-y-4 max-h-[85vh] overflow-y-auto pr-2">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-white">حساب طالب جديد</h2>
+                    <p class="text-xs text-gray-400 mt-1">انضم إلينا واختر مرحلتك الدراسية</p>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">الاسم الثلاثي</label>
+                    <input type="text" placeholder="أدخل اسمك بالكامل" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">البريد الإلكتروني</label>
+                    <input type="email" placeholder="example@email.com" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">المرحلة الدراسية</label>
+                    <select id="student-grade" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-xs outline-none focus:border-[#801A24] cursor-pointer" required>
+                        <option value="" disabled selected>اختر مرحلتك الدراسية...</option>
+                        <optgroup label="المرحلة الثانوية">
+                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                        </optgroup>
+                        <optgroup label="المرحلة الإعدادية">
+                            <option value="الصف الأول الإعدادي">الصف الأول الإعدادي</option>
+                            <option value="الصف الثاني الإعدادي">الصف الثاني الإعدادي</option>
+                            <option value="الصف الثالث الإعدادي">الصف الثالث الإعدادي</option>
+                        </optgroup>
+                        <optgroup label="المرحلة الابتدائية">
+                            <option value="الصف الأول الابتدائي">الصف الأول الابتدائي</option>
+                            <option value="الصف الثاني الابتدائي">الصف الثاني الابتدائي</option>
+                            <option value="الصف الثالث الابتدائي">الصف الثالث الابتدائي</option>
+                            <option value="الصف الرابع الابتدائي">الصف الرابع الابتدائي</option>
+                            <option value="الصف الخامس الابتدائي">الصف الخامس الابتدائي</option>
+                            <option value="الصف السادس الابتدائي">الصف السادس الابتدائي</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div id="branch-container" class="hidden space-y-1.5 text-right mt-3">
+                    <label class="text-[11px] text-gray-400 block font-bold">التخصص الدراسي</label>
+                    <select id="student-branch" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-xs outline-none focus:border-[#801A24] cursor-pointer">
+                        <option value="" disabled selected>اختر التخصص...</option>
+                        <option value="علمي">علمي</option>
+                        <option value="أدبي">أدبي</option>
+                    </select>
+                </div>
+
+                <div id="subjects-container" class="hidden space-y-2 text-right mt-3 p-3 bg-[#111] border border-gray-800/80 rounded-xl">
+                    <label class="text-[11px] text-emerald-400 block font-bold mb-1"><i class="fa-solid fa-book-open ml-1"></i> اختر موادك الدراسية للتسجيل:</label>
+                    <div id="subjects-list" class="grid grid-cols-2 gap-2 text-xs text-gray-300"></div>
+                </div>
+
+                <div class="flex flex-col space-y-1">
+                    <label class="text-xs font-semibold text-gray-300">كلمة المرور</label>
+                    <input type="password" placeholder="أكتب كلمة مرور قوية" class="p-3 bg-[#111] border border-gray-800 rounded-xl text-white text-sm outline-none focus:border-[#801A24]" required>
+                </div>
+
+                <button type="submit" class="btn-burgundy w-full py-3 rounded-xl text-white font-bold text-xs tracking-wide uppercase mt-2">
+                    تسجيل الحساب والبدء
+                </button>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="w-full text-center text-xs text-gray-500 py-6 bg-transparent relative z-10">
+        &copy; 2026 NovaPlatform. جميع الحقوق محفوظة.
+    </footer>
+
+    <script>
+        function switchForm(type) {
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+
+            if(type === 'login') {
+                loginForm.classList.add('active-form');
+                registerForm.classList.remove('active-form');
+                tabLogin.className = "flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]";
+                tabRegister.className = "flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition";
+            } else {
+                registerForm.classList.add('active-form');
+                loginForm.classList.remove('active-form');
+                tabRegister.className = "flex-1 pb-3 text-sm font-bold text-white border-b-2 border-[#801A24]";
+                tabLogin.className = "flex-1 pb-3 text-sm font-bold text-gray-400 hover:text-white transition";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const gradeSelect = document.getElementById('student-grade');
+            const branchContainer = document.getElementById('branch-container');
+            const branchSelect = document.getElementById('student-branch');
+            const subjectsContainer = document.getElementById('subjects-container');
+            const subjectsList = document.getElementById('subjects-list');
+
+            if(gradeSelect) {
+                gradeSelect.addEventListener('change', function() {
+                    if (this.value.includes('الثانوي')) {
+                        branchContainer.classList.remove('hidden');
+                    } else {
+                        branchContainer.classList.add('hidden');
+                        subjectsContainer.classList.add('hidden');
+                        if(branchSelect) branchSelect.value = "";
+                    }
+                });
+            }
+
+            if(branchSelect) {
+                branchSelect.addEventListener('change', function() {
+                    subjectsContainer.classList.remove('hidden');
+                    subjectsList.innerHTML = ''; 
+                    let htmlContent = '';
+                    if (this.value === 'علمي') {
+                        const scientificSubjects = ['فيزياء', 'كيمياء', 'أحياء', 'جيولوجيا', 'رياضيات بحتة', 'رياضيات تطبيقية'];
+                        htmlContent = scientificSubjects.map(sub => `
+                            <label class="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                <input type="checkbox" name="selected_subjects" value="${sub}" class="accent-[#801A24]">
+                                <span>${sub}</span>
+                            </label>
+                        `).join('');
+                    } else if (this.value === 'أدبي') {
+                        const literarySubjects = ['تاريخ', 'جغرافيا', 'فلسفة ومنطق', 'علم نفس واجتماع'];
+                        htmlContent = literarySubjects.map(sub => `
+                            <label class="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                                <input type="checkbox" name="selected_subjects" value="${sub}" class="accent-[#801A24]">
+                                <span>${sub}</span>
+                            </label>
+                        `).join('');
+                    }
+                    subjectsList.innerHTML = htmlContent;
+                });
+            }
+
+            const loginForm = document.getElementById('form-login');
+            const loginInput = document.getElementById('student-login-code');
+
+            if (loginForm && loginInput) {
+                loginForm.addEventListener('submit', function(event) {
+                    const value = loginInput.value.trim();
+                    const studentCodePattern = /^#NV-\d{4,}$/i;
+                    const manualCredentialPattern = /^(student|admin|teacher)\d{3,}$/i;
+
+                    if (!value || (!studentCodePattern.test(value) && !manualCredentialPattern.test(value))) {
+                        event.preventDefault();
+                        alert('يرجى إدخال كود الطالب بصيغة #NV-8821 أو بيانات دخول صحيحة');
+                        return;
+                    }
+
+                    event.preventDefault();
+                    window.location.href = 'student.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
