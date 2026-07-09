@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exam.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:student_exam_list' %}">Exams</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ exam.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                <div>
+                    <h1 class="h4 mb-1">{{ exam.title }}</h1>
+                    <p class="text-muted mb-0">{{ exam.course.code }} - {{ exam.course.title }}</p>
+                </div>
+                {% if exam_state == 'open' %}
+                <span class="badge text-bg-success">Open</span>
+                {% elif exam_state == 'upcoming' %}
+                <span class="badge text-bg-warning">Upcoming</span>
+                {% else %}
+                <span class="badge text-bg-secondary">Closed</span>
+                {% endif %}
+            </div>
+
+            <div class="row g-2 small text-muted">
+                <div class="col-md-4"><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</div>
+                <div class="col-md-4"><strong>Total marks:</strong> {{ exam.total_marks }}</div>
+                <div class="col-md-4"><strong>Passing marks:</strong> {{ exam.passing_marks }}</div>
+                <div class="col-md-6"><strong>Start:</strong> {{ exam.start_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-md-6"><strong>End:</strong> {{ exam.end_at|date:"Y-m-d H:i"|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+
+    {% if student_exam and student_exam.submitted_at %}
+    <div class="alert alert-success">
+        This exam has already been submitted.
+        <a href="{% url 'exams:student_exam_result' exam.pk %}" class="alert-link">View your result</a>.
+    </div>
+    {% elif exam_state == 'upcoming' %}
+    <div class="alert alert-warning">This exam has not started yet.</div>
+    {% elif exam_state == 'closed' %}
+    <div class="alert alert-secondary">This exam is no longer available.</div>
+    {% endif %}
+
+    {% if student_exam and student_exam.submitted_at %}
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="row g-2 small">
+                <div class="col-md-4"><strong>Score:</strong> {{ student_exam.score|default:"-" }}</div>
+                <div class="col-md-4"><strong>Percentage:</strong> {{ student_exam.percentage|default:"-" }}%</div>
+                <div class="col-md-4"><strong>Result:</strong> {{ student_exam.get_result_status_display }}</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            {% if form and can_submit %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label fw-bold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="mt-2">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                    <div class="alert alert-danger py-2 px-3 small mt-2 mb-0">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Submit Exam</button>
+            </form>
+            {% else %}
+            <div class="text-muted">Answering is currently unavailable for this exam.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

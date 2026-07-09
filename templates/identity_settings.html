@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | إعدادات الهوية والمظهر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #dcd9d4; }
+        .card { background-color: #1a1a1a; }
+        .btn-burgundy { background-color: #801A24; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center font-sans text-gray-200">
+    <div class="w-full max-w-3xl p-6">
+        <div class="card rounded-2xl p-8">
+            <h2 class="text-xl font-bold text-white mb-4">إعدادات الهوية والمظهر</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-3 rounded-xl bg-rose-500/10 text-rose-400">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+
+                <div>
+                    <label class="text-sm text-gray-300">اسم المنصة</label>
+                    <input type="text" name="platform_name" value="{{ platform_name|default:'' }}" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white" placeholder="ادخل اسم المنصة">
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-300">رفع الشعار (اللوجو)</label>
+                    <input type="file" name="logo" accept="image/*" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white">
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-300">رفع أيقونة المتصفح (Favicon)</label>
+                    <input type="file" name="favicon" accept="image/*" class="w-full p-3 bg-[#111] border border-gray-800 rounded-xl text-white">
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-300">اللون الأساسي</label>
+                    <input type="color" name="primary_color" value="{{ primary_color|default:'#801A24' }}" class="w-24 h-12 p-1 rounded">
+                </div>
+
+                <div>
+                    <button type="submit" class="btn-burgundy py-3 px-6 rounded-xl text-white font-bold">حفظ الإعدادات</button>
+                    <a href="{% url 'admin_dashboard' %}" class="ml-3 text-sm text-gray-300">عودة للوحة التحكم</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

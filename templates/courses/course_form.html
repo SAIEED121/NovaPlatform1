@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+<div class="max-w-3xl mx-auto p-6">
+    {% if messages %}
+    <div class="mb-4 space-y-2">
+        {% for message in messages %}
+        <div class="rounded border px-3 py-2 text-sm {% if message.tags == 'error' %}border-rose-300 bg-rose-50 text-rose-700{% elif message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-700{% else %}border-slate-300 bg-white text-slate-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="bg-white rounded shadow p-6 space-y-4">
+        {% csrf_token %}
+        <h1 class="text-2xl font-bold">Course</h1>
+        {{ form.as_p }}
+        <div class="space-x-2">
+            <button class="px-4 py-2 bg-blue-700 text-white rounded" type="submit">Save</button>
+            <a class="px-4 py-2 bg-slate-300 rounded" href="{% url 'courses:course_list' %}">Cancel</a>
+        </div>
+    </form>
+
+    <script>
+        (function () {
+            const gradeField = document.getElementById("id_grade_level");
+            const branchField = document.getElementById("id_branch");
+            if (!gradeField || !branchField) {
+                return;
+            }
+
+            const generalOnlyGrades = new Set([
+                "grade_1_primary", "grade_2_primary", "grade_3_primary", "grade_4_primary", "grade_5_primary", "grade_6_primary",
+                "grade_1_preparatory", "grade_2_preparatory", "grade_3_preparatory", "grade_1_secondary"
+            ]);
+            const branchedGrades = new Set(["grade_2_secondary", "grade_3_secondary"]);
+
+            function setBranchOptions(choices, defaultValue) {
+                branchField.innerHTML = "";
+                choices.forEach(([value, label]) => {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.textContent = label;
+                    branchField.appendChild(option);
+                });
+                if (defaultValue && choices.some(([value]) => value === defaultValue)) {
+                    branchField.value = defaultValue;
+                }
+            }
+
+            function updateBranchOptions() {
+                const currentValue = branchField.value;
+                if (generalOnlyGrades.has(gradeField.value)) {
+                    setBranchOptions([["general", "General"]], "general");
+                    return;
+                }
+                if (branchedGrades.has(gradeField.value)) {
+                    setBranchOptions([
+                        ["science", "Science"],
+                        ["literary", "Literary"]
+                    ], currentValue === "science" || currentValue === "literary" ? currentValue : "science");
+                }
+            }
+
+            gradeField.addEventListener("change", updateBranchOptions);
+            updateBranchOptions();
+        })();
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[Unit]
+Description=NovaPlatform Gunicorn Service
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/novaplatform
+EnvironmentFile=/var/www/novaplatform/.env
+ExecStart=/var/www/novaplatform/venv/bin/gunicorn --config /var/www/novaplatform/deploy/gunicorn/gunicorn.conf.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+<div class="max-w-3xl mx-auto p-6">
+    {% if messages %}
+    <div class="mb-4 space-y-2">
+        {% for message in messages %}
+        <div class="rounded border px-3 py-2 text-sm {% if message.tags == 'error' %}border-rose-300 bg-rose-50 text-rose-700{% elif message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-700{% else %}border-slate-300 bg-white text-slate-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded shadow p-6 space-y-3">
+        <h1 class="text-2xl font-bold">{{ notification.title }}</h1>
+        <p>{{ notification.message }}</p>
+        <p>Recipient: {{ notification.get_recipient_type_display }}</p>
+        <p>Channel: {{ notification.get_channel_display }}</p>
+        <p>Status: {{ notification.get_status_display }}</p>
+        <p>Sent At: {{ notification.sent_at|date:"Y-m-d H:i" }}</p>
+        <div class="space-x-2">
+            <a class="text-amber-700" href="{% url 'notifications:notification_update' notification.pk %}">Edit</a>
+            <a class="text-rose-700" href="{% url 'notifications:notification_delete' notification.pk %}">Delete</a>
+            <a class="text-slate-700" href="{% url 'notifications:notification_list' %}">Back</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+<div class="max-w-7xl mx-auto p-6 space-y-4">
+    {% if messages %}
+    <div class="space-y-2">
+        {% for message in messages %}
+        <div class="rounded border px-3 py-2 text-sm {% if message.tags == 'error' %}border-rose-300 bg-rose-50 text-rose-700{% elif message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-700{% else %}border-slate-300 bg-white text-slate-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Notifications</h1>
+        <div class="space-x-2">
+            <a href="{% url 'notifications:inbox' %}" class="px-4 py-2 bg-slate-700 text-white rounded">Inbox</a>
+            <a href="{% url 'notifications:notification_create' %}" class="px-4 py-2 bg-blue-700 text-white rounded">Add Notification</a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-200">
+                <tr>
+                    <th class="text-left p-3">Title</th>
+                    <th class="text-left p-3">Recipient Type</th>
+                    <th class="text-left p-3">Status</th>
+                    <th class="text-left p-3">Sent At</th>
+                    <th class="text-left p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in notifications %}
+                <tr class="border-t">
+                    <td class="p-3">{{ notification.title }}</td>
+                    <td class="p-3">{{ notification.get_recipient_type_display }}</td>
+                    <td class="p-3">{{ notification.get_status_display }}</td>
+                    <td class="p-3">{{ notification.sent_at|date:"Y-m-d H:i" }}</td>
+                    <td class="p-3 space-x-2">
+                        <a class="text-blue-700" href="{% url 'notifications:notification_detail' notification.pk %}">View Details</a>
+                        <a class="text-amber-700" href="{% url 'notifications:notification_update' notification.pk %}">Edit</a>
+                        <a class="text-rose-700" href="{% url 'notifications:notification_delete' notification.pk %}">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="p-3 text-slate-500">No notifications are available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Result - {{ exam.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:student_exam_list' %}">Exams</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:student_exam_detail' exam.pk %}">{{ exam.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Result</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                <div>
+                    <h1 class="h4 mb-1">{{ exam.title }} - Result</h1>
+                    <p class="text-muted mb-0">{{ exam.course.code }} - {{ exam.course.title }}</p>
+                </div>
+                {% if student_exam.result_status == 'passed' %}
+                <span class="badge text-bg-success">Passed</span>
+                {% elif student_exam.result_status == 'failed' %}
+                <span class="badge text-bg-danger">Failed</span>
+                {% else %}
+                <span class="badge text-bg-warning">Pending</span>
+                {% endif %}
+            </div>
+            <div class="row g-2 small">
+                <div class="col-md-4"><strong>Score:</strong> {{ student_exam.score|default:"-" }}</div>
+                <div class="col-md-4"><strong>Percentage:</strong> {{ student_exam.percentage|default:"-" }}%</div>
+                <div class="col-md-4"><strong>Status:</strong> {{ student_exam.get_result_status_display }}</div>
+                <div class="col-md-4"><strong>Submitted At:</strong> {{ student_exam.submitted_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-md-4"><strong>Graded At:</strong> {{ student_exam.graded_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-md-4"><strong>Passing Marks:</strong> {{ exam.passing_marks }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white"><strong>Answer Breakdown</strong></div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Question</th>
+                            <th>Type</th>
+                            <th>Your Answer</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for answer in answers %}
+                        <tr>
+                            <td>{{ answer.question.display_order }}. {{ answer.question.text|truncatechars:90 }}</td>
+                            <td>{{ answer.question.get_question_type_display }}</td>
+                            <td>
+                                {% if answer.question.question_type == 'essay' %}
+                                {{ answer.answer_text|default:"-"|linebreaksbr }}
+                                {% else %}
+                                {{ answer.selected_choice.text|default:"-" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if answer.score is not None %}
+                                {{ answer.score }} / {{ answer.question.marks }}
+                                {% else %}
+                                <span class="text-muted">Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No answers recorded.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

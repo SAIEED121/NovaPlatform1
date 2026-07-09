@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Student Exams{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Exams</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <h1 class="h4 mb-0">Available Exams</h1>
+        <a href="{% url 'student_dashboard' %}" class="btn btn-outline-secondary btn-sm">Back to Dashboard</a>
+    </div>
+
+    {% if exams %}
+    <div class="row g-3">
+        {% for exam in exams %}
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <div>
+                            <h2 class="h5 mb-1">{{ exam.title }}</h2>
+                            <p class="text-muted small mb-0">{{ exam.course.code }} - {{ exam.course.title }}</p>
+                        </div>
+                        {% if exam.availability_state == 'open' %}
+                        <span class="badge text-bg-success">Open</span>
+                        {% elif exam.availability_state == 'upcoming' %}
+                        <span class="badge text-bg-warning">Upcoming</span>
+                        {% else %}
+                        <span class="badge text-bg-secondary">Closed</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-2 small text-muted mb-3">
+                        <div class="col-6"><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</div>
+                        <div class="col-6"><strong>Marks:</strong> {{ exam.total_marks }}</div>
+                        <div class="col-6"><strong>Start:</strong> {{ exam.start_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                        <div class="col-6"><strong>End:</strong> {{ exam.end_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                    </div>
+
+                    <p class="mb-3">{{ exam.description|default:"-"|linebreaksbr }}</p>
+                    <a href="{% url 'exams:student_exam_detail' exam.pk %}" class="btn btn-primary btn-sm">Open Exam</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-5 text-center text-muted">
+            No published exams are available right now.
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

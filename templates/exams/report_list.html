@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Reports{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:exam_list' %}">Exams</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reports</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <h1 class="h4 mb-0">Exam Reports</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'exams:result_list' %}" class="btn btn-outline-secondary btn-sm">Results</a>
+            <a href="{% url 'exams:exam_list' %}" class="btn btn-outline-secondary btn-sm">Back to Exams</a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">Total Exams</p>
+                    <p class="h4 mb-0">{{ total_exams }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">Submitted Attempts</p>
+                    <p class="h4 mb-0">{{ total_submitted_attempts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">Graded Attempts</p>
+                    <p class="h4 mb-0">{{ total_graded_attempts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">Overall Pass Rate</p>
+                    <p class="h4 mb-0">{{ overall_pass_rate }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Exam</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Questions</th>
+                            <th>Submitted</th>
+                            <th>Graded</th>
+                            <th>Pass Rate</th>
+                            <th>Avg Score</th>
+                            <th>Avg %</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exam_reports %}
+                        <tr>
+                            <td>{{ exam.title }}</td>
+                            <td>{{ exam.course.code }} - {{ exam.course.title }}</td>
+                            <td>{{ exam.get_status_display }}</td>
+                            <td>{{ exam.question_count }}</td>
+                            <td>{{ exam.submitted_attempts }}</td>
+                            <td>{{ exam.graded_attempts }}</td>
+                            <td>
+                                {% if exam.graded_attempts %}
+                                {% widthratio exam.passed_attempts exam.graded_attempts 100 %}%
+                                {% else %}
+                                0%
+                                {% endif %}
+                            </td>
+                            <td>{{ exam.avg_score|floatformat:2 }}</td>
+                            <td>{{ exam.avg_percentage|floatformat:1 }}%</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+                                    <a href="{% url 'exams:exam_detail' exam.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+                                    <a href="{% url 'exams:result_list' %}" class="btn btn-sm btn-outline-secondary">Results</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center py-4 text-muted">No exam reports available yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

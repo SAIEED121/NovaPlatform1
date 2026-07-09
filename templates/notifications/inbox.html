@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Inbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+<div class="max-w-6xl mx-auto p-6 space-y-4">
+    <div class="flex flex-wrap justify-between items-center gap-3">
+        <h1 class="text-2xl font-bold">Notification Inbox</h1>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-2 bg-slate-900 text-white rounded text-sm">Unread notifications: {{ unread_count }}</span>
+            <form method="post" action="{% url 'notifications:mark_all_read' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'notifications:inbox' %}">
+                <button type="submit" class="px-3 py-2 bg-emerald-700 text-white rounded text-sm">Mark all as read</button>
+            </form>
+            {% if dashboard_url_name %}
+            <a href="{% url dashboard_url_name %}" class="px-3 py-2 bg-slate-300 rounded text-sm">Dashboard</a>
+            {% endif %}
+            <a href="{% url 'home' %}" class="px-3 py-2 bg-slate-300 rounded text-sm">Back to home</a>
+            {% if can_access_teacher_exams %}
+            <a href="{% url 'exams:exam_list' %}" class="px-3 py-2 bg-slate-300 rounded text-sm">Exams</a>
+            {% endif %}
+            {% if can_access_student_exams %}
+            <a href="{% url 'exams:student_exam_list' %}" class="px-3 py-2 bg-slate-300 rounded text-sm">My Exams</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="px-3 py-2 rounded text-sm {% if message.tags == 'error' %}bg-rose-100 text-rose-900{% elif message.tags == 'warning' %}bg-amber-100 text-amber-900{% elif message.tags == 'success' %}bg-emerald-100 text-emerald-900{% else %}bg-slate-100 text-slate-900{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="space-y-3">
+        {% for notification in notifications %}
+        <div class="bg-white rounded shadow p-4 border {% if notification.status == 'unread' %}border-amber-300{% else %}border-slate-200{% endif %}">
+            <div class="flex justify-between items-start gap-4">
+                <div>
+                    <h2 class="font-bold text-base">{{ notification.title }}</h2>
+                    <p class="text-sm text-slate-600 mt-1">{{ notification.message }}</p>
+                    <p class="text-xs text-slate-500 mt-2">
+                        {{ notification.get_channel_display }} | {{ notification.get_recipient_type_display }} | {{ notification.sent_at|date:"Y-m-d H:i" }}
+                    </p>
+                </div>
+                <div class="text-right space-y-2">
+                    <span class="inline-block px-2 py-1 rounded text-xs {% if notification.status == 'unread' %}bg-amber-100 text-amber-900{% else %}bg-slate-100 text-slate-700{% endif %}">
+                        {{ notification.get_status_display }}
+                    </span>
+                    {% if notification.status == 'unread' %}
+                    <form method="post" action="{% url 'notifications:mark_read' notification.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'notifications:inbox' %}">
+                        <button type="submit" class="w-full px-3 py-1.5 bg-blue-700 text-white rounded text-xs">Mark as read</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-white rounded shadow p-5 text-center text-slate-500">No notifications are available at the moment.</div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="flex gap-2 items-center">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 bg-slate-300 rounded text-sm">Previous page</a>
+        {% endif %}
+        <span class="px-3 py-2 bg-white rounded text-sm">Page {{ page_obj.number }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 bg-slate-300 rounded text-sm">Next page</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
+

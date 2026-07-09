@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Payment #{{ payment.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Payment #{{ payment.id }}</h1>
+        <a href="{% url 'payments:payment_list' %}" class="btn btn-outline-secondary btn-sm">Back to list</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Student:</strong> {{ payment.student }}</div>
+                <div class="col-md-6"><strong>Subscription:</strong> {{ payment.subscription|default:"-" }}</div>
+                <div class="col-md-6"><strong>Amount:</strong> {{ payment.amount }} {{ payment.currency }}</div>
+                <div class="col-md-6"><strong>Method:</strong> {{ payment.get_method_display }}</div>
+                <div class="col-md-6"><strong>Status:</strong> {{ payment.get_status_display }}</div>
+                <div class="col-md-6"><strong>Transaction Ref:</strong> {{ payment.transaction_reference|default:"-" }}</div>
+                <div class="col-md-6"><strong>Requested By:</strong> {{ payment.requested_by|default:"-" }}</div>
+                <div class="col-md-6"><strong>Approved By:</strong> {{ payment.approved_by|default:"-" }}</div>
+                <div class="col-md-6"><strong>Paid At:</strong> {{ payment.paid_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-md-6"><strong>Approved At:</strong> {{ payment.approved_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-12"><strong>Notes:</strong><br>{{ payment.notes|default:"-"|linebreaksbr }}</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex flex-wrap gap-2">
+                {% if payment.invoice %}
+                <a href="{% url 'payments:invoice_detail' payment.invoice.pk %}" class="btn btn-outline-primary btn-sm">View Invoice</a>
+                {% endif %}
+                {% if payment.receipt %}
+                <a href="{% url 'payments:receipt_detail' payment.receipt.pk %}" class="btn btn-outline-success btn-sm">View Receipt</a>
+                {% endif %}
+                {% if payment.status == 'pending' %}
+                <a href="{% url 'payments:payment_approve' payment.pk %}" class="btn btn-success btn-sm">Approve / Reject</a>
+                {% endif %}
+                <a href="{% url 'payments:payment_update' payment.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'payments:payment_delete' payment.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

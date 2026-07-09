@@ -1,0 +1,11 @@
+[Unit]
+Description=NovaPlatform Backup Job
+After=network.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/novaplatform
+EnvironmentFile=/var/www/novaplatform/.env
+ExecStart=/usr/bin/env bash /var/www/novaplatform/deploy/scripts/backup.sh

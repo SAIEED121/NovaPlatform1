@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Exam {{ exam.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:exam_list' %}">Exams</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ exam.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+        <h1 class="h4 mb-0">{{ exam.title }}</h1>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'exams:result_list' %}" class="btn btn-outline-dark btn-sm">Results</a>
+            <a href="{% url 'exams:report_list' %}" class="btn btn-outline-dark btn-sm">Reports</a>
+            <a href="{% url 'exams:question_create' exam.pk %}" class="btn btn-primary btn-sm">Add Question</a>
+            <a href="{% url 'exams:exam_update' exam.pk %}" class="btn btn-warning btn-sm">Edit Exam</a>
+            <form method="post" action="{% url 'exams:exam_publish_toggle' exam.pk %}" class="d-inline">
+                {% csrf_token %}
+                {% if exam.status == 'published' %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Unpublish</button>
+                {% else %}
+                <button type="submit" class="btn btn-outline-success btn-sm">Publish</button>
+                {% endif %}
+            </form>
+            <a href="{% url 'exams:exam_delete' exam.pk %}" class="btn btn-danger btn-sm">Delete</a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Course:</strong> {{ exam.course.code }} - {{ exam.course.title }}</div>
+                <div class="col-md-6"><strong>Status:</strong> {{ exam.get_status_display }}</div>
+                <div class="col-md-6"><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</div>
+                <div class="col-md-6"><strong>Total/Passing:</strong> {{ exam.total_marks }} / {{ exam.passing_marks }}</div>
+                <div class="col-md-6"><strong>Start:</strong> {{ exam.start_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-md-6"><strong>End:</strong> {{ exam.end_at|date:"Y-m-d H:i"|default:"-" }}</div>
+                <div class="col-12"><strong>Description:</strong><br>{{ exam.description|default:"-"|linebreaksbr }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <strong>Questions</strong>
+        </div>
+        <div class="card-body p-0">
+            {% if exam.questions.all %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order</th>
+                            <th>Type</th>
+                            <th>Text</th>
+                            <th>Marks</th>
+                            <th>Choices</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question in exam.questions.all %}
+                        <tr>
+                            <td>{{ question.display_order }}</td>
+                            <td>{{ question.get_question_type_display }}</td>
+                            <td>{{ question.text|truncatechars:80 }}</td>
+                            <td>{{ question.marks }}</td>
+                            <td>{{ question.choices.count }}</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+                                    <a href="{% url 'exams:choice_create' exam.pk question.pk %}" class="btn btn-sm btn-outline-primary">Add Choice</a>
+                                    <a href="{% url 'exams:question_update' exam.pk question.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                    <a href="{% url 'exams:question_delete' exam.pk question.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% if question.choices.all %}
+                        <tr>
+                            <td colspan="6" class="bg-light">
+                                <ul class="mb-0 ps-3">
+                                    {% for choice in question.choices.all %}
+                                    <li class="d-flex justify-content-between align-items-center py-1">
+                                        <span>{{ choice.display_order }}. {{ choice.text }} {% if choice.is_correct %}<span class="badge text-bg-success ms-2">Correct</span>{% endif %}</span>
+                                        <span>
+                                            <a href="{% url 'exams:choice_update' exam.pk question.pk choice.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                            <a href="{% url 'exams:choice_delete' exam.pk question.pk choice.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                        </span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-4 text-muted">No questions added yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

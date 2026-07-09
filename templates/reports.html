@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPlatform | التقارير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #dcd9d4;
+            background-image: linear-gradient(to bottom, rgba(220, 217, 212, 0.9), rgba(220, 217, 212, 0.95));
+            font-family: "Cairo", sans-serif;
+        }
+        .panel {
+            background-color: #1a1a1a;
+            border: 1px solid #2b2b2b;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-200">
+    <header class="border-b border-gray-400/20">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap gap-3 items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl font-black text-[#801A24]">Nova<span class="text-gray-800 font-light">Platform</span></div>
+                <span class="text-[10px] bg-[#801A24] text-white px-2 py-1 rounded">التقارير</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="{% url 'admin_dashboard' %}" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold">لوحة الإدارة</a>
+                <a href="{% url 'exams:report_list' %}" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold">تقارير الاختبارات</a>
+                <a href="{% url 'home' %}" class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-xs font-bold">الرئيسية</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-6">
+        {% if messages %}
+        <section class="space-y-2">
+            {% for message in messages %}
+            <div class="px-4 py-3 rounded-lg text-xs font-bold {% if message.tags == 'success' %}bg-emerald-700/90 text-white{% elif message.tags == 'error' %}bg-rose-700/90 text-white{% elif message.tags == 'warning' %}bg-amber-600/90 text-white{% else %}bg-zinc-700 text-white{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">الطلاب</p>
+                <p class="text-xl font-black text-white mt-1">{{ statistics.total_students }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">المعلمون</p>
+                <p class="text-xl font-black text-white mt-1">{{ statistics.total_teachers }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">الدورات</p>
+                <p class="text-xl font-black text-white mt-1">{{ statistics.total_courses }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">التسجيلات</p>
+                <p class="text-xl font-black text-white mt-1">{{ statistics.total_enrollments }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">اشتراكات نشطة</p>
+                <p class="text-xl font-black text-emerald-400 mt-1">{{ statistics.active_subscriptions }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">دفعات معلقة</p>
+                <p class="text-xl font-black text-amber-400 mt-1">{{ statistics.pending_payments }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">دفعات ناجحة</p>
+                <p class="text-xl font-black text-cyan-400 mt-1">{{ statistics.successful_payments }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">إيراد ناجح</p>
+                <p class="text-xl font-black text-lime-400 mt-1">{{ statistics.successful_revenue }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">الاختبارات</p>
+                <p class="text-xl font-black text-white mt-1">{{ statistics.total_exams }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">الاختبارات المنشورة</p>
+                <p class="text-xl font-black text-cyan-400 mt-1">{{ statistics.published_exams }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">نتائج مُصححة</p>
+                <p class="text-xl font-black text-emerald-400 mt-1">{{ statistics.graded_exam_attempts }}</p>
+            </div>
+            <div class="panel p-4 text-center">
+                <p class="text-[11px] text-gray-400">قيد التصحيح</p>
+                <p class="text-xl font-black text-amber-400 mt-1">{{ statistics.pending_exam_grading }}</p>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="panel p-4 md:p-6">
+                <h2 class="text-sm font-bold text-white mb-3">مخطط التقرير الشهري</h2>
+                <canvas id="monthlyChart" height="140"></canvas>
+            </div>
+            <div class="panel p-4 md:p-6">
+                <h2 class="text-sm font-bold text-white mb-3">مخطط نشاط الطلاب</h2>
+                <canvas id="growthChart" height="140"></canvas>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="panel p-4 md:p-6">
+                <h2 class="text-sm font-bold text-white mb-3">توزيع المدفوعات حسب الحالة</h2>
+                <canvas id="statusChart" height="140"></canvas>
+            </div>
+            <div class="panel p-4 md:p-6">
+                <h2 class="text-sm font-bold text-white mb-3">توزيع المدفوعات حسب الطريقة</h2>
+                <canvas id="methodChart" height="140"></canvas>
+            </div>
+        </section>
+
+        <section class="panel p-4 md:p-6 space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-white">التقارير الشهرية</h2>
+                <span class="text-[11px] text-gray-500">آخر 12 شهر</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-xs">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-gray-400">
+                            <th class="py-2">الشهر</th>
+                            <th class="py-2">طلاب جدد</th>
+                            <th class="py-2">تسجيلات جديدة</th>
+                            <th class="py-2">عدد الدفعات</th>
+                            <th class="py-2">دفعات ناجحة</th>
+                            <th class="py-2">إيراد ناجح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in monthly_report_rows %}
+                        <tr class="border-b border-gray-900">
+                            <td class="py-2 font-mono">{{ row.month }}</td>
+                            <td class="py-2">{{ row.new_students }}</td>
+                            <td class="py-2">{{ row.new_enrollments }}</td>
+                            <td class="py-2">{{ row.payment_count }}</td>
+                            <td class="py-2">{{ row.successful_count }}</td>
+                            <td class="py-2 text-lime-400">{{ row.successful_amount }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="py-3 text-center text-gray-500">لا توجد بيانات شهرية.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel p-4 md:p-6 space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-white">تقارير الدورات</h2>
+                <a href="{% url 'courses:course_list' %}" class="text-xs text-cyan-400 hover:text-cyan-300">كل الدورات</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-xs">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-gray-400">
+                            <th class="py-2">الكود</th>
+                            <th class="py-2">الدورة</th>
+                            <th class="py-2">المعلم</th>
+                            <th class="py-2">إجمالي التسجيلات</th>
+                            <th class="py-2">التسجيلات النشطة</th>
+                            <th class="py-2">متوسط التقدم</th>
+                            <th class="py-2">مدفوعات مرتبطة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in course_reports %}
+                        <tr class="border-b border-gray-900">
+                            <td class="py-2 font-mono">{{ course.code }}</td>
+                            <td class="py-2">{{ course.title }}</td>
+                            <td class="py-2">{{ course.teacher.account.user.get_full_name|default:course.teacher.account.user.username|default:"-" }}</td>
+                            <td class="py-2">{{ course.enrollment_count }}</td>
+                            <td class="py-2">{{ course.active_enrollment_count }}</td>
+                            <td class="py-2">{{ course.avg_progress|floatformat:1 }}%</td>
+                            <td class="py-2 text-lime-400">{{ course.successful_payment_total|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="py-3 text-center text-gray-500">لا توجد بيانات دورات.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel p-4 md:p-6 space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-white">تقارير الاختبارات</h2>
+                <a href="{% url 'exams:report_list' %}" class="text-xs text-cyan-400 hover:text-cyan-300">كل تقارير الاختبارات</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-xs">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-gray-400">
+                            <th class="py-2">الاختبار</th>
+                            <th class="py-2">المقرر</th>
+                            <th class="py-2">الأسئلة</th>
+                            <th class="py-2">المحاولات</th>
+                            <th class="py-2">مصححة</th>
+                            <th class="py-2">نسبة النجاح</th>
+                            <th class="py-2">متوسط النسبة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exam_reports %}
+                        <tr class="border-b border-gray-900">
+                            <td class="py-2">{{ exam.title }}</td>
+                            <td class="py-2">{{ exam.course.code }}</td>
+                            <td class="py-2">{{ exam.question_count }}</td>
+                            <td class="py-2">{{ exam.submitted_attempts }}</td>
+                            <td class="py-2">{{ exam.graded_attempts }}</td>
+                            <td class="py-2">{% if exam.graded_attempts %}{% widthratio exam.passed_attempts exam.graded_attempts 100 %}%{% else %}0%{% endif %}</td>
+                            <td class="py-2">{{ exam.avg_percentage|floatformat:1 }}%</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="py-3 text-center text-gray-500">لا توجد بيانات اختبارات.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="panel p-4 md:p-6 space-y-3">
+                <h2 class="text-sm font-bold text-white">تقرير المدفوعات حسب الحالة</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="border-b border-gray-800 text-gray-400">
+                                <th class="py-2">الحالة</th>
+                                <th class="py-2">عدد العمليات</th>
+                                <th class="py-2">إجمالي المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in payment_status_rows %}
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2">{{ row.status }}</td>
+                                <td class="py-2">{{ row.count }}</td>
+                                <td class="py-2 text-lime-400">{{ row.total_amount|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" class="py-3 text-center text-gray-500">لا توجد بيانات.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel p-4 md:p-6 space-y-3">
+                <h2 class="text-sm font-bold text-white">تقرير المدفوعات حسب الطريقة</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="border-b border-gray-800 text-gray-400">
+                                <th class="py-2">الطريقة</th>
+                                <th class="py-2">عدد العمليات</th>
+                                <th class="py-2">إجمالي المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in payment_method_rows %}
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2">{{ row.method }}</td>
+                                <td class="py-2">{{ row.count }}</td>
+                                <td class="py-2 text-lime-400">{{ row.total_amount|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" class="py-3 text-center text-gray-500">لا توجد بيانات.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel p-4 md:p-6 space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-white">آخر عمليات الدفع</h2>
+                <a href="{% url 'payments:payment_list' %}" class="text-xs text-cyan-400 hover:text-cyan-300">كل المدفوعات</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-xs">
+                    <thead>
+                        <tr class="border-b border-gray-800 text-gray-400">
+                            <th class="py-2">#</th>
+                            <th class="py-2">الطالب</th>
+                            <th class="py-2">المبلغ</th>
+                            <th class="py-2">الطريقة</th>
+                            <th class="py-2">الحالة</th>
+                            <th class="py-2">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in recent_payments %}
+                        <tr class="border-b border-gray-900">
+                            <td class="py-2 font-mono">{{ payment.id }}</td>
+                            <td class="py-2">{{ payment.student.account.user.get_full_name|default:payment.student.account.user.username }}</td>
+                            <td class="py-2 text-lime-400">{{ payment.amount }} {{ payment.currency }}</td>
+                            <td class="py-2">{{ payment.get_method_display }}</td>
+                            <td class="py-2">{{ payment.get_status_display }}</td>
+                            <td class="py-2">{{ payment.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="py-3 text-center text-gray-500">لا توجد مدفوعات.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    {{ monthly_labels|json_script:"monthly-labels" }}
+    {{ monthly_revenue|json_script:"monthly-revenue" }}
+    {{ monthly_payment_counts|json_script:"monthly-payments" }}
+    {{ monthly_new_students|json_script:"monthly-students" }}
+    {{ monthly_new_enrollments|json_script:"monthly-enrollments" }}
+    {{ payment_status_labels|json_script:"status-labels" }}
+    {{ payment_status_counts|json_script:"status-counts" }}
+    {{ payment_method_labels|json_script:"method-labels" }}
+    {{ payment_method_counts|json_script:"method-counts" }}
+
+    <script>
+        const monthlyLabels = JSON.parse(document.getElementById("monthly-labels").textContent);
+        const monthlyRevenue = JSON.parse(document.getElementById("monthly-revenue").textContent);
+        const monthlyPayments = JSON.parse(document.getElementById("monthly-payments").textContent);
+        const monthlyStudents = JSON.parse(document.getElementById("monthly-students").textContent);
+        const monthlyEnrollments = JSON.parse(document.getElementById("monthly-enrollments").textContent);
+        const statusLabels = JSON.parse(document.getElementById("status-labels").textContent);
+        const statusCounts = JSON.parse(document.getElementById("status-counts").textContent);
+        const methodLabels = JSON.parse(document.getElementById("method-labels").textContent);
+        const methodCounts = JSON.parse(document.getElementById("method-counts").textContent);
+
+        new Chart(document.getElementById("monthlyChart"), {
+            type: "bar",
+            data: {
+                labels: monthlyLabels,
+                datasets: [
+                    {
+                        type: "line",
+                        label: "الإيراد الناجح",
+                        data: monthlyRevenue,
+                        borderColor: "#84cc16",
+                        backgroundColor: "rgba(132, 204, 22, 0.2)",
+                        borderWidth: 2,
+                        yAxisID: "y1",
+                        tension: 0.2,
+                    },
+                    {
+                        label: "عدد المدفوعات",
+                        data: monthlyPayments,
+                        backgroundColor: "rgba(14, 116, 144, 0.6)",
+                        borderColor: "#06b6d4",
+                        borderWidth: 1,
+                        yAxisID: "y",
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "#d1d5db" } },
+                },
+                scales: {
+                    x: { ticks: { color: "#9ca3af" }, grid: { color: "rgba(255,255,255,0.05)" } },
+                    y: { ticks: { color: "#9ca3af" }, grid: { color: "rgba(255,255,255,0.05)" } },
+                    y1: {
+                        position: "left",
+                        ticks: { color: "#84cc16" },
+                        grid: { drawOnChartArea: false },
+                    },
+                },
+            },
+        });
+
+        new Chart(document.getElementById("growthChart"), {
+            type: "line",
+            data: {
+                labels: monthlyLabels,
+                datasets: [
+                    {
+                        label: "طلاب جدد",
+                        data: monthlyStudents,
+                        borderColor: "#38bdf8",
+                        backgroundColor: "rgba(56, 189, 248, 0.2)",
+                        borderWidth: 2,
+                        tension: 0.25,
+                    },
+                    {
+                        label: "تسجيلات جديدة",
+                        data: monthlyEnrollments,
+                        borderColor: "#f59e0b",
+                        backgroundColor: "rgba(245, 158, 11, 0.2)",
+                        borderWidth: 2,
+                        tension: 0.25,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "#d1d5db" } },
+                },
+                scales: {
+                    x: { ticks: { color: "#9ca3af" }, grid: { color: "rgba(255,255,255,0.05)" } },
+                    y: { ticks: { color: "#9ca3af" }, grid: { color: "rgba(255,255,255,0.05)" } },
+                },
+            },
+        });
+
+        new Chart(document.getElementById("statusChart"), {
+            type: "doughnut",
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusCounts,
+                    backgroundColor: ["#10b981", "#f59e0b", "#ef4444", "#6366f1"],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "#d1d5db" } },
+                },
+            },
+        });
+
+        new Chart(document.getElementById("methodChart"), {
+            type: "polarArea",
+            data: {
+                labels: methodLabels,
+                datasets: [{
+                    data: methodCounts,
+                    backgroundColor: [
+                        "rgba(14, 165, 233, 0.7)",
+                        "rgba(168, 85, 247, 0.7)",
+                        "rgba(34, 197, 94, 0.7)",
+                        "rgba(245, 158, 11, 0.7)",
+                        "rgba(239, 68, 68, 0.7)",
+                    ],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "#d1d5db" } },
+                },
+                scales: {
+                    r: {
+                        ticks: { color: "#9ca3af", backdropColor: "transparent" },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                        pointLabels: { color: "#d1d5db" },
+                    },
+                },
+            },
+        });
+    </script>
+</body>
+</html>

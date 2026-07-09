@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Plan Course Detail{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Plan Course Mapping</h1>
+        <a href="{% url 'subscriptions:plan_course_list' %}" class="btn btn-outline-secondary btn-sm">Back to list</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Plan:</strong> {{ plan_course.plan }}</div>
+                <div class="col-md-6"><strong>Course:</strong> {{ plan_course.course }}</div>
+                <div class="col-md-6"><strong>Order:</strong> {{ plan_course.order }}</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'subscriptions:plan_course_update' plan_course.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'subscriptions:plan_course_delete' plan_course.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

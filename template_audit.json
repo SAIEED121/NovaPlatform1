@@ -1,0 +1,511 @@
+{
+  "total": 79,
+  "missing": [
+    {
+      "view": "AccountProfileListView",
+      "template": "accounts/accountprofile_list.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileDetailView",
+      "template": "accounts/accountprofile_detail.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileCreateView",
+      "template": "accounts/accountprofile_form.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileUpdateView",
+      "template": "accounts/accountprofile_form.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileDeleteView",
+      "template": "accounts/accountprofile_confirm_delete.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    }
+  ],
+  "mappings": [
+    {
+      "view": "AccountProfileListView",
+      "template": "accounts/accountprofile_list.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileDetailView",
+      "template": "accounts/accountprofile_detail.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileCreateView",
+      "template": "accounts/accountprofile_form.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileUpdateView",
+      "template": "accounts/accountprofile_form.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "AccountProfileDeleteView",
+      "template": "accounts/accountprofile_confirm_delete.html",
+      "view_file": "accounts/views.py",
+      "exists": false
+    },
+    {
+      "view": "ActivityLogListView",
+      "template": "accounts/activitylog_list.html",
+      "view_file": "accounts/views.py",
+      "exists": true
+    },
+    {
+      "view": "CategoryListView",
+      "template": "courses/category_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CategoryDetailView",
+      "template": "courses/category_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CategoryCreateView",
+      "template": "courses/category_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CategoryUpdateView",
+      "template": "courses/category_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CategoryDeleteView",
+      "template": "courses/category_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseListView",
+      "template": "courses/course_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseDetailView",
+      "template": "courses/course_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseCreateView",
+      "template": "courses/course_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseUpdateView",
+      "template": "courses/course_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseTeacherAssignView",
+      "template": "courses/course_assign_teacher.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "CourseDeleteView",
+      "template": "courses/course_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "EnrollmentListView",
+      "template": "courses/enrollment_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "EnrollmentDetailView",
+      "template": "courses/enrollment_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "EnrollmentCreateView",
+      "template": "courses/enrollment_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "EnrollmentUpdateView",
+      "template": "courses/enrollment_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "EnrollmentDeleteView",
+      "template": "courses/enrollment_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "LessonListView",
+      "template": "courses/lesson_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "LessonDetailView",
+      "template": "courses/lesson_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "LessonCreateView",
+      "template": "courses/lesson_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "LessonUpdateView",
+      "template": "courses/lesson_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "LessonDeleteView",
+      "template": "courses/lesson_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "ScheduleListView",
+      "template": "courses/schedule_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "ScheduleDetailView",
+      "template": "courses/schedule_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "ScheduleCreateView",
+      "template": "courses/schedule_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "ScheduleUpdateView",
+      "template": "courses/schedule_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "ScheduleDeleteView",
+      "template": "courses/schedule_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomeworkSubmissionListView",
+      "template": "courses/homeworksubmission_list.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomeworkSubmissionDetailView",
+      "template": "courses/homeworksubmission_detail.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomeworkSubmissionCreateView",
+      "template": "courses/homeworksubmission_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomeworkSubmissionUpdateView",
+      "template": "courses/homeworksubmission_form.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomeworkSubmissionDeleteView",
+      "template": "courses/homeworksubmission_confirm_delete.html",
+      "view_file": "courses/views.py",
+      "exists": true
+    },
+    {
+      "view": "HomePageView",
+      "template": "index.html",
+      "view_file": "dashboard/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationListView",
+      "template": "notifications/notification_list.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationDetailView",
+      "template": "notifications/notification_detail.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationCreateView",
+      "template": "notifications/notification_form.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationUpdateView",
+      "template": "notifications/notification_form.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationDeleteView",
+      "template": "notifications/notification_confirm_delete.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "NotificationInboxView",
+      "template": "notifications/inbox.html",
+      "view_file": "notifications/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentListView",
+      "template": "payments/payment_list.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentDetailView",
+      "template": "payments/payment_detail.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentCreateView",
+      "template": "payments/payment_form.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentUpdateView",
+      "template": "payments/payment_form.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentDeleteView",
+      "template": "payments/payment_confirm_delete.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentRequestCreateView",
+      "template": "payments/payment_request_form.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentApproveView",
+      "template": "payments/payment_approval_form.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "PaymentHistoryView",
+      "template": "payments/payment_history.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "InvoiceDetailView",
+      "template": "payments/invoice_detail.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "ReceiptDetailView",
+      "template": "payments/receipt_detail.html",
+      "view_file": "payments/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentListView",
+      "template": "students/student_list.html",
+      "view_file": "students/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentDetailView",
+      "template": "students/student_detail.html",
+      "view_file": "students/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentCreateView",
+      "template": "students/student_form.html",
+      "view_file": "students/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentUpdateView",
+      "template": "students/student_form.html",
+      "view_file": "students/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentDeleteView",
+      "template": "students/student_confirm_delete.html",
+      "view_file": "students/views.py",
+      "exists": true
+    },
+    {
+      "view": "SubscriptionPlanListView",
+      "template": "subscriptions/subscription_plan_list.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "SubscriptionPlanDetailView",
+      "template": "subscriptions/subscription_plan_detail.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "SubscriptionPlanCreateView",
+      "template": "subscriptions/subscription_plan_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "SubscriptionPlanUpdateView",
+      "template": "subscriptions/subscription_plan_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "SubscriptionPlanDeleteView",
+      "template": "subscriptions/subscription_plan_confirm_delete.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "PlanCourseListView",
+      "template": "subscriptions/plan_course_list.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "PlanCourseDetailView",
+      "template": "subscriptions/plan_course_detail.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "PlanCourseCreateView",
+      "template": "subscriptions/plan_course_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "PlanCourseUpdateView",
+      "template": "subscriptions/plan_course_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "PlanCourseDeleteView",
+      "template": "subscriptions/plan_course_confirm_delete.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentSubscriptionListView",
+      "template": "subscriptions/student_subscription_list.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentSubscriptionDetailView",
+      "template": "subscriptions/student_subscription_detail.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentSubscriptionCreateView",
+      "template": "subscriptions/student_subscription_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentSubscriptionUpdateView",
+      "template": "subscriptions/student_subscription_form.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "StudentSubscriptionDeleteView",
+      "template": "subscriptions/student_subscription_confirm_delete.html",
+      "view_file": "subscriptions/views.py",
+      "exists": true
+    },
+    {
+      "view": "TeacherListView",
+      "template": "teachers/teacher_list.html",
+      "view_file": "teachers/views.py",
+      "exists": true
+    },
+    {
+      "view": "TeacherDetailView",
+      "template": "teachers/teacher_detail.html",
+      "view_file": "teachers/views.py",
+      "exists": true
+    },
+    {
+      "view": "TeacherCreateView",
+      "template": "teachers/teacher_form.html",
+      "view_file": "teachers/views.py",
+      "exists": true
+    },
+    {
+      "view": "TeacherUpdateView",
+      "template": "teachers/teacher_form.html",
+      "view_file": "teachers/views.py",
+      "exists": true
+    },
+    {
+      "view": "TeacherDeleteView",
+      "template": "teachers/teacher_confirm_delete.html",
+      "view_file": "teachers/views.py",
+      "exists": true
+    }
+  ]
+}

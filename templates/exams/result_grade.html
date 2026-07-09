@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Grade Essay - {{ student_exam.exam.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'exams:result_list' %}">Results</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Grade Essay</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <h1 class="h4 mb-2">{{ student_exam.exam.title }} - Essay Grading</h1>
+            <div class="row g-2 small text-muted">
+                <div class="col-md-4"><strong>Student:</strong> {{ student_exam.student.account.user.get_full_name|default:student_exam.student.account.user.username }}</div>
+                <div class="col-md-4"><strong>Current Score:</strong> {{ student_exam.score|default:"-" }}</div>
+                <div class="col-md-4"><strong>Current Percentage:</strong> {{ student_exam.percentage|default:"-" }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            {% if essay_form_rows %}
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for answer, field in essay_form_rows %}
+                <div class="border rounded p-3 mb-3">
+                    <p class="mb-2"><strong>Question {{ answer.question.display_order }} ({{ answer.question.marks }} marks):</strong> {{ answer.question.text }}</p>
+                    <div class="mb-2 text-muted">{{ answer.answer_text|linebreaksbr }}</div>
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.grader_notes.id_for_label }}">{{ form.grader_notes.label }}</label>
+                    {{ form.grader_notes }}
+                    {% if form.grader_notes.errors %}
+                    <div class="text-danger small mt-1">{{ form.grader_notes.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Grades</button>
+            </form>
+            {% else %}
+            <div class="text-muted">No essay answers found for this submission.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

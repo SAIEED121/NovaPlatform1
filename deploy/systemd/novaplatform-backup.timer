@@ -1,0 +1,11 @@
+[Unit]
+Description=Run NovaPlatform backup daily
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=novaplatform-backup.service
+
+[Install]
+WantedBy=timers.target

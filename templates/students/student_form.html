@@ -1,0 +1,118 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{% if object %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'students:student_list' %}">Students</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% if object %}Edit{% else %}Create{% endif %}</li>
+        </ol>
+    </nav>
+
+    <h1 class="h4 mb-4">{% if object %}Edit Student{% else %}Add Student{% endif %}</h1>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="row g-3 g-lg-4">
+                    {% for field in form %}
+                    <div class="col-12 col-md-6">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="alert alert-danger py-2 px-3 small mt-2 mb-0" role="alert">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    {% if object %}
+                    <a href="{% url 'students:student_detail' object.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    {% else %}
+                    <a href="{% url 'students:student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const gradeField = document.getElementById("id_grade_level");
+            const branchField = document.getElementById("id_branch");
+            if (!gradeField || !branchField) {
+                return;
+            }
+
+            const branchChoices = {
+                general: "General",
+                science: "Science",
+                literary: "Literary"
+            };
+
+            const generalOnlyGrades = new Set([
+                "grade_1_primary", "grade_2_primary", "grade_3_primary", "grade_4_primary", "grade_5_primary", "grade_6_primary",
+                "grade_1_preparatory", "grade_2_preparatory", "grade_3_preparatory", "grade_1_secondary"
+            ]);
+            const branchedGrades = new Set(["grade_2_secondary", "grade_3_secondary"]);
+
+            function resetBranchOptions(choices, defaultValue) {
+                branchField.innerHTML = "";
+                choices.forEach(([value, label]) => {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.textContent = label;
+                    branchField.appendChild(option);
+                });
+                if (defaultValue && choices.some(([value]) => value === defaultValue)) {
+                    branchField.value = defaultValue;
+                }
+            }
+
+            function updateBranchChoices() {
+                const currentValue = branchField.value;
+                if (generalOnlyGrades.has(gradeField.value)) {
+                    resetBranchOptions([["general", branchChoices.general]], "general");
+                    return;
+                }
+                if (branchedGrades.has(gradeField.value)) {
+                    resetBranchOptions([
+                        ["science", branchChoices.science],
+                        ["literary", branchChoices.literary]
+                    ], currentValue === "science" || currentValue === "literary" ? currentValue : "science");
+                }
+            }
+
+            gradeField.addEventListener("change", updateBranchChoices);
+            updateBranchChoices();
+        })();
+    </script>
+</div>
+{% endblock %}
+
