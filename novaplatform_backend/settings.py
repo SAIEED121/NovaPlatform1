@@ -18,18 +18,12 @@ def env_list(name, default=""):
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", os.environ.get("DJANGO_SECRET_KEY", ""))
-DEBUG = False if os.environ.get("RENDER") else True
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
-if render_hostname:
-    ALLOWED_HOSTS.append(render_hostname)
+DEBUG = env_bool("DJANGO_DEBUG", default=False)
 
-# Optional additional hosts can still be provided through env.
-for host in env_list("DJANGO_ALLOWED_HOSTS", ""):
-    if host not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append(host)
+default_allowed_hosts = "localhost,127.0.0.1,[::1]" if DEBUG else ""
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", default_allowed_hosts)
 
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
 
