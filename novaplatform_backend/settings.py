@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from django.core.exceptions import ImproperlyConfigured
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,20 +18,26 @@ def env_list(name, default=""):
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
-DEBUG = env_bool("DJANGO_DEBUG", default=False)
-default_allowed_hosts = "localhost,127.0.0.1,[::1]" if DEBUG else ""
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", default_allowed_hosts)
+SECRET_KEY = os.environ.get("SECRET_KEY", os.environ.get("DJANGO_SECRET_KEY", ""))
+DEBUG = False if os.environ.get("RENDER") else True
+
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if render_hostname:
+    ALLOWED_HOSTS.append(render_hostname)
+
+# Optional additional hosts can still be provided through env.
+for host in env_list("DJANGO_ALLOWED_HOSTS", ""):
+    if host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
 
 if not SECRET_KEY:
     if DEBUG:
         SECRET_KEY = "dev-only-insecure-key-change-before-prod"
     else:
-        raise RuntimeError("DJANGO_SECRET_KEY must be set when DJANGO_DEBUG=False")
-
-if not DEBUG and not ALLOWED_HOSTS:
-    raise RuntimeError("DJANGO_ALLOWED_HOSTS must be set when DJANGO_DEBUG=False")
+        raise RuntimeError("SECRET_KEY must be set when DEBUG=False")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -95,54 +101,22 @@ if not DEBUG:
 WSGI_APPLICATION = 'novaplatform_backend.wsgi.application'
 ASGI_APPLICATION = 'novaplatform_backend.asgi.application'
 
-if DEBUG:
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=bool(os.environ.get("RENDER")),
+        )
+    }
+else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-else:
-    db_engine = os.environ.get("DB_ENGINE", "").strip().lower()
-    if db_engine not in {"postgres", "postgresql", "sqlite"}:
-        raise ImproperlyConfigured(
-            "Production database is not configured correctly. "
-            "Set DB_ENGINE to one of: postgres, postgresql, sqlite. "
-            "If using PostgreSQL, also provide DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT."
-        )
-
-    if db_engine in {"postgres", "postgresql"}:
-        required_db_env_vars = ["DB_NAME", "DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT"]
-        missing_db_env_vars = [name for name in required_db_env_vars if not os.environ.get(name, "").strip()]
-        if missing_db_env_vars:
-            raise ImproperlyConfigured(
-                "Missing required PostgreSQL environment variables: "
-                f"{', '.join(missing_db_env_vars)}. "
-                "Required variables when DJANGO_DEBUG=False and DB_ENGINE is PostgreSQL: "
-                "DB_ENGINE, DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT."
-            )
-
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql",
-                "NAME": os.environ["DB_NAME"],
-                "USER": os.environ["DB_USER"],
-                "PASSWORD": os.environ["DB_PASSWORD"],
-                "HOST": os.environ["DB_HOST"],
-                "PORT": os.environ["DB_PORT"],
-                "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
-                "OPTIONS": {
-                    "sslmode": os.environ.get("DB_SSLMODE", "require"),
-                },
-            }
-        }
-    else:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": BASE_DIR / "db.sqlite3",
-            }
-        }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
