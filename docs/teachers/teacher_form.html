@@ -1,0 +1,66 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{% if object %}Edit Teacher{% else %}Add Teacher{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'teachers:teacher_list' %}">Teachers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% if object %}Edit{% else %}Create{% endif %}</li>
+        </ol>
+    </nav>
+
+    <h1 class="h4 mb-4">{% if object %}Edit Teacher{% else %}Add Teacher{% endif %}</h1>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="row g-3 g-lg-4">
+                    {% for field in form %}
+                    <div class="col-12 col-md-6 {% if field.name == 'bio' %}col-md-12{% endif %}">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="alert alert-danger py-2 px-3 small mt-2 mb-0" role="alert">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    {% if object %}
+                    <a href="{% url 'teachers:teacher_detail' object.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    {% else %}
+                    <a href="{% url 'teachers:teacher_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

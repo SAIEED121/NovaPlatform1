@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Choice{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h4 mb-3">Delete Choice</h1>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <p class="mb-3">Are you sure you want to delete this choice?</p>
+            <p class="text-muted">{{ object.text }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url 'exams:exam_detail' exam.pk %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

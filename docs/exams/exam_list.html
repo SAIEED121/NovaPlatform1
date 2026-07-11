@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}My Exams{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'teachers:teacher_list' %}">Teachers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Exams</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <h1 class="h4 mb-0">My Exams</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'teachers:teacher_list' %}" class="btn btn-outline-secondary btn-sm">Teachers</a>
+            <a href="{% url 'exams:report_list' %}" class="btn btn-outline-secondary btn-sm">Reports</a>
+            <a href="{% url 'exams:result_list' %}" class="btn btn-outline-secondary btn-sm">Results</a>
+            <a href="{% url 'exams:exam_create' %}" class="btn btn-primary btn-sm">Create Exam</a>
+        </div>
+    </div>
+
+    {% if exams %}
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Course</th>
+                            <th>Status</th>
+                            <th>Questions</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exams %}
+                        <tr>
+                            <td>{{ exam.id }}</td>
+                            <td>{{ exam.title }}</td>
+                            <td>{{ exam.course.code }} - {{ exam.course.title }}</td>
+                            <td>
+                                {% if exam.status == 'published' %}
+                                <span class="badge text-bg-success">{{ exam.get_status_display }}</span>
+                                {% elif exam.status == 'draft' %}
+                                <span class="badge text-bg-warning">{{ exam.get_status_display }}</span>
+                                {% else %}
+                                <span class="badge text-bg-secondary">{{ exam.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ exam.questions.count }}</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+                                    <a href="{% url 'exams:exam_detail' exam.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+                                    <a href="{% url 'exams:exam_update' exam.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                    <a href="{% url 'exams:exam_delete' exam.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card border-0 shadow-sm nova-empty-state">
+        <div class="card-body p-5 text-center">
+            <h2 class="h5 mb-2">No exams yet</h2>
+            <p class="text-muted mb-3">Create your first exam to start adding questions.</p>
+            <a href="{% url 'exams:exam_create' %}" class="btn btn-primary">Create Exam</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

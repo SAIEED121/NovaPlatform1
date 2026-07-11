@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Receipt {{ receipt.receipt_number }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="h4 mb-3">Receipt {{ receipt.receipt_number }}</h1>
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Payment:</strong> #{{ receipt.payment.id }}</div>
+                <div class="col-md-6"><strong>Method:</strong> {{ receipt.payment.get_method_display }}</div>
+                <div class="col-md-6"><strong>Amount:</strong> {{ receipt.amount }} {{ receipt.currency }}</div>
+                <div class="col-md-6"><strong>Transaction Ref:</strong> {{ receipt.transaction_reference|default:"-" }}</div>
+                <div class="col-md-6"><strong>Issued At:</strong> {{ receipt.issued_at|date:"Y-m-d H:i" }}</div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <a href="{% url 'payments:payment_detail' receipt.payment.pk %}" class="btn btn-outline-secondary btn-sm">Back to Payment</a>
+                <a href="{% url 'payments:payment_history' %}" class="btn btn-outline-primary btn-sm">Payment History</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

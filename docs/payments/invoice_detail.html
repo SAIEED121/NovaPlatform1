@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="h4 mb-3">Invoice {{ invoice.invoice_number }}</h1>
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Payment:</strong> #{{ invoice.payment.id }}</div>
+                <div class="col-md-6"><strong>Status:</strong> {{ invoice.get_status_display }}</div>
+                <div class="col-md-6"><strong>Total:</strong> {{ invoice.total_amount }} {{ invoice.currency }}</div>
+                <div class="col-md-6"><strong>Issued At:</strong> {{ invoice.issued_at|date:"Y-m-d H:i" }}</div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <a href="{% url 'payments:payment_detail' invoice.payment.pk %}" class="btn btn-outline-secondary btn-sm">Back to Payment</a>
+                <a href="{% url 'payments:payment_history' %}" class="btn btn-outline-primary btn-sm">Payment History</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

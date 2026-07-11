@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Account Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Profile: {{ profile.user.username }}</h1>
+        <a href="{% url 'accounts:profile_list' %}" class="btn btn-outline-secondary btn-sm">Back to list</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Username:</strong> {{ profile.user.username }}</div>
+                <div class="col-md-6"><strong>Full Name:</strong> {{ profile.user.get_full_name|default:"-" }}</div>
+                <div class="col-md-6"><strong>Email:</strong> {{ profile.user.email|default:"-" }}</div>
+                <div class="col-md-6"><strong>Phone:</strong> {{ profile.phone|default:"-" }}</div>
+                <div class="col-md-6"><strong>Role:</strong> {{ profile.role|default:"-" }}</div>
+                <div class="col-md-6"><strong>Status:</strong> {{ profile.status|default:"-" }}</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'accounts:profile_update' profile.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'accounts:profile_delete' profile.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

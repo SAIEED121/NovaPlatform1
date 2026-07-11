@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+<div class="max-w-7xl mx-auto p-6 space-y-4">
+    {% if messages %}
+    <div class="space-y-2">
+        {% for message in messages %}
+        <div class="rounded border px-3 py-2 text-sm {% if message.tags == 'error' %}border-rose-300 bg-rose-50 text-rose-700{% elif message.tags == 'success' %}border-emerald-300 bg-emerald-50 text-emerald-700{% else %}border-slate-300 bg-white text-slate-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Course Management</h1>
+        <a class="px-4 py-2 bg-blue-700 text-white rounded" href="{% url 'courses:course_create' %}">Add Course</a>
+    </div>
+    <div class="text-sm text-slate-600 flex gap-4">
+        <a href="{% url 'courses:category_list' %}">Categories</a>
+        <a href="{% url 'courses:lesson_list' %}">Lessons</a>
+        <a href="{% url 'courses:schedule_list' %}">Schedules</a>
+        <a href="{% url 'courses:enrollment_list' %}">Enrollments</a>
+        <a href="{% url 'exams:exam_list' %}">Exams</a>
+    </div>
+    <div class="bg-white rounded shadow overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-200">
+                <tr>
+                    <th class="p-3 text-left">Code</th>
+                    <th class="p-3 text-left">Title</th>
+                    <th class="p-3 text-left">Category</th>
+                    <th class="p-3 text-left">Teacher</th>
+                    <th class="p-3 text-left">Status</th>
+                    <th class="p-3 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for course in courses %}
+                <tr class="border-t">
+                    <td class="p-3">{{ course.code }}</td>
+                    <td class="p-3">{{ course.title }}</td>
+                    <td class="p-3">{{ course.category.name|default:"-" }}</td>
+                    <td class="p-3">{{ course.teacher.account.user.get_full_name|default:course.teacher.account.user.username|default:"-" }}</td>
+                    <td class="p-3">{{ course.get_status_display }}</td>
+                    <td class="p-3 space-x-2">
+                        <a class="text-blue-700" href="{% url 'courses:course_detail' course.pk %}">View Details</a>
+                        <a class="text-amber-700" href="{% url 'courses:course_update' course.pk %}">Edit</a>
+                        <a class="text-emerald-700" href="{% url 'courses:course_assign_teacher' course.pk %}">Assign Teacher</a>
+                        <a class="text-rose-700" href="{% url 'courses:course_delete' course.pk %}">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6" class="p-3 text-slate-500">No courses are available yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+

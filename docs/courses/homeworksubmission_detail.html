@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Submission</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+<div class="max-w-3xl mx-auto p-6">
+    <div class="bg-white rounded shadow p-6 space-y-4">
+        <h1 class="text-2xl font-bold">Homework Submission</h1>
+        <div class="text-sm space-y-2">
+            <p><strong>Student:</strong> {{ submission.enrollment.student.student_code }}</p>
+            <p><strong>Course:</strong> {{ submission.enrollment.course.code }} - {{ submission.enrollment.course.title }}</p>
+            <p><strong>Title:</strong> {{ submission.title }}</p>
+            <p><strong>Description:</strong> {{ submission.description|default:"-" }}</p>
+            <p><strong>Grade:</strong> {{ submission.grade|default:"-" }}</p>
+            <p><strong>Feedback:</strong> {{ submission.feedback|default:"-" }}</p>
+            <p><strong>Submitted:</strong> {{ submission.submitted_at|date:"Y-m-d H:i" }}</p>
+            <p><strong>Reviewed:</strong> {{ submission.reviewed_at|date:"Y-m-d H:i"|default:"-" }}</p>
+            <p>
+                <strong>Attachment:</strong>
+                {% if submission.attachment %}
+                <a class="text-blue-700" href="{{ submission.attachment.url }}" target="_blank" rel="noopener">Open file</a>
+                {% else %}
+                -
+                {% endif %}
+            </p>
+        </div>
+        <div class="space-x-2">
+            <a class="px-4 py-2 bg-slate-300 rounded" href="{% url 'courses:homework_submission_list' %}">Back</a>
+            <a class="px-4 py-2 bg-amber-600 text-white rounded" href="{% url 'courses:homework_submission_update' submission.pk %}">Edit</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

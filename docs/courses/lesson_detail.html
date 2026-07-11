@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+<div class="max-w-3xl mx-auto p-6">
+    <div class="bg-white rounded shadow p-6 space-y-2">
+        <h1 class="text-2xl font-bold">{{ lesson.title }}</h1>
+        <p>Course: {{ lesson.course.code }} - {{ lesson.course.title }}</p>
+        <p>Order: {{ lesson.order }}</p>
+        <p>Duration: {{ lesson.duration_minutes }} minutes</p>
+        <p>Published: {% if lesson.is_published %}Yes{% else %}No{% endif %}</p>
+        <p>{{ lesson.description|default:"No description" }}</p>
+        <div class="space-x-2">
+            <a class="text-amber-700" href="{% url 'courses:lesson_update' lesson.pk %}">Edit</a>
+            <a class="text-slate-700" href="{% url 'courses:lesson_list' %}">Back</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

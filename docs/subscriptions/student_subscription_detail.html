@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Student Subscription Detail{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Student Subscription</h1>
+        <a href="{% url 'subscriptions:student_subscription_list' %}" class="btn btn-outline-secondary btn-sm">Back to list</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Student:</strong> {{ student_subscription.student }}</div>
+                <div class="col-md-6"><strong>Plan:</strong> {{ student_subscription.plan }}</div>
+                <div class="col-md-6"><strong>Status:</strong> {{ student_subscription.get_status_display }}</div>
+                <div class="col-md-6"><strong>Auto Renew:</strong> {{ student_subscription.auto_renew|yesno:"Yes,No" }}</div>
+                <div class="col-md-6"><strong>Start Date:</strong> {{ student_subscription.started_at|date:"Y-m-d" }}</div>
+                <div class="col-md-6"><strong>End Date:</strong> {{ student_subscription.ends_at|date:"Y-m-d" }}</div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'subscriptions:student_subscription_update' student_subscription.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'subscriptions:student_subscription_delete' student_subscription.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

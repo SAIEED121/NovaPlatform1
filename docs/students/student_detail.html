@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Student {{ student.student_code }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} mb-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'students:student_list' %}">Students</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ student.student_code }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+        <h1 class="h4 mb-0">Student {{ student.student_code }}</h1>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'students:student_update' student.pk %}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'students:student_delete' student.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            <a href="{% url 'students:student_list' %}" class="btn btn-outline-secondary btn-sm">Back to list</a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-md-6"><strong>Student Code:</strong> {{ student.student_code }}</div>
+                <div class="col-12 col-md-6"><strong>Status:</strong> {{ student.get_status_display }}</div>
+
+                <div class="col-12 col-md-6"><strong>Full Name:</strong> {{ student.account.user.get_full_name|default:student.account.user.username }}</div>
+                <div class="col-12 col-md-6"><strong>Username:</strong> {{ student.account.user.username }}</div>
+
+                <div class="col-12 col-md-6"><strong>Email:</strong> {{ student.account.user.email|default:"-" }}</div>
+                <div class="col-12 col-md-6"><strong>Date of Birth:</strong> {{ student.date_of_birth|date:"Y-m-d"|default:"-" }}</div>
+
+                <div class="col-12 col-md-6"><strong>Grade Level:</strong> {{ student.get_grade_level_display }}</div>
+                <div class="col-12 col-md-6"><strong>Branch:</strong> {{ student.get_branch_display }}</div>
+
+                <div class="col-12 col-md-6"><strong>Guardian Name:</strong> {{ student.guardian_name|default:"-" }}</div>
+                <div class="col-12 col-md-6"><strong>Guardian Phone:</strong> {{ student.guardian_phone|default:"-" }}</div>
+
+                <div class="col-12 col-md-6"><strong>Joined At:</strong> {{ student.joined_at|date:"Y-m-d" }}</div>
+                <div class="col-12 col-md-6"><strong>Last Updated:</strong> {{ student.updated_at|date:"Y-m-d H:i" }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
